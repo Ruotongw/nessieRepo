@@ -1,6 +1,6 @@
 // Client ID and API key from the Developer Console
-var CLIENT_ID = 'FILLER'
-var API_KEY = 'FILLER';
+var CLIENT_ID = 'filler'
+var API_KEY = 'filler';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -11,6 +11,11 @@ var SCOPES = "https://www.googleapis.com/auth/calendar";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
+var initializeButton = document.getElementById('start');
+
+
+var titleName = document.getElementById('title');
+console.console.log(titleName);
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -31,6 +36,7 @@ function initClient() {
     scope: SCOPES
   }).then(function () {
     // Listen for sign-in state changes.
+    document.getElementById("start").onclick = creationOfEvent;
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
     // Handle the initial sign-in state.
@@ -46,14 +52,23 @@ function initClient() {
  */
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
+    initializeButton.style.display = 'block'
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
-    addTestEvent();
+    titleName.style.display = 'block'
+
+    // addTestEvent();
     listUpcomingEvents();
   } else {
+    initializeButton.style.display = 'none'
     authorizeButton.style.display = 'block';
     signoutButton.style.display = 'none';
+    titleName.style.display = 'none'
   }
+}
+
+function creationOfEvent() {
+  addTestEvent();
 }
 
 /**
@@ -115,10 +130,11 @@ function listUpcomingEvents() {
 }
 
 function addTestEvent() {
+    var titleName = document.getElementById("title");
     var event = {
-      'summary': 'Test Event',
+      'summary': titleName.value,
       'location': 'Olin-Rice Science Center, 1600 Grand Ave, St. Paul MN',
-      'description': 'this is a test event',
+      'description': ('Do homework for ' + titleName.value),
       'start': {
         'dateTime': '2018-10-10T09:00:00-07:00',
       },

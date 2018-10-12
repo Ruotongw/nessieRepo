@@ -5,28 +5,28 @@
     <title>{% block title %}{% endblock %}</title>
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
   </head>
   <body>
     <div class="container">
       <p>Google Calendar API Quickstart</p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <!--Add buttons to initiate auth sequence and sign out-->
+
+
       <button id="authorize_button" style="display: none;">Authorize</button>
       <button id="signout_button" style="display: none;">Sign Out</button>
 
       <!--  -->
 
-      <p>This is a test of the emergency broadcast system.</p>
-
       <!--  -->
-      <pre id="content"></pre>
+      <pre id="content">
+        <text>Title:
+          <input id="title" type="text"style="display: none;"></input>
+        </text>
+        <button id="start" style="display: none;">Create Study Time</button>
+      </pre>
 
       <script src = "{{ url_for('static', filename = 'index.js') }}" ></script>
-
-      <script> console.log("test") </script>
-
 
       <script async defer src="https://apis.google.com/js/api.js"
         var CLIENT_ID = '333626695075-70df99q3gkg067peaunvg9tknuijimfq.apps.googleusercontent.com'
@@ -35,7 +35,6 @@
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
       </script>
       <footer class="footer">
-  <p>© 2016 Your Name Here</p>
 </footer>
 </div> <!-- /container -->
 </body>

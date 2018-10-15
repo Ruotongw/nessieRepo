@@ -1,0 +1,41 @@
+<!-- index.html-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <p>Google Calendar API Quickstart</p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <!--Add buttons to initiate auth sequence and sign out-->
+
+
+      <button id="authorize_button" style="display: none;">Authorize</button>
+      <button id="signout_button" style="display: none;">Sign Out</button>
+
+      <!--  -->
+
+      <!--  -->
+      <pre id="content">
+        <text>Title:
+          <input id="title" type="text"style="display: none;"></input>
+        </text>
+        <button id="start" style="display: none;">Create Study Time</button>
+      </pre>
+
+      <script src = "{{ url_for('static', filename = 'index.js') }}" ></script>
+
+      <script async defer src="https://apis.google.com/js/api.js"
+        var CLIENT_ID = '333626695075-70df99q3gkg067peaunvg9tknuijimfq.apps.googleusercontent.com'
+        var API_KEY = 'AIzaSyCTJljhNHZLSPQVoB-ViYBFea9-CgHVKIA';
+        onload="this.onload=function(){};handleClientLoad()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+      </script>
+      <footer class="footer">
+</footer>
+</div> <!-- /container -->
+</body>
+</html>

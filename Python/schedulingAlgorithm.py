@@ -6,21 +6,22 @@ from oauth2client import file, client, tools
 import random
 import math
 
-SCOPES = 'https://www.googleapis.com/auth/calendar'
 
-store = file.Storage('token.json')
-creds = store.get()
-service = build('calendar', 'v3', http=creds.authorize(Http()))
-
-dueDate = datetime.datetime(2018, 10, 20, 14)
-estTime = 2
-title = 'Test Assignment'
-restrictStart = 23
-restrictEnd = 9
 
 
 def main():
     setUp()
+    SCOPES = 'https://www.googleapis.com/auth/calendar'
+
+    store = file.Storage('token.json')
+    creds = store.get()
+    service = build('calendar', 'v3', http=creds.authorize(Http()))
+
+    dueDate = datetime.datetime(2018, 10, 20, 14)
+    estTime = 2
+    title = 'Test Assignment'
+    restrictStart = 23
+    restrictEnd = 9
     createEvent()
 
 

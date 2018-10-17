@@ -1,4 +1,3 @@
-# views.py
 from __future__ import print_function
 import datetime
 from googleapiclient.discovery import build
@@ -6,13 +5,6 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 import random
 import math
-
-from flask import render_template
-
-from app import app
-
-
-
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
@@ -206,11 +198,5 @@ def formatDT2(year, month, day, hour, minute, second):
 
     return formattedDt
 
-
-@app.route('/', methods = ['GET','POST'])
-def index():
-    if request.method == 'POST':
-        event = request.form
-        title = event['title']
-        main()
-    return render_template("index.html")
+if __name__ == '__main__':
+    main()

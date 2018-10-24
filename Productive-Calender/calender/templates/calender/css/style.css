@@ -56,23 +56,23 @@ body {
 .dropdown {
     position: relative;
     display: inline-block;
-}
+ }
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #424D76;
-    min-width: 130px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    /* min-width: 25px; */
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;  */
 }
 .dropdown:hover .dropdown-content {display: block;}
 .container {
-	height: calc(100vh - 38px);
+	/* height: calc(100vh - 38px);
 	width: calc(100% - 20px);
 	padding-left: 10px;
-	padding-right: 10px;
+	padding-right: 10px; */
 }
 
 table {
@@ -119,7 +119,13 @@ td {
 	display: none;
 	z-index: 100;
 	background-color: white;
+	position: absolute;
 	padding-bottom: 10px;
+
+	top: 50%;
+	left: 50%;
+	margin-top: 100px;
+	margin-left: -50px;
 }
 
 .eveBoxClose {
@@ -262,11 +268,11 @@ textarea {
 	font-size: 0.8em;
 }
 
-.event-rectangle-select {
+/* .event-rectangle-select {
 	background-color: #424D76 !important;
 	color: white !important;
 	border-color: #424D76 !important;
-}
+} */
 
 
 #justForShowEvent {
@@ -365,6 +371,7 @@ textarea {
 	#addEvent {
 		font-size: 0.6em;
 		width: 150px;
+		position: fixed;
 	}
 	#viewEvent {
 		font-size: 0.7em;
@@ -375,10 +382,10 @@ textarea {
 		width: 120px;
 		height: 10px;
 	}
-	#eventStartDate, #eventStartTime, #eventEndDate, #eventEndTime {
+	/* #eventStartDate, #eventStartTime, #eventEndDate, #eventEndTime {
 		height: 10px;
 		font-size: 1.2em;
-	}
+	} */
 	#eventCancelButton, #eventSaveButton, #eventEditButton, #eventDeleteButton {
 		margin-top: 10px;
 		font-size: 0.9em;
@@ -395,7 +402,10 @@ textarea {
 	}
 	#add-event
 	{
-		position: fixed;
-		left: 10px;
+		/* position: absolute;
+		left: 30px;
+		bottom: -1000px; */
+		/* top: -500px; */
+
 	}
 }

@@ -43,12 +43,12 @@
 				<span class="eveBoxDate"></span>
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 				<div class="form-container">
-					<form id="addEventForm" onsubmit="updateEvent(event);">
+					<form id="addEventForm" onsubmit="updateEvent(event);" method="POST">
 						<input type="text" id="eventId" value="" hidden>
 						<br>
-						<input type="text" placeholder="Event Name" id="eventName" value="" required>
-						<input type="number" placeholder="Event Duration in Minutes" id="eventDuration" name ="eventDuration" required />
-						<input type="text" placeholder="Due Date" id="dueDate" value="" required>
+						<input type="text" name="Title" placeholder="Event Name" id="eventName" value="" required>
+						<input type="number" placeholder="Event Duration in Minutes" id="eventDuration" ame="est" required />
+						<input type="text" placeholder="Due Date" id="dueDate" name="dead" value="" required>
 						<br>
 						<div id="error"></div>
 						<strong>&nbsp;&nbsp;Description</strong><br>

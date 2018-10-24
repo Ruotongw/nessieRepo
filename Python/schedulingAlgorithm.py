@@ -5,6 +5,7 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 import random
 import math
+from datetime import timezone
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
@@ -37,10 +38,17 @@ def getCalendarEvents():
     global service
     global dueDate
 
+
+    # utc_dt = datetime.now(timezone.utc) # UTC time
+    # dt = utc_dt.astimezone()
+    # offset = datetime.timedelta(0, 0, 0, 0, 0, 5, 0)
     now = datetime.datetime.utcnow().isoformat() + 'Z'
+    # now = now.astimezone(timezone('US/Central'))
+    # now = datetime.datetime.now()
+    # print(dt.__str__())
 
     dueDateFormatted = formatDT1(dueDate)
-    events_result = service.events().list(calendarId='primary', timeMin=now,
+    events_result = service.events().list(calendarId='primary', timeMin=dt,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
 

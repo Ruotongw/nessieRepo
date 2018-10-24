@@ -2,16 +2,50 @@
 from __future__ import print_function
 from flask import render_template, Flask, request, json
 import os
+import requests
 import datetime
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
 from app import app
 import random
 import math
 
+# CLIENT_SECRETS_FILE = "credentials.json"
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
+# API_SERVICE_NAME = 'calendar'
+# API_VERSION = 'v3'
+
+# app = flask.Flask(__name__)
+#
+# app.secret_key = 'REPLACE ME - this value is here as a placeholder.'
+#
+# @app.route('/test')
+# def test_api_request():
+#   if 'credentials' not in flask.session:
+#     return flask.redirect('authorize')
+#
+#   # Load credentials from the session.
+#   credentials = google.oauth2.credentials.Credentials(
+#       **flask.session['credentials'])
+#
+#   drive = googleapiclient.discovery.build(
+#       API_SERVICE_NAME, API_VERSION, credentials=credentials)
+#
+#   files = drive.files().list().execute()
+#
+#   # Save credentials back to session in case access token was refreshed.
+#   # ACTION ITEM: In a production app, you likely want to save these
+#   #              credentials in a persistent database instead.
+#   flask.session['credentials'] = credentials_to_dict(credentials)
+#
+#   return flask.jsonify(**files)
+#
+#
+#
 
 
 store = file.Storage('app/static/token.json')
@@ -32,12 +66,12 @@ def main():
     restrictEnd = 9
 
 
-    return form_example()
+    return form()
     # return test()
 
 
-@app.route('/form-example', methods=['GET', 'POST']) #allow both GET and POST requests
-def form_example():
+@app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
+def form():
     if request.method == 'POST': #this block is only entered when the form is submitted
 
         title = request.form.get('Title')
@@ -163,11 +197,14 @@ def getEventTime(duration, deadLine):
     availableTimes = findAvailableTimes(duration, deadLine)
 
     length = len(availableTimes)
-    x = random.randrange(0, length)
+    if (len != 0):
+        print (length)
+        x = random.randrange(0, length)
 
-    eventTime = availableTimes[x]
-    return eventTime
-
+        eventTime = availableTimes[x]
+        return eventTime
+    else:
+        main()
 
 @app.route('/')
 def createEvent(newTitle, duration, deadLine):
@@ -188,7 +225,7 @@ def createEvent(newTitle, duration, deadLine):
         },
     }
 
-    event = service.events().insert(calendarId='primary', body=event).execute()
+    # event = service.events().insert(calendarId='primary', body=event).execute()
     print ('Event created: %s' % (event.get('summary')))
     print ('time: %s' % (eventStart))
 

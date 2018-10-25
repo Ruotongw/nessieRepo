@@ -21,7 +21,7 @@
 			<i class="fa fa-arrow-right" onclick="nextMonth();"></i>
 			<div id="menu-bar">
 					<!-- <button id="authorize-button">Sign In</button> -->
-					<button id="add-event">Add Event</button>
+					<button id="add-event" onclick="td_click(event)">Add Event</button>
 					<!-- <i class="fa fa-gear"></i> -->
 					<div class="dropdown">
 						<button class="fa fa-gear">
@@ -40,9 +40,10 @@
 
 			<!-- Box for adding and updating events -->
 			<div id="addEvent">
-				<span class="eveBoxDate"></span>
+				<span class="New Event"></span>
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 				<div class="form-container">
+					<strong>Assignment</strong>
 					<form id="addEventForm" onsubmit="updateEvent(event);">
 						<input type="text" id="eventId" value="" hidden>
 						<br>
@@ -54,8 +55,8 @@
 						<strong>&nbsp;&nbsp;Description</strong><br>
 						<textarea id="eventDescription" cols="23" rows="3"></textarea>
 						<br>
-						<button id="eventCancelButton" onclick="closeEveBox(event);"><strong>Cancel</strong></button>
-						<input type="submit" id="eventSaveButton" value="Save">
+						<button id="eventCancelButton" onclick="closeEveBox(event);">Cancel</button>
+						<input type="submit" id="eventSaveButton" value= "Create">
 						<br><br>
 					</form>
 				</div>

@@ -12,6 +12,7 @@ import google_auth_oauthlib.flow
 from app import app
 import random
 import math
+import pytz
 
 # CLIENT_SECRETS_FILE = "credentials.json"
 
@@ -103,7 +104,12 @@ def getCalendarEvents(deadLine):
     service = build('calendar', 'v3', http=creds.authorize(Http()))
     dueDate = deadLine
 
-    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    d = datetime.datetime.utcnow()
+    d = pytz.UTC.localize(d)
+    pst = pytz.timezone('America/Chicago')
+    nowUnformat = d.astimezone(pst).isoformat() + 'Z'
+    now = nowUnformat[0:26] + nowUnformat[len(nowUnformat) - 1]
+    print(now)
 
     dueDateFormatted = dueDate + 'T00:00:00-05:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,

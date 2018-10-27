@@ -77,6 +77,7 @@ body {
 	padding-right: 10px; */
 }
 
+
 table {
 	border: none;
 	border-bottom: 1px solid #F8F9F7;
@@ -112,6 +113,41 @@ td {
 .currentday {
 	background-color: #25add1;
 	color: white;
+}
+
+#preferences{
+	border: solid 1px #424D76;
+	border-radius: 3px;
+	width: 275px;
+	display: none;
+	z-index: 100;
+	background-color: white;
+	position: absolute;
+	padding-bottom: 10px;
+
+	top: 50%;
+	left: 50%;
+	margin-top: -225px;
+	margin-left: 275px;
+}
+
+#earliestWorkTime{
+	font-size: .7em;
+	width: 130%;
+	height: 25px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding: 5px 0px 5px 20px;
+}
+
+#latestWorkTime
+{
+	font-size: .7em;
+	width: 130%;
+	height: 25px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding: 5px 0px 5px 20px;
 }
 
 #addEvent {
@@ -193,7 +229,7 @@ textarea {
 	padding: 5px 5px 5px 0px;
 }
 
-#eventCancelButton, #eventSaveButton {
+#eventCancelButton, #eventSaveButton, #eventUpdateButton{
 	margin-top: 10px;
 	font-size: .7em;
 	width: 90px;
@@ -204,7 +240,7 @@ textarea {
 	border: none;
 }
 
-#eventSaveButton {
+#eventSaveButton, #eventUpdateButton {
 	position: absolute;
 	background-color: #424D76;
 	color: White;
@@ -338,6 +374,15 @@ textarea {
 }
 
 #authorize-button {
+	background-color: #424D76;
+	width: 100px;
+	color: white;
+	border: none;
+	padding: 10px 15px 10px 15px;
+	margin-left: -50px;
+}
+
+#pReferences {
 	background-color: #424D76;
 	width: 100px;
 	color: white;

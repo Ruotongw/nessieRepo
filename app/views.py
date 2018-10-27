@@ -1,6 +1,9 @@
 # views.py
+
 from __future__ import print_function
-from flask import render_template, Flask, request, json
+from apiclient import discovery
+import httplib2
+from flask import render_template, Flask, request, json, redirect, url_for
 import os
 import requests
 import datetime
@@ -13,79 +16,68 @@ from app import app
 import random
 import math
 
-# CLIENT_SECRETS_FILE = "credentials.json"
-
-SCOPES = 'https://www.googleapis.com/auth/calendar'
-# API_SERVICE_NAME = 'calendar'
-# API_VERSION = 'v3'
-
-# app = flask.Flask(__name__)
-#
-# app.secret_key = 'REPLACE ME - this value is here as a placeholder.'
-#
-# @app.route('/test')
-# def test_api_request():
-#   if 'credentials' not in flask.session:
-#     return flask.redirect('authorize')
-#
-#   # Load credentials from the session.
-#   credentials = google.oauth2.credentials.Credentials(
-#       **flask.session['credentials'])
-#
-#   drive = googleapiclient.discovery.build(
-#       API_SERVICE_NAME, API_VERSION, credentials=credentials)
-#
-#   files = drive.files().list().execute()
-#
-#   # Save credentials back to session in case access token was refreshed.
-#   # ACTION ITEM: In a production app, you likely want to save these
-#   #              credentials in a persistent database instead.
-#   flask.session['credentials'] = credentials_to_dict(credentials)
-#
-#   return flask.jsonify(**files)
-#
-#
-#
-
-
-store = file.Storage('app/static/token.json')
-creds = store.get()
-service = build('calendar', 'v3', http=creds.authorize(Http()))
-
-
 @app.route('/', methods=['GET','POST'])
 def main():
 
-    store = file.Storage('app/static/token.json')
-    creds = store.get()
-    service = build('calendar', 'v3', http=creds.authorize(Http()))
 
-    dueDate = datetime.datetime(2018, 10, 20, 14)
-    estTime = 1
-    restrictStart = 23
-    restrictEnd = 9
+    # render_template('base.html')
+    if request.method == "POST":
+        auth_code = request.data
+        print (auth_code)
+        if not request.headers.get('X-Requested-With'):
+            print ('403')
 
+        # Set path to the Web application client_secret_*.json file you downloaded from the
+        # Google API Console: https://console.developers.google.com/apis/credentials
+        CLIENT_SECRET_FILE = 'app/static/client_secret.json'
 
-    return form()
-    # return test()
+        # Exchange auth code for access token, refresh token, and ID token
+        credentials = client.credentials_from_clientsecrets_and_code(
+            CLIENT_SECRET_FILE,
+            ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
+            auth_code)
 
+        # Call Google API
+        http_auth = credentials.authorize(httplib2.Http())
+        service = discovery.build('calendar', 'v3', http=http_auth)
+
+        # Get profile info from ID token
+        userid = credentials.id_token['sub']
+        email = credentials.id_token['email']
+
+        now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+        # print('Getting the upcoming 10 events')
+        # events_result = service.events().list(calendarId='primary', timeMin=now,
+        #                                     maxResults=10, singleEvents=True,
+        #                                     orderBy='startTime').execute()
+        # events = events_result.get('items', [])
+        #
+        # if not events:
+        #     print('No upcoming events found.')
+        # for event in events:
+        #     start = event['start'].get('dateTime', event['start'].get('date'))
+        #     print(start, event['summary'])
+        # form()
+        return redirect('/form')
+    return render_template('base.html')
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
-    if request.method == 'POST': #this block is only entered when the form is submitted
-
-        title = request.form.get('Title')
-        timeEst = int(request.form.get('est'))
-        DedLine = request.form.get('dead')
-
-        setUp()
-        createEvent(title, timeEst, DedLine)
-
+    print("test")
+    # redirect("/form")
+    # render_template('index.html')
+    # if request.method == 'POST': #this block is only entered when the form is submitted
+    #
+    #     title = request.form.get('Title')
+    #     timeEst = int(request.form.get('est'))
+    #     DedLine = request.form.get('dead')
+    #
+    #     setUp()
+    #     createEvent(title, timeEst, DedLine)
+    # return render_template('index.html')
     return render_template('index.html')
 
-
-
-@app.route('/', methods=['GET','POST'])
+@app.route('/setup', methods=['GET','POST'])
 def setUp():
 
     store = file.Storage('app/static/token.json')
@@ -96,7 +88,7 @@ def setUp():
         creds = tools.run_flow(flow, store)
 
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/getEvent', methods=['GET','POST'])
 def getCalendarEvents(deadLine):
     store = file.Storage('app/static/token.json')
     creds = store.get()
@@ -121,7 +113,7 @@ def getCalendarEvents(deadLine):
     return events
 
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/findTimes', methods=['GET','POST'])
 def findAvailableTimes(duration, deadLine):
     estTime = duration
     restrictStart = 23
@@ -192,7 +184,7 @@ def findAvailableTimes(duration, deadLine):
     print(availableTimes)
     return availableTimes
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/getTime', methods=['GET','POST'])
 def getEventTime(duration, deadLine):
     availableTimes = findAvailableTimes(duration, deadLine)
 
@@ -206,7 +198,7 @@ def getEventTime(duration, deadLine):
     else:
         main()
 
-@app.route('/')
+@app.route('/createEvent')
 def createEvent(newTitle, duration, deadLine):
     # global title
 
@@ -230,7 +222,7 @@ def createEvent(newTitle, duration, deadLine):
     print ('time: %s' % (eventStart))
 
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/format', methods=['GET','POST'])
 def formatDT1(dt):
     year = dt.year.__str__()
 
@@ -260,8 +252,16 @@ def formatDT1(dt):
 
     return formattedDt
 
+def credentials_to_dict(credentials):
+  return {'token': credentials.token,
+          'refresh_token': credentials.refresh_token,
+          'token_uri': credentials.token_uri,
+          'client_id': credentials.client_id,
+          'client_secret': credentials.client_secret,
+          'scopes': credentials.scopes}
 
-@app.route('/', methods=['GET','POST'])
+
+@app.route('/format2', methods=['GET','POST'])
 def formatDT2(year, month, day, hour, minute, second):
     year = year.__str__()
 

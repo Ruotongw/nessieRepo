@@ -1,21 +1,68 @@
 <!-- base.html -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html itemscope itemtype="http://schema.org/Article">
   <head>
-    <title>{% block title %}{% endblock %}</title>
-    <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+    </script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+    </script>
+    <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: '333626695075-ldu172t8tcfaek30cv9ln66h6jpp0khj.apps.googleusercontent.com',
+          // Scopes to request in addition to 'profile' and 'email'
+          scope: 'https://www.googleapis.com/auth/calendar'
+        });
+      });
+    }
+    </script>
   </head>
   <body>
-    <div class="container">
       {% block body %}
       {% endblock %}
-      <footer class="footer">
-        <p>© 2016 Your Name Here</p>
-      </footer>
-    </div> <!-- /container -->
+      <button id="signinButton">Sign in with Google</button>
+      <script>
+        $('#signinButton').click(function() {
+          // signInCallback defined in step 6.
+          console.log("got to line 25");
+          auth2.grantOfflineAccess().then(signInCallback);
+        });
+      </script>
+
+      <script>
+      console.log("got to line 35");
+      function signInCallback(authResult) {
+        console.log("got to line 37");
+        console.log(authResult['code']);
+        if (authResult['code']) {
+          console.log("got to line 39");
+
+          // Hide the sign-in button now that the user is authorized, for example:
+          $('#signinButton').attr('style', 'display: none');
+
+          // Send the code to the server
+          $.ajax({
+            type: 'POST',
+            url: '/',
+            // Always include an `X-Requested-With` header in every AJAX request,
+            // to protect against CSRF attacks.
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            contentType: 'application/octet-stream; charset=utf-8',
+            success: function(result) {
+              console.log("the authentication was a success");
+            },
+            processData: false,
+            data: authResult['code']
+          });
+        } else {
+          // There was an error.
+        }
+      }
+    </script>
+
   </body>
 </html>

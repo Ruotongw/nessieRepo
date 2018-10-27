@@ -63,8 +63,10 @@ def main():
 
     dueDate = datetime.datetime(2018, 10, 20, 14)
     estTime = 1
-    restrictStart = 23
-    restrictEnd = 9
+    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
+    # restrictStart = 23
+    # restrictEnd = 9
 
 
     return form()
@@ -130,8 +132,10 @@ def getCalendarEvents(deadLine):
 @app.route('/', methods=['GET','POST'])
 def findAvailableTimes(duration, deadLine):
     estTime = duration
-    restrictStart = 23
-    restrictEnd = 9
+    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
+    # restrictStart = 23
+    # restrictEnd = 9
 
     availableTimes = []
 
@@ -165,12 +169,16 @@ def findAvailableTimes(duration, deadLine):
         sameDay = (e1Day == e2Day)
         hourDiff = e2Hour - e1Hour
         minuteDiff = abs(e1Minute - e2Minute)
-        checkRestrictStart = e1Hour - restrictStart
+        # checkRestrictStart = e1Hour - restrictStart
 
-        if ((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
-                and ((checkRestrictStart >= estTime) or
-                ((e1Hour - restrictEnd) >= estTime))) or
-                ((not sameDay) and ((restrictStart - e1Hour) >= estTime))):
+        if((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
+                and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))
+                or ((not sameDay) and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))):
+
+        # if ((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
+        #         and ((checkRestrictStart >= estTime) or
+        #         ((e1Hour - restrictEnd) >= estTime))) or
+        #         ((not sameDay) and ((restrictStart - e1Hour) >= estTime))):
 
             startHour = e1Hour
 

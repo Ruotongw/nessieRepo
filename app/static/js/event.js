@@ -5,16 +5,6 @@ var day_name = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
 var year = parseInt($(".year").attr('id'));
 
 //If empty space or weather part of any date is clicked, create new event box
-function myPreferences() {
-    var x = document.getElementById("preferences");
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-}
-
-
 function td_click(event) {
 	event.stopPropagation();
 	closeEveBox(event);

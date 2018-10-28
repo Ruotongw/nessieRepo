@@ -21,7 +21,7 @@
 			<i class="fa fa-arrow-right" onclick="nextMonth();"></i>
 			<div id="menu-bar">
 					<!-- <button id="authorize-button">Sign In</button> -->
-					<button id="add-event">Add Event</button>
+					<button id="add-event" onclick="td_click(event)">Add Event</button>
 					<!-- <i class="fa fa-gear"></i> -->
 					<div class="dropdown">
 						<button class="fa fa-gear">
@@ -29,6 +29,7 @@
 				    </button>
 				    <div class="dropdown-content">
 				      <button id="authorize-button">Sign In</button>
+							<button id="pReferences" onclick="myPreferences()">Preferences</button>
 					<!-- <button class="fa fa-gear"></button>
 						  <div class="dropdown-content">
 						  		<button id="authorize-button">Sign In</button> -->
@@ -40,26 +41,56 @@
 
 			<!-- Box for adding and updating events -->
 			<div id="addEvent">
-				<span class="eveBoxDate"></span>
+				<span class="New Event"></span>
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 				<div class="form-container">
+					<strong>Assignment</strong>
 					<form id="addEventForm" onsubmit="updateEvent(event);">
 						<input type="text" id="eventId" value="" hidden>
 						<br>
 						<input type="text" placeholder="Event Name" id="eventName" value="" required>
-						<input type="number" placeholder="Event Duration in Minutes" id="eventDuration" name ="eventDuration" required />
+						<input type="number" placeholder="Event Duration in Hours" id="eventDuration" name ="eventDuration" required />
 						<input type="text" placeholder="Due Date" id="dueDate" value="" required>
 						<br>
 						<div id="error"></div>
 						<strong>&nbsp;&nbsp;Description</strong><br>
 						<textarea id="eventDescription" cols="23" rows="3"></textarea>
 						<br>
-						<button id="eventCancelButton" onclick="closeEveBox(event);"><strong>Cancel</strong></button>
-						<input type="submit" id="eventSaveButton" value="Save">
+						<button id="eventCancelButton" onclick="closeEveBox(event);">Cancel</button>
+						<input type="submit" id="eventSaveButton" value= "Create">
 						<br><br>
 					</form>
 				</div>
 			</div>
+
+			<!-- Box for adding and updating events -->
+			<div id="preferences">
+				<span class="Preferences"></span>
+				<span class="eveBoxClose" onclick="closeEveBox(preferences);">x</span>
+				<div class="form-container">
+					<strong>Preferences</strong>
+					<form id="addpreferencesForm" onsubmit="updatePreferences();">
+						<input type="text" id="eventId" value="" hidden>
+						<br>
+						<label for="earliestWorkTime">Earliest time to start work:</label>
+						<input type="time" id="earliestWorkTime" name="earliestWorkTime" required>
+						<label for="latestWorkTime">Latest time to work until:</label>
+						<input type="time"  id="latestWorkTime" name ="latestWorkTime" required />
+						<!-- <label for="preferredStartTime">Preferred Start Times</label>
+						<input type="time" id="preferredStartTime" name="preferredStartTime" required>
+						<label for="preferredEndTime">Preferred End Times</label>
+						<input type="time" id="preferredEndTime" name="preferredEndTime" required> -->
+						<br>
+						<div id="error"></div>
+						<br>
+						<button id="eventCancelButton" onclick="closeEveBox(preferences);">Cancel</button>
+						<input type="submit" id="eventUpdateButton" value= "Update">
+						<br><br>
+					</form>
+				</div>
+			</div>
+
+
 
 			<!-- Box for viewing events -->
 			<div id="viewEvent">

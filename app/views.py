@@ -15,8 +15,37 @@ import google_auth_oauthlib.flow
 from app import app
 import random
 import math
+import pytz
 
-@app.route("/form", methods=['GET', 'POST']) #allow both GET and POST requests
+
+SCOPES = 'https://www.googleapis.com/auth/calendar'
+
+
+store = file.Storage('app/static/token.json')
+creds = store.get()
+service = build('calendar', 'v3', http=creds.authorize(Http()))
+
+
+@app.route('/', methods=['GET','POST'])
+def main():
+
+    store = file.Storage('app/static/token.json')
+    creds = store.get()
+    service = build('calendar', 'v3', http=creds.authorize(Http()))
+
+    dueDate = datetime.datetime(2018, 10, 20, 14)
+    estTime = 1
+    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
+    # restrictStart = 23
+    # restrictEnd = 9
+
+
+    return form()
+    # return test()
+
+
+@app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
     print("test")
     render_template('index.html')
@@ -82,7 +111,12 @@ def getCalendarEvents(deadLine):
     service = build('calendar', 'v3', http=creds.authorize(Http()))
     dueDate = deadLine
 
-    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    d = datetime.datetime.utcnow()
+    d = pytz.UTC.localize(d)
+    pst = pytz.timezone('America/Chicago')
+    nowUnformat = d.astimezone(pst).isoformat() + 'Z'
+    now = nowUnformat[0:26] + nowUnformat[len(nowUnformat) - 1]
+    print(now)
 
     dueDateFormatted = dueDate + 'T00:00:00-05:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,
@@ -102,8 +136,10 @@ def getCalendarEvents(deadLine):
 
 def findAvailableTimes(duration, deadLine):
     estTime = duration
-    restrictStart = 23
-    restrictEnd = 9
+    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
+    # restrictStart = 23
+    # restrictEnd = 9
 
     availableTimes = []
 
@@ -137,12 +173,16 @@ def findAvailableTimes(duration, deadLine):
         sameDay = (e1Day == e2Day)
         hourDiff = e2Hour - e1Hour
         minuteDiff = abs(e1Minute - e2Minute)
-        checkRestrictStart = e1Hour - restrictStart
+        # checkRestrictStart = e1Hour - restrictStart
 
-        if ((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
-                and ((checkRestrictStart >= estTime) or
-                ((e1Hour - restrictEnd) >= estTime))) or
-                ((not sameDay) and ((restrictStart - e1Hour) >= estTime))):
+        if((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
+                and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))
+                or ((not sameDay) and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))):
+
+        # if ((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
+        #         and ((checkRestrictStart >= estTime) or
+        #         ((e1Hour - restrictEnd) >= estTime))) or
+        #         ((not sameDay) and ((restrictStart - e1Hour) >= estTime))):
 
             startHour = e1Hour
 

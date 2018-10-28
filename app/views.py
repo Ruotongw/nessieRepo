@@ -16,6 +16,24 @@ from app import app
 import random
 import math
 
+@app.route("/form", methods=['GET', 'POST']) #allow both GET and POST requests
+def form():
+    print("test")
+    render_template('index.html')
+    print("test")
+    redirect("/form")
+    render_template('index.html')
+    if request.method == 'POST': #this block is only entered when the form is submitted
+
+        title = request.form.get('Title')
+        timeEst = int(request.form.get('est'))
+        DedLine = request.form.get('dead')
+
+        setUp()
+        createEvent(title, timeEst, DedLine)
+    return render_template('index.html')
+    return render_template('index.html')
+
 @app.route('/', methods=['GET','POST'])
 def main():
 
@@ -42,40 +60,12 @@ def main():
         service = discovery.build('calendar', 'v3', http=http_auth)
 
         # Get profile info from ID token
-        userid = credentials.id_token['sub']
-        email = credentials.id_token['email']
+        # userid = credentials.id_token['sub']
+        # email = credentials.id_token['email']
 
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-        # print('Getting the upcoming 10 events')
-        # events_result = service.events().list(calendarId='primary', timeMin=now,
-        #                                     maxResults=10, singleEvents=True,
-        #                                     orderBy='startTime').execute()
-        # events = events_result.get('items', [])
-        #
-        # if not events:
-        #     print('No upcoming events found.')
-        # for event in events:
-        #     start = event['start'].get('dateTime', event['start'].get('date'))
-        #     print(start, event['summary'])
-        # form()
-        return redirect('/form')
+        return redirect(url_for('form'))
     return render_template('base.html')
-
-@app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
-def form():
-    print("test")
-    # redirect("/form")
-    # render_template('index.html')
-    # if request.method == 'POST': #this block is only entered when the form is submitted
-    #
-    #     title = request.form.get('Title')
-    #     timeEst = int(request.form.get('est'))
-    #     DedLine = request.form.get('dead')
-    #
-    #     setUp()
-    #     createEvent(title, timeEst, DedLine)
-    # return render_template('index.html')
-    return render_template('index.html')
 
 @app.route('/setup', methods=['GET','POST'])
 def setUp():
@@ -217,7 +207,7 @@ def createEvent(newTitle, duration, deadLine):
         },
     }
 
-    # event = service.events().insert(calendarId='primary', body=event).execute()
+    event = service.events().insert(calendarId='primary', body=event).execute()
     print ('Event created: %s' % (event.get('summary')))
     print ('time: %s' % (eventStart))
 

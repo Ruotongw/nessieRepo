@@ -67,7 +67,6 @@ def main():
         return redirect(url_for('form'))
     return render_template('base.html')
 
-@app.route('/setup', methods=['GET','POST'])
 def setUp():
 
     store = file.Storage('app/static/token.json')
@@ -78,7 +77,6 @@ def setUp():
         creds = tools.run_flow(flow, store)
 
 
-@app.route('/getEvent', methods=['GET','POST'])
 def getCalendarEvents(deadLine):
     store = file.Storage('app/static/token.json')
     creds = store.get()
@@ -103,7 +101,6 @@ def getCalendarEvents(deadLine):
     return events
 
 
-@app.route('/findTimes', methods=['GET','POST'])
 def findAvailableTimes(duration, deadLine):
     estTime = duration
     restrictStart = 23
@@ -174,7 +171,6 @@ def findAvailableTimes(duration, deadLine):
     print(availableTimes)
     return availableTimes
 
-@app.route('/getTime', methods=['GET','POST'])
 def getEventTime(duration, deadLine):
     availableTimes = findAvailableTimes(duration, deadLine)
 
@@ -188,7 +184,6 @@ def getEventTime(duration, deadLine):
     else:
         main()
 
-@app.route('/createEvent')
 def createEvent(newTitle, duration, deadLine):
     # global title
 
@@ -207,12 +202,10 @@ def createEvent(newTitle, duration, deadLine):
         },
     }
 
-    event = service.events().insert(calendarId='primary', body=event).execute()
     print ('Event created: %s' % (event.get('summary')))
     print ('time: %s' % (eventStart))
 
 
-@app.route('/format', methods=['GET','POST'])
 def formatDT1(dt):
     year = dt.year.__str__()
 
@@ -251,7 +244,6 @@ def credentials_to_dict(credentials):
           'scopes': credentials.scopes}
 
 
-@app.route('/format2', methods=['GET','POST'])
 def formatDT2(year, month, day, hour, minute, second):
     year = year.__str__()
 

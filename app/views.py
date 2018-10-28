@@ -38,7 +38,6 @@ def form():
 def main():
 
 
-    # render_template('base.html')
     if request.method == "POST":
         auth_code = request.data
         print (auth_code)

@@ -26,25 +26,6 @@ creds = store.get()
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 
-@app.route('/', methods=['GET','POST'])
-def main():
-
-    store = file.Storage('app/static/token.json')
-    creds = store.get()
-    service = build('calendar', 'v3', http=creds.authorize(Http()))
-
-    dueDate = datetime.datetime(2018, 10, 20, 14)
-    estTime = 1
-    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
-    # restrictStart = 23
-    # restrictEnd = 9
-
-
-    return form()
-    # return test()
-
-
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
     print("test")
@@ -170,12 +151,14 @@ def findAvailableTimes(duration, deadLine):
         e2Second = int(e2DT[17:19])
 
         sameDay = (e1Day == e2Day)
-        hourDiff = e2Hour - e1Hour
-        minuteDiff = abs(e1Minute - e2Minute)
+        # hourDiff = e2Hour - e1Hour
+        # minuteDiff = abs(e1Minute - e2Minute)
         # checkRestrictStart = e1Hour - restrictStart
 
-        if((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
-                and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))
+        timeDiff = (e2Hour * 60 + e2Minute) - (e1Hour * 60 + e1Minute)
+        enoughTime = timeDiff >= (estTime * 60)
+
+        if((sameDay and enoughTime and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))
                 or ((not sameDay) and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))):
 
         # if ((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))

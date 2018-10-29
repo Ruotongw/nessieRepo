@@ -1,12 +1,3 @@
-<!-- index.html-->
-<!DOCTYPE html>
-<html itemscope itemtype="http://schema.org/Article">
-  <head>
-  </head>
-  <body>
-    <div class="container">
-      <p>Google Calendar API Quickstart</p>
-      <!--Add buttons to initiate auth sequence and sign out-->
 <!DOCTYPE HTML>
 <html lang="en-US">
 	<head>
@@ -17,20 +8,112 @@
 
 		<title>Calender</title>
 
-      <!--  -->
+		<!-- Font Awesome served from CDN -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/style.css') }}">
+		<link rel="shortcut icon" href="{{ url_for('static', filename='./favicon.png') }}">
+	</head>
+	<body>
+		<div id="right-area">
+			<i class="fa fa-arrow-left"></i>
+			<!-- <i class="fa fa-arrow-left" onclick="prevMonth();"></i> -->
+			<span class="month"></span> <span class="year"></span>
+			<!-- <i class="fa fa-arrow-right" onclick="nextMonth();"></i> -->
+			<i class="fa fa-arrow-right"></i>
+			<div id="menu-bar">
+					<!-- <button id="authorize-button">Sign In</button> -->
+					<!-- <button id="add-event" onclick="td_click(event)">Add Event</button> -->
+					<button id="add-event" onclick="td_click(event)">Add Event</button>
+					<!-- <i class="fa fa-gear"></i> -->
+					<div class="dropdown">
+						<button class="fa fa-gear">
+				      <!-- <button class="fa fa-gear"></button> -->
+				    </button>
+				    <div class="dropdown-content">
+				      <button id="authorize-button">Sign In</button>
+							<button id="pReferences" onclick="myPreferences()">Preferences</button>
+					<!-- <button class="fa fa-gear"></button>
+						  <div class="dropdown-content">
+						  		<button id="authorize-button">Sign In</button> -->
+						  </div>
+						</div>
+				</span>
+			</div>
+			<div class="container"></div>
 
-      <!--  -->
-      <form method="POST">
-               Assignment Title: <input type="text" name="Title"><br>
-               Estimated Time: <input type="number" min="0" name="est"><br>
-               Deadline: <input type="date" name="dead"><br>
-               <input type="submit" value="Create"><br>
-           </form>
+			<!-- Box for adding and updating events -->
+			<div id="addEvent">
+				<span class="New Event"></span>
+				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
+				<div class="form-container">
+					<strong>Assignment</strong>
+					   <form id="addEventForm" action="/form" method="POST">
+			               Assignment Title: <input type="text" name="Title" value=""><br>
+			               Estimated Time: <input type="number" min="0" name="est" ><br>
+			               Deadline: <input type="date" name="dead" value=""><br>
+			               <input type="submit" value="Create"><br>
+			           </form>
+				</div>
+			</div>
+
+			<!-- Box for adding and updating events -->
+			<div id="preferences">
+				<span class="Preferences"></span>
+				<span class="eveBoxClose" onclick="closeEveBox(preferences);">x</span>
+				<div class="form-container">
+					<strong>Preferences</strong>
+					<form id="addpreferencesForm" onsubmit="updatePreferences();">
+						<input type="text" id="eventId" value="" hidden>
+						<br>
+						<label for="earliestWorkTime">Earliest time to start work:</label>
+						<input type="time" id="earliestWorkTime" name="earliestWorkTime" required>
+						<label for="latestWorkTime">Latest time to work until:</label>
+						<input type="time"  id="latestWorkTime" name ="latestWorkTime" required />
+						<!-- <label for="preferredStartTime">Preferred Start Times</label>
+						<input type="time" id="preferredStartTime" name="preferredStartTime" required>
+						<label for="preferredEndTime">Preferred End Times</label>
+						<input type="time" id="preferredEndTime" name="preferredEndTime" required> -->
+						<br>
+						<div id="error"></div>
+						<br>
+						<button id="eventCancelButton" onclick="closeEveBox(preferences);">Cancel</button>
+						<input type="submit" id="eventUpdateButton" value= "Update">
+						<br><br>
+					</form>
+				</div>
+			</div>
 
 
 
-      <footer class="footer">
-</footer>
-</div> <!-- /container -->
-</body>
+			<!-- Box for viewing events -->
+			<div id="viewEvent">
+				<span class="viewEveBoxName"></span>
+				<span id="viewEveBoxEveId"></span>
+				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
+				<br><br>
+				<div class="viewEveLabel">Title</div>
+				<div class="viewTitle"></div><br>
+				<div class="viewEveLabel">Where</div>
+				<div class="viewLocation"></div><br>
+				<div class="viewEveLabel">When</div>
+				<div class="viewDay"></div><br>
+				<div class="viewEveLabel">Description</div>
+				<div class="viewDescription">No Description</div>
+				<br><br><br><br>
+				<button id="eventDeleteButton" onclick="deleteEve(event);"><strong>Delete</strong></button>
+				<button id="eventEditButton" onclick="editEve(event);"><strong>Edit</strong></button>
+				<br><br>
+			</div>
+		</div>
+
+		<!-- jQuery, Weather script, events script, calender creation, clock, google calender sync, google calender check login status on load -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="{{ url_for('static', filename='./js/event.js') }}" ></script>
+		<script src="{{ url_for('static', filename='./js/calender.js') }}"></script>
+		<script src="{{ url_for('static', filename='./js/google_calender.js') }}"></script>
+		<script async defer src="https://apis.google.com/js/api.js"
+			onload="this.onload=function(){};handleClientLoad()"
+			onreadystatechange="if (this.readyState === 'complete') this.onload()">
+		</script>
+	</body>
 </html>

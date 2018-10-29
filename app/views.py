@@ -26,22 +26,22 @@ creds = store.get()
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 
-@app.route('/', methods=['GET','POST'])
-def main():
-
-    store = file.Storage('app/static/token.json')
-    creds = store.get()
-    service = build('calendar', 'v3', http=creds.authorize(Http()))
-
-    dueDate = datetime.datetime(2018, 10, 20, 14)
-    estTime = 1
-    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
-    # restrictStart = 23
-    # restrictEnd = 9
-
-
-    return form()
+# @app.route('/', methods=['GET','POST'])
+# def main():
+#
+#     store = file.Storage('app/static/token.json')
+#     creds = store.get()
+#     service = build('calendar', 'v3', http=creds.authorize(Http()))
+#
+#     dueDate = datetime.datetime(2018, 10, 20, 14)
+#     estTime = 1
+#     restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+#     openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
+#     # restrictStart = 23
+#     # restrictEnd = 9
+#
+#
+#     return form()
     # return test()
 
 
@@ -214,14 +214,14 @@ def getEventTime(duration, deadLine):
     availableTimes = findAvailableTimes(duration, deadLine)
 
     length = len(availableTimes)
-    if (len != 0):
+    if (length != 0):
         print (length)
         x = random.randrange(0, length)
 
         eventTime = availableTimes[x]
         return eventTime
     else:
-        main()
+        return  '''<h1>Oops</h1>'''
 
 def createEvent(newTitle, duration, deadLine):
     # global title
@@ -241,8 +241,10 @@ def createEvent(newTitle, duration, deadLine):
         },
     }
 
+    # event = service.events().insert(calendarId='primary', body=event).execute()
     print ('Event created: %s' % (event.get('summary')))
     print ('time: %s' % (eventStart))
+    return redirect('https://calendar.google.com/calendar/', code=302)
 
 
 def formatDT1(dt):

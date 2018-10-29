@@ -1,6 +1,9 @@
 # views.py
+
 from __future__ import print_function
-from flask import render_template, Flask, request, json
+from apiclient import discovery
+import httplib2
+from flask import render_template, Flask, request, json, redirect, url_for
 import os
 # import requests
 import datetime
@@ -14,39 +17,8 @@ import random
 import math
 import pytz
 
-# CLIENT_SECRETS_FILE = "credentials.json"
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
-# API_SERVICE_NAME = 'calendar'
-# API_VERSION = 'v3'
-
-# app = flask.Flask(__name__)
-#
-# app.secret_key = 'REPLACE ME - this value is here as a placeholder.'
-#
-# @app.route('/test')
-# def test_api_request():
-#   if 'credentials' not in flask.session:
-#     return flask.redirect('authorize')
-#
-#   # Load credentials from the session.
-#   credentials = google.oauth2.credentials.Credentials(
-#       **flask.session['credentials'])
-#
-#   drive = googleapiclient.discovery.build(
-#       API_SERVICE_NAME, API_VERSION, credentials=credentials)
-#
-#   files = drive.files().list().execute()
-#
-#   # Save credentials back to session in case access token was refreshed.
-#   # ACTION ITEM: In a production app, you likely want to save these
-#   #              credentials in a persistent database instead.
-#   flask.session['credentials'] = credentials_to_dict(credentials)
-#
-#   return flask.jsonify(**files)
-#
-#
-#
 
 
 store = file.Storage('app/static/token.json')
@@ -63,8 +35,10 @@ def main():
 
     dueDate = datetime.datetime(2018, 10, 20, 14)
     estTime = 1
-    restrictStart = 23
-    restrictEnd = 9
+    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
+    # restrictStart = 23
+    # restrictEnd = 9
 
 
     return form()
@@ -73,6 +47,11 @@ def main():
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
+    print("test")
+    render_template('index.html')
+    print("test")
+    redirect("/form")
+    render_template('index.html')
     if request.method == 'POST': #this block is only entered when the form is submitted
 
         title = request.form.get('Title')
@@ -81,12 +60,41 @@ def form():
 
         setUp()
         createEvent(title, timeEst, DedLine)
-
+    return render_template('index.html')
     return render_template('index.html')
 
-
-
 @app.route('/', methods=['GET','POST'])
+def main():
+
+
+    if request.method == "POST":
+        auth_code = request.data
+        print (auth_code)
+        if not request.headers.get('X-Requested-With'):
+            print ('403')
+
+        # Set path to the Web application client_secret_*.json file you downloaded from the
+        # Google API Console: https://console.developers.google.com/apis/credentials
+        CLIENT_SECRET_FILE = 'app/static/client_secret.json'
+
+        # Exchange auth code for access token, refresh token, and ID token
+        credentials = client.credentials_from_clientsecrets_and_code(
+            CLIENT_SECRET_FILE,
+            ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
+            auth_code)
+
+        # Call Google API
+        http_auth = credentials.authorize(httplib2.Http())
+        service = discovery.build('calendar', 'v3', http=http_auth)
+
+        # Get profile info from ID token
+        # userid = credentials.id_token['sub']
+        # email = credentials.id_token['email']
+
+        now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+        return redirect(url_for('form'))
+    return render_template('base.html')
+
 def setUp():
 
     store = file.Storage('app/static/token.json')
@@ -97,7 +105,6 @@ def setUp():
         creds = tools.run_flow(flow, store)
 
 
-@app.route('/', methods=['GET','POST'])
 def getCalendarEvents(deadLine):
     store = file.Storage('app/static/token.json')
     creds = store.get()
@@ -126,11 +133,12 @@ def getCalendarEvents(deadLine):
     return events
 
 
-@app.route('/', methods=['GET','POST'])
 def findAvailableTimes(duration, deadLine):
     estTime = duration
-    restrictStart = 23
-    restrictEnd = 9
+    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
+    # restrictStart = 23
+    # restrictEnd = 9
 
     availableTimes = []
 
@@ -162,40 +170,18 @@ def findAvailableTimes(duration, deadLine):
         e2Second = int(e2DT[17:19])
 
         sameDay = (e1Day == e2Day)
+        hourDiff = e2Hour - e1Hour
+        minuteDiff = abs(e1Minute - e2Minute)
+        # checkRestrictStart = e1Hour - restrictStart
 
-        timeDiff = (e2Hour - e1Hour) * 60 + abs(e1Minute - e2Minute)
-        timeNeed = estTime * 60 + 30
-        enoughTime = timeDiff >= timeNeed
+        if((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
+                and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))
+                or ((not sameDay) and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))):
 
-        checkRestrictStart = e1Hour - restrictStart
-        checkRestrictEnd = restrictEnd - e1Hour
-
-        if sameDay and enoughTime and ((checkRestrictStart >= estTime) or
-                (checkRestrictEnd >= estTime)):
-
-            startHour = e1Hour
-
-            startMinute = e1Minute
-            if startMinute >= 45:
-                startHour += 1
-                startMinute = 60 - startMinute
-                startMinute = abs(startMinute - 15)
-            else:
-                startMinute += 15
-
-            endHour = startHour + estTime
-            endMinute = startMinute
-
-            eventStart = formatDT2(e1Year, e1Month, e1Day, startHour, startMinute, e1Second)
-            eventEnd = formatDT2(e1Year, e1Month, e1Day, endHour, endMinute, e1Second)
-
-            timeSlot = [eventStart, eventEnd]
-            availableTimes.append(timeSlot)
-            print (len(availableTimes))
-
-
-        elif not sameDay and ((restrictStart - e1Hour) >= estTime  or
-            checkRestrictEnd >= estTime):
+        # if ((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
+        #         and ((checkRestrictStart >= estTime) or
+        #         ((e1Hour - restrictEnd) >= estTime))) or
+        #         ((not sameDay) and ((restrictStart - e1Hour) >= estTime))):
 
             startHour = e1Hour
 
@@ -220,7 +206,6 @@ def findAvailableTimes(duration, deadLine):
     print(availableTimes)
     return availableTimes
 
-@app.route('/', methods=['GET','POST'])
 def getEventTime(duration, deadLine):
     availableTimes = findAvailableTimes(duration, deadLine)
 
@@ -234,7 +219,6 @@ def getEventTime(duration, deadLine):
     else:
         main()
 
-@app.route('/')
 def createEvent(newTitle, duration, deadLine):
     # global title
 
@@ -258,7 +242,6 @@ def createEvent(newTitle, duration, deadLine):
     print ('time: %s' % (eventStart))
 
 
-@app.route('/', methods=['GET','POST'])
 def formatDT1(dt):
     year = dt.year.__str__()
 
@@ -288,8 +271,15 @@ def formatDT1(dt):
 
     return formattedDt
 
+def credentials_to_dict(credentials):
+  return {'token': credentials.token,
+          'refresh_token': credentials.refresh_token,
+          'token_uri': credentials.token_uri,
+          'client_id': credentials.client_id,
+          'client_secret': credentials.client_secret,
+          'scopes': credentials.scopes}
 
-@app.route('/', methods=['GET','POST'])
+
 def formatDT2(year, month, day, hour, minute, second):
     year = year.__str__()
 

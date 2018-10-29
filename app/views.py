@@ -5,13 +5,13 @@ from apiclient import discovery
 import httplib2
 from flask import render_template, Flask, request, json, redirect, url_for
 import os
-import requests
+# import requests
 import datetime
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 import google.oauth2.credentials
-import google_auth_oauthlib.flow
+# import google_auth_oauthlib.flow
 from app import app
 import random
 import math
@@ -116,7 +116,6 @@ def getCalendarEvents(deadLine):
     pst = pytz.timezone('America/Chicago')
     nowUnformat = d.astimezone(pst).isoformat() + 'Z'
     now = nowUnformat[0:26] + nowUnformat[len(nowUnformat) - 1]
-    print(now)
 
     dueDateFormatted = dueDate + 'T00:00:00-05:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,
@@ -203,9 +202,6 @@ def findAvailableTimes(duration, deadLine):
             timeSlot = [eventStart, eventEnd]
             availableTimes.append(timeSlot)
             print (len(availableTimes))
-        # elif ((e1Day != e2Day) and  (restrictStart - e1Hour) >= estTime):
-        #     eventStart = formatDT2(e1Year, e1Month, e1Day, e1Hour, e1Minute, e1Second)
-        #     eventEnd = formatDT2(e1Year, e1Month, e1Day, e1Hour + estTime, e1Minute, e1Second)
 
     print(availableTimes)
     return availableTimes

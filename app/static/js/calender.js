@@ -76,7 +76,7 @@ function nextMonth() {
     }
     // console.log(nextmon);
     calender(nextMon, year);
-    calculateWeather();
+    // calculateWeather();
     refreshAllEvents();
 }
 
@@ -102,11 +102,11 @@ function prevMonth() {
 // 
 if (window.addEventListener) {
     calender(currentMonth, currentYear);
-    calculateWeather();
+    // calculateWeather();
     refreshAllEvents();
 } else if (window.attachEvent) {
     calender(currentMonth, currentYear);
-    calculateWeather();
+    // calculateWeather();
     refreshAllEvents();
 }
 

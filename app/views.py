@@ -3,7 +3,7 @@
 from __future__ import print_function
 from apiclient import discovery
 import httplib2
-from flask import render_template, Flask, request, json, redirect, url_for
+from flask import render_template, Flask, request, json, redirect, url_for, jsonify
 import os
 # import requests
 import datetime
@@ -56,6 +56,7 @@ def form():
 
         title = request.form.get('Title')
         timeEst = int(request.form.get('est'))
+        global DedLine
         DedLine = request.form.get('dead')
 
         setUp()
@@ -104,7 +105,6 @@ def setUp():
         flow = client.flow_from_clientsecrets('app/static/credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
 
-
 def getCalendarEvents(deadLine):
     store = file.Storage('app/static/token.json')
     creds = store.get()
@@ -117,7 +117,7 @@ def getCalendarEvents(deadLine):
     nowUnformat = d.astimezone(pst).isoformat() + 'Z'
     now = nowUnformat[0:26] + nowUnformat[len(nowUnformat) - 1]
 
-    dueDateFormatted = dueDate + 'T00:00:00-05:00'
+    dueDateFormatted = str(dueDate) + 'T00:00:00-05:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
@@ -131,6 +131,15 @@ def getCalendarEvents(deadLine):
         # print(start, event['summary'])
 
     return events
+
+@app.route('/allEvents/', methods=['GET','POST'])
+def getDisplayEvents():
+    events= getCalendarEvents(DedLine)
+    eventsJSON = jsonify(events)
+    eventsJSON.status_code = 200
+    return getCalendarEvents(eventsJSON)
+
+
 
 
 def findAvailableTimes(duration, deadLine):

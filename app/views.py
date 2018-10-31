@@ -137,7 +137,8 @@ def getDisplayEvents():
     events= getCalendarEvents(DedLine)
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200
-    return getCalendarEvents(eventsJSON)
+    print(eventsJSON)
+    return eventsJSON
 
 
 

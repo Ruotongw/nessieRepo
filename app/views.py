@@ -140,7 +140,7 @@ def findAvailableTimes(duration, deadLine):
     estHours = (estTimeMin - estMins) / 60
 
     # Eventually these values will be taken as user input
-    openStartTime = 9
+    openStartTime = 6
     openEndTime = 23
 
     availableTimes = []
@@ -183,7 +183,7 @@ def findAvailableTimes(duration, deadLine):
         enoughTime2 = timeDiff2 >= (estTimeMin + 30)
 
         # Ensures that the algorithm doesn't schedule events in the past
-        currentTime = ((e1Hour >= nowHour) and (e1Minute >= nowMinute)) or (e1Day > nowDay)
+        currentTime = ((e1Hour == nowHour) and (e1Minute >= nowMinute)) or e1Hour > nowHour or (e1Day > nowDay)
 
         # Ensures that the entire scheduled event would be within the open working hours
         timeWindow = (e1Hour * 60) + e1Minute + (estTimeMin + 30)
@@ -196,6 +196,8 @@ def findAvailableTimes(duration, deadLine):
 
             startHour = e1Hour
 
+            print(startHour)
+
             startMinute = e1Minute
             if startMinute + estMins >= 45:
                 startHour += 1
@@ -204,17 +206,29 @@ def findAvailableTimes(duration, deadLine):
             else:
                 startMinute += 15
 
+            print(startMinute)
+
             endHour = startHour + estHours
+
+            print(endHour)
+
             endMinute = startMinute + estMins
 
+            print(endMinute)
+
             eventStart = formatDT2(e1Year, e1Month, e1Day, startHour, startMinute, e1Second)
+
+            print(eventStart)
+
             eventEnd = formatDT2(e1Year, e1Month, e1Day, endHour, endMinute, e1Second)
+
+            print(eventEnd)
 
             timeSlot = [eventStart, eventEnd]
             availableTimes.append(timeSlot)
-            # print (len(availableTimes))
+            print (len(availableTimes))
 
-    # print(availableTimes)
+    print(availableTimes)
     return availableTimes
 
 def getEventTime(duration, deadLine):
@@ -234,24 +248,34 @@ event = {}
 def createEvent(newTitle, duration, deadLine):
     global event
     eventTime = getEventTime(duration, deadLine)
-    eventStart = eventTime[0]
-    eventEnd = eventTime[1]
-    event = {
-        'summary': newTitle,
-        'start': {
-            'dateTime': eventStart,
-            'timeZone': 'America/Los_Angeles',
-        },
-        'end': {
-            'dateTime': eventEnd,
-            'timeZone': 'America/Los_Angeles'
-        },
-    }
 
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    print ('Event created: %s' % (event.get('summary')))
-    print ('time: %s' % (eventStart))
-    return redirect('https://calendar.google.com/calendar/', code=302)
+    print(eventTime)
+
+    if (eventTime != '''<h1>Oops</h1>'''):
+        eventStart = eventTime[0]
+        eventEnd = eventTime[1]
+        event = {
+            'summary': newTitle,
+            'start': {
+                'dateTime': eventStart,
+                'timeZone': 'America/Los_Angeles',
+            },
+            'end': {
+                'dateTime': eventEnd,
+                'timeZone': 'America/Los_Angeles'
+            },
+        }
+
+        print(event)
+
+        event = service.events().insert(calendarId='primary', body=event).execute()
+        print ('Event created: %s' % (event.get('summary')))
+        print ('time: %s' % (eventStart))
+        return redirect('https://calendar.google.com/calendar/', code=302)
+
+    else:
+        print("No available times")
+
 
 
 def getScheduledEvent():

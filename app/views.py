@@ -5,14 +5,12 @@ from apiclient import discovery
 import httplib2
 from flask import render_template, Flask, request, json, redirect, url_for, jsonify
 import os
-# import requests
-import datetime
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 import google.oauth2.credentials
-# import google_auth_oauthlib.flow
 from app import app
+import datetime
 import random
 import math
 import pytz
@@ -26,23 +24,6 @@ creds = store.get()
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 
-# @app.route('/', methods=['GET','POST'])
-# def main():
-#
-#     store = file.Storage('app/static/token.json')
-#     creds = store.get()
-#     service = build('calendar', 'v3', http=creds.authorize(Http()))
-#
-#     dueDate = datetime.datetime(2018, 10, 20, 14)
-#     estTime = 1
-#     restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-#     openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
-#     # restrictStart = 23
-#     # restrictEnd = 9
-#
-#
-#     return form()
-    # return test()
 
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
@@ -105,17 +86,36 @@ def setUp():
         flow = client.flow_from_clientsecrets('app/static/credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
 
+nowDay = 0
+nowHour = 0
+nowMinute = 0
+
 def getCalendarEvents(deadLine):
+    global nowDay
+    global nowHour
+    global nowMinute
+
     store = file.Storage('app/static/token.json')
     creds = store.get()
     service = build('calendar', 'v3', http=creds.authorize(Http()))
     dueDate = deadLine
 
+    # Changes 'now' from UTC time to Central Time and formats it correctly
     d = datetime.datetime.utcnow()
     d = pytz.UTC.localize(d)
     pst = pytz.timezone('America/Chicago')
-    nowUnformat = d.astimezone(pst).isoformat() + 'Z'
-    now = nowUnformat[0:26] + nowUnformat[len(nowUnformat) - 1]
+
+    nowUnformat = d.astimezone(pst)
+
+    # Used later in the algorithm
+    nowDay = nowUnformat.day
+    nowHour = nowUnformat.hour
+    nowMinute = nowUnformat.minute
+
+    nowString = nowUnformat.isoformat() + 'Z'
+
+    now = nowString[0:26] + nowString[len(nowString) - 1]
+    print(now)
 
     dueDateFormatted = str(dueDate) + 'T00:00:00-05:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,
@@ -126,9 +126,6 @@ def getCalendarEvents(deadLine):
 
     if not events:
         print('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        # print(start, event['summary'])
 
     return events
 
@@ -144,11 +141,18 @@ def getDisplayEvents():
 
 
 def findAvailableTimes(duration, deadLine):
-    estTime = duration
-    restrictedTimes = [23, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    openTimes = [10,11,12,13,14,15,16,17,18,19,20,21,22]
-    # restrictStart = 23
-    # restrictEnd = 9
+    global nowDay
+    global nowHour
+    global nowMinute
+
+    estTimeMin = duration * 60
+
+    estMins = estTimeMin % 60
+    estHours = (estTimeMin - estMins) / 60
+
+    # Eventually these values will be taken as user input
+    openStartTime = 9
+    openEndTime = 23
 
     availableTimes = []
 
@@ -180,42 +184,48 @@ def findAvailableTimes(duration, deadLine):
         e2Second = int(e2DT[17:19])
 
         sameDay = (e1Day == e2Day)
-        # hourDiff = e2Hour - e1Hour
-        # minuteDiff = abs(e1Minute - e2Minute)
-        # checkRestrictStart = e1Hour - restrictStart
 
+        # For events on the same day
         timeDiff = (e2Hour * 60 + e2Minute) - (e1Hour * 60 + e1Minute)
-        enoughTime = timeDiff >= (estTime * 60)
+        enoughTime = timeDiff >= (estTimeMin + 30)
 
-        if((sameDay and enoughTime and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))
-                or ((not sameDay) and ((e1Hour in openTimes) and ((e1Hour + estTime) in openTimes)))):
+        # For events on different days
+        timeDiff2 = (1440 - (e1Hour * 60) + e1Minute) + (e2Hour * 60 + e2Minute)
+        enoughTime2 = timeDiff2 >= (estTimeMin + 30)
 
-        # if ((sameDay and ((hourDiff == estTime and minuteDiff >= 30) or (hourDiff > estTime))
-        #         and ((checkRestrictStart >= estTime) or
-        #         ((e1Hour - restrictEnd) >= estTime))) or
-        #         ((not sameDay) and ((restrictStart - e1Hour) >= estTime))):
+        # Ensures that the algorithm doesn't schedule events in the past
+        currentTime = ((e1Hour >= nowHour) and (e1Minute >= nowMinute)) or (e1Day > nowDay)
+
+        # Ensures that the entire scheduled event would be within the open working hours
+        timeWindow = (e1Hour * 60) + e1Minute + (estTimeMin + 30)
+
+        openRangeH = range(openStartTime, openEndTime)
+        openRangeM = range(openStartTime * 60, openEndTime * 60)
+
+        if(currentTime and (sameDay and enoughTime and (e1Hour in openRangeH) and (timeWindow in openRangeM))
+                or (not sameDay and enoughTime2 and (e1Hour in openRangeH) and (timeWindow in openRangeM))):
 
             startHour = e1Hour
 
             startMinute = e1Minute
-            if startMinute >= 45:
+            if startMinute + estMins >= 45:
                 startHour += 1
                 startMinute = 60 - startMinute
                 startMinute = abs(startMinute - 15)
             else:
                 startMinute += 15
 
-            endHour = startHour + estTime
-            endMinute = startMinute
+            endHour = startHour + estHours
+            endMinute = startMinute + estMins
 
             eventStart = formatDT2(e1Year, e1Month, e1Day, startHour, startMinute, e1Second)
             eventEnd = formatDT2(e1Year, e1Month, e1Day, endHour, endMinute, e1Second)
 
             timeSlot = [eventStart, eventEnd]
             availableTimes.append(timeSlot)
-            print (len(availableTimes))
+            # print (len(availableTimes))
 
-    print(availableTimes)
+    # print(availableTimes)
     return availableTimes
 
 def getEventTime(duration, deadLine):
@@ -231,9 +241,9 @@ def getEventTime(duration, deadLine):
     else:
         return  '''<h1>Oops</h1>'''
 
+event = {}
 def createEvent(newTitle, duration, deadLine):
-    # global title
-
+    global event
     eventTime = getEventTime(duration, deadLine)
     eventStart = eventTime[0]
     eventEnd = eventTime[1]
@@ -249,11 +259,15 @@ def createEvent(newTitle, duration, deadLine):
         },
     }
 
-    # event = service.events().insert(calendarId='primary', body=event).execute()
+    event = service.events().insert(calendarId='primary', body=event).execute()
     print ('Event created: %s' % (event.get('summary')))
     print ('time: %s' % (eventStart))
     return redirect('https://calendar.google.com/calendar/', code=302)
 
+
+def getScheduledEvent():
+    global event
+    return event
 
 def formatDT1(dt):
     year = dt.year.__str__()
@@ -304,10 +318,12 @@ def formatDT2(year, month, day, hour, minute, second):
     if int(day) < 10:
         day = '0' + day
 
+    hour = int(hour)
     hour = hour.__str__()
     if int(hour) < 10:
         hour = '0' + hour
 
+    minute = int(minute)
     minute = minute.__str__()
     if int(minute) < 10:
         minute = '0' + minute

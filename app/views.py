@@ -3,7 +3,7 @@
 from __future__ import print_function
 from apiclient import discovery
 import httplib2
-from flask import render_template, Flask, request, json, redirect, url_for
+from flask import render_template, Flask, request, json, redirect, url_for, jsonify
 import os
 from googleapiclient.discovery import build
 from httplib2 import Http
@@ -37,6 +37,7 @@ def form():
 
         title = request.form.get('Title')
         timeEst = int(request.form.get('est'))
+        global DedLine
         DedLine = request.form.get('dead')
 
         setUp()
@@ -116,7 +117,7 @@ def getCalendarEvents(deadLine):
     now = nowString[0:26] + nowString[len(nowString) - 1]
     print(now)
 
-    dueDateFormatted = dueDate + 'T00:00:00-05:00'
+    dueDateFormatted = str(dueDate) + 'T00:00:00-05:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
@@ -127,6 +128,16 @@ def getCalendarEvents(deadLine):
         print('No upcoming events found.')
 
     return events
+
+@app.route('/allEvents/', methods=['GET','POST'])
+def getDisplayEvents():
+    events= getCalendarEvents(DedLine)
+    eventsJSON = jsonify(events)
+    eventsJSON.status_code = 200
+    print(eventsJSON)
+    return eventsJSON
+
+
 
 
 def findAvailableTimes(duration, deadLine):

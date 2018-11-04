@@ -14,6 +14,9 @@ import datetime
 import random
 import math
 import pytz
+from pytz import timezone
+import time
+from tzlocal import get_localzone
 
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
@@ -28,9 +31,9 @@ service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
-    print("test")
+    # print("test")
     render_template('index.html')
-    print("test")
+    # print("test")
     redirect("/form")
     render_template('index.html')
     if request.method == 'POST': #this block is only entered when the form is submitted
@@ -100,24 +103,33 @@ def getCalendarEvents(deadLine):
     service = build('calendar', 'v3', http=creds.authorize(Http()))
     dueDate = deadLine
 
-    # Changes 'now' from UTC time to Central Time and formats it correctly
-    d = datetime.datetime.utcnow()
-    d = pytz.UTC.localize(d)
-    pst = pytz.timezone('America/Chicago')
 
-    nowUnformat = d.astimezone(pst)
+    chi = timezone('America/Chicago')
+    fmt = '%Y-%m-%dT%H:%M:%S%z'
+
+    # Retrieves the current time in UTC time, converts it to Chicago time,
+    # and formats it
+    utcDt = datetime.datetime.utcnow()
+    localDt = utcDt.astimezone(chi)
+    localDt.strftime(fmt)
+
+    # Offsets the time from UTC to Chicago
+    offset = localDt - datetime.timedelta(hours = 5)
+    offset.strftime(fmt)
+
+    # Normalizes it to change the offset depending on DST
+    now = chi.normalize(offset)
 
     # Used later in the algorithm
-    nowDay = nowUnformat.day
-    nowHour = nowUnformat.hour
-    nowMinute = nowUnformat.minute
+    nowDay = now.day
+    nowHour = now.hour
+    nowMinute = now.minute
 
-    nowString = nowUnformat.isoformat() + 'Z'
+    # Formats and adds necessary colon
+    now = now.strftime(fmt)
+    now = now[:22] + ':' + now[22:]
 
-    now = nowString[0:26] + nowString[len(nowString) - 1]
-    print(now)
-
-    dueDateFormatted = str(dueDate) + 'T00:00:00-05:00'
+    dueDateFormatted = str(dueDate) + 'T00:00:00-06:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
@@ -137,6 +149,8 @@ def getDisplayEvents():
     print(eventsJSON)
     return eventsJSON
 
+
+# def inDaylightSavings(Datetime dt):
 
 
 
@@ -159,57 +173,72 @@ def findAvailableTimes(duration, deadLine):
     events = getCalendarEvents(deadLine)
 
     for i in range(len(events) - 1):
-        e1 = events[i]
-        e2 = events[i + 1]
+        event1 = events[i]
+        event2 = events[i + 1]
 
-        e1DT = e1['end'].get('dateTime')
-        e2DT = e2['start'].get('dateTime')
+        fmt = '%Y-%m-%dT%H:%M:%S%z'
 
-        e1Year = int(e1DT[0:4])
-        e2Year = int(e2DT[0:4])
+        e1str = event1['end'].get('dateTime')
+        e2str = event2['start'].get('dateTime')
 
-        e1Month = int(e1DT[5:7])
-        e2Month = int(e2DT[5:7])
+        e1str = e1str[:22] + e1str[23:]
+        e2str = e2str[:22] + e2str[23:]
 
-        e1Day = int(e1DT[8:10])
-        e2Day = int(e2DT[8:10])
+        e1 = datetime.datetime.strptime(e1str, fmt)
+        e2 = datetime.datetime.strptime(e2str, fmt)
 
-        e1Hour = int(e1DT[11:13])
-        e2Hour = int(e2DT[11:13])
+        utc = timezone('UTC')
+        chi = timezone('America/Chicago')
 
-        e1Minute = int(e1DT[14:16])
-        e2Minute = int(e2DT[14:16])
+        e1 = e1.astimezone(utc)
+        e2 = e2.astimezone(utc)
 
-        e1Second = int(e1DT[17:19])
-        e2Second = int(e2DT[17:19])
+        e1.strftime(fmt)
+        e2.strftime(fmt)
 
-        sameDay = (e1Day == e2Day)
+        DSTMonths = [4, 5, 6, 7, 8, 9, 10]
+
+        if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
+            e1 = e1 + datetime.timedelta(hours = 0)
+            e2 = e2 + datetime.timedelta(hours = 0)
+        else:
+            e1 = e1 + datetime.timedelta(hours = 1)
+            e2 = e2 + datetime.timedelta(hours = 1)
+
+        e1.strftime(fmt)
+        e2.strftime(fmt)
+
+        e1 = chi.normalize(e1)
+        e2 = chi.normalize(e2)
+
+        print(e1)
+        print(e2)
+
+        sameDay = (e1.day == e2.day)
 
         # For events on the same day
-        timeDiff = (e2Hour * 60 + e2Minute) - (e1Hour * 60 + e1Minute)
+        timeDiff = (e2.hour * 60 + e2.minute) - (e1.hour * 60 + e1.minute)
         enoughTime = timeDiff >= (estTimeMin + 30)
 
         # For events on different days
-        timeDiff2 = (1440 - (e1Hour * 60) + e1Minute) + (e2Hour * 60 + e2Minute)
+        timeDiff2 = (1440 - (e1.hour * 60) + e1.minute) + (e2.hour * 60 + e2.minute)
         enoughTime2 = timeDiff2 >= (estTimeMin + 30)
 
         # Ensures that the algorithm doesn't schedule events in the past
-        currentTime = ((e1Hour == nowHour) and (e1Minute >= nowMinute)) or e1Hour > nowHour or (e1Day > nowDay)
+        currentTime = ((e1.hour == nowHour) and (e1.minute >= nowMinute)) or e1.hour > nowHour or (e1.day > nowDay)
 
         # Ensures that the entire scheduled event would be within the open working hours
-        timeWindow = (e1Hour * 60) + e1Minute + (estTimeMin + 30)
+        timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
-        openRangeH = range(openStartTime, openEndTime)
-        openRangeM = range(openStartTime * 60, openEndTime * 60)
+        openHours = range(openStartTime, openEndTime)
+        openMinutes = range(openStartTime * 60, openEndTime * 60)
 
-        if(currentTime and (sameDay and enoughTime and (e1Hour in openRangeH) and (timeWindow in openRangeM))
-                or (not sameDay and enoughTime2 and (e1Hour in openRangeH) and (timeWindow in openRangeM))):
+        if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))
+                or (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
 
-            startHour = e1Hour
+            startHour = e1.hour
 
-            print(startHour)
-
-            startMinute = e1Minute
+            startMinute = e1.minute
             if startMinute + estMins >= 45:
                 startHour += 1
                 startMinute = 60 - startMinute
@@ -217,23 +246,11 @@ def findAvailableTimes(duration, deadLine):
             else:
                 startMinute += 15
 
-            print(startMinute)
-
             endHour = startHour + estHours
-
-            print(endHour)
-
             endMinute = startMinute + estMins
 
-            print(endMinute)
-
-            eventStart = formatDT2(e1Year, e1Month, e1Day, startHour, startMinute, e1Second)
-
-            print(eventStart)
-
-            eventEnd = formatDT2(e1Year, e1Month, e1Day, endHour, endMinute, e1Second)
-
-            print(eventEnd)
+            eventStart = formatDT2(e1.year, e1.month, e1.day, startHour, startMinute, e1.second)
+            eventEnd = formatDT2(e1.year, e1.month, e1.day, endHour, endMinute, e1.second)
 
             timeSlot = [eventStart, eventEnd]
             availableTimes.append(timeSlot)
@@ -242,12 +259,13 @@ def findAvailableTimes(duration, deadLine):
     print(availableTimes)
     return availableTimes
 
+
 def getEventTime(duration, deadLine):
     availableTimes = findAvailableTimes(duration, deadLine)
 
     length = len(availableTimes)
     if (length != 0):
-        print (length)
+        # print (length)
         x = random.randrange(0, length)
 
         eventTime = availableTimes[x]
@@ -260,7 +278,7 @@ def createEvent(newTitle, duration, deadLine):
     global event
     eventTime = getEventTime(duration, deadLine)
 
-    print(eventTime)
+    # print(eventTime)
 
     if (eventTime != '''<h1>Oops</h1>'''):
         eventStart = eventTime[0]
@@ -269,17 +287,17 @@ def createEvent(newTitle, duration, deadLine):
             'summary': newTitle,
             'start': {
                 'dateTime': eventStart,
-                'timeZone': 'America/Los_Angeles',
+                'timeZone': 'America/Chicago',
             },
             'end': {
                 'dateTime': eventEnd,
-                'timeZone': 'America/Los_Angeles'
+                'timeZone': 'America/Chicago'
             },
         }
 
         print(event)
 
-        event = service.events().insert(calendarId='primary', body=event).execute()
+        event = service.events().insert(calendarId = 'primary', body = event).execute()
         print ('Event created: %s' % (event.get('summary')))
         print ('time: %s' % (eventStart))
         return redirect('https://calendar.google.com/calendar/', code=302)
@@ -294,33 +312,11 @@ def getScheduledEvent():
     return event
 
 def formatDT1(dt):
-    year = dt.year.__str__()
+    fmt = '%Y-%m-%dT%H:%M:%S%z'
+    dt = dt.strftime(fmt)
+    dt = dt[:22] + ':' + e2[22:]
 
-    month = dt.month.__str__()
-    if int(month) < 10:
-        month = '0' + month
-
-    day = dt.day.__str__()
-    if int(day) < 10:
-        day = '0' + day
-
-    hour = dt.hour.__str__()
-    if int(hour) < 10:
-        hour = '0' + hour
-
-    minute = dt.minute.__str__()
-    if int(minute) < 10:
-        minute = '0' + minute
-
-    second = dt.second.__str__()
-    if int(second) < 10:
-        second = '0' + second
-
-    formattedDt = (year + '-' + month + '-' + day +
-                    'T' + hour + ':' + minute + ':' +
-                    second + '-05:00')
-
-    return formattedDt
+    return dt
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
@@ -332,32 +328,35 @@ def credentials_to_dict(credentials):
 
 
 def formatDT2(year, month, day, hour, minute, second):
-    year = year.__str__()
+    year = str(year)
 
-    month = month.__str__()
+    month = int(month)
+    month = str(month)
     if int(month) < 10:
         month = '0' + month
 
-    day = day.__str__()
+    day = int(day)
+    day = str(day)
     if int(day) < 10:
         day = '0' + day
 
     hour = int(hour)
-    hour = hour.__str__()
+    hour = str(hour)
     if int(hour) < 10:
         hour = '0' + hour
 
     minute = int(minute)
-    minute = minute.__str__()
+    minute = str(minute)
     if int(minute) < 10:
         minute = '0' + minute
 
-    second = second.__str__()
+    second = int(second)
+    second = str(second)
     if int(second) < 10:
         second = '0' + second
 
-    formattedDt = (year + '-' + month + '-' + day +
+    dt = (year + '-' + month + '-' + day +
                     'T' + hour + ':' + minute + ':' +
                     second + '-05:00')
 
-    return formattedDt
+    return dt

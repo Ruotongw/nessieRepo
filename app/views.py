@@ -27,7 +27,8 @@ nowDay = 0
 nowHour = 0
 nowMinute = 0
 credentials = 0
-global Dedline
+Dedline = '2018-11-30T11:25:00-05:00'
+
 # @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form(credentials):
     print("test")
@@ -39,7 +40,7 @@ def form(credentials):
             title = request.form.get('Title')
             timeEst = int(request.form.get('est'))
             DedLine = request.form.get('dead')
-
+            print ('phase 1')
             # setUp()
             createEvent(title, timeEst, DedLine, credentials)
     return render_template('newIndex.html')
@@ -127,13 +128,13 @@ def getCalendarEvents(deadLine, credentials):
 
     if not events:
         print('No upcoming events found.')
-
+    print (events)
     return events
 
 @app.route('/allEvents/', methods=['GET','POST'])
 def getDisplayEvents():
-    events= getCalendarEvents(DedLine)
-    eventsJSON = jsonify(events)
+    # events= getCalendarEvents('2018-11-30T11:25:00-05:00')
+    eventsJSON = jsonify('2018-11-30T11:25:00-05:00')
     eventsJSON.status_code = 200
     print(eventsJSON)
     return eventsJSON
@@ -258,6 +259,9 @@ def getEventTime(duration, deadLine, credentials):
 
 event = {}
 def createEvent(newTitle, duration, deadLine, credentials):
+
+    print ('phase 2')
+
     global event
     eventTime = getEventTime(duration, deadLine)
 

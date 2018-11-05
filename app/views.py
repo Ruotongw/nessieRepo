@@ -177,11 +177,17 @@ def formatEvent(event1, event2):
     e1.strftime(fmt)
     e2.strftime(fmt)
 
-    e1, e2 = inDaylightSavings(e1, e2, fmt)
+    e1, e2 = inDaylightSavings(e1, e2)
+
+    e1.strftime(fmt)
+    e2.strftime(fmt)
+
+    e1 = chi.normalize(e1)
+    e2 = chi.normalize(e2)
 
     return e1, e2
 
-def inDaylightSavings(e1, e2, fmt):
+def inDaylightSavings(e1, e2):
     DSTMonths = [4, 5, 6, 7, 8, 9, 10]
 
     if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
@@ -190,12 +196,6 @@ def inDaylightSavings(e1, e2, fmt):
     else:
         e1 = e1 + datetime.timedelta(hours = 1)
         e2 = e2 + datetime.timedelta(hours = 1)
-
-    e1.strftime(fmt)
-    e2.strftime(fmt)
-
-    e1 = chi.normalize(e1)
-    e2 = chi.normalize(e2)
 
     return e1, e2
 

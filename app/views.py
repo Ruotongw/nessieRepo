@@ -110,7 +110,8 @@ def getCalendarEvents(deadLine):
     # Retrieves the current time in UTC time, converts it to Chicago time,
     # and formats it
     utcDt = datetime.datetime.utcnow()
-    localDt = utcDt.astimezone(chi)
+    # localDt = utcDt.astimezone(chi)
+    localDt = utcDt.replace(tzinfo=chi)
     localDt.strftime(fmt)
 
     # Offsets the time from UTC to Chicago
@@ -171,8 +172,11 @@ def formatEvent(event1, event2):
     utc = timezone('UTC')
     chi = timezone('America/Chicago')
 
-    e1 = e1.astimezone(utc)
-    e2 = e2.astimezone(utc)
+    # e1 = e1.astimezone(utc)
+    # e2 = e2.astimezone(utc)
+
+    e1 = e1.replace(tzinfo=utc)
+    e2 = e2.replace(tzinfo=utc)
 
     e1.strftime(fmt)
     e2.strftime(fmt)

@@ -119,7 +119,8 @@ def getCalendarEvents(deadLine, credentials):
     # Retrieves the current time in UTC time, converts it to Chicago time,
     # and formats it
     utcDt = datetime.datetime.utcnow()
-    localDt = utcDt.astimezone(chi)
+    # localDt = utcDt.astimezone(chi)
+    localDt = utcDt.replace(tzinfo=chi)
     localDt.strftime(fmt)
 
     # Offsets the time from UTC to Chicago
@@ -160,70 +161,77 @@ def getDisplayEvents():
     redirect("/")
     return eventsJSON
 
+def openTimeWindow(openStartTime, openEndTime):
+    openStartTime = 6
+    openEndTime = 23
+    openHours = range(openStartTime, openEndTime)
+    openMinutes = range(openStartTime * 60, openEndTime * 60)
+    return openHours, openMinutes
 
-# def inDaylightSavings(Datetime dt):
+def formatEvent(event1, event2):
+    fmt = '%Y-%m-%dT%H:%M:%S%z'
 
+    e1str = event1['end'].get('dateTime')
+    e2str = event2['start'].get('dateTime')
 
+    e1str = e1str[:22] + e1str[23:]
+    e2str = e2str[:22] + e2str[23:]
 
-def findAvailableTimes(duration, deadLine, credentials):
+    e1 = datetime.datetime.strptime(e1str, fmt)
+    e2 = datetime.datetime.strptime(e2str, fmt)
+
+    utc = timezone('UTC')
+    chi = timezone('America/Chicago')
+
+    # e1 = e1.astimezone(utc)
+    # e2 = e2.astimezone(utc)
+
+    e1 = e1.replace(tzinfo=utc)
+    e2 = e2.replace(tzinfo=utc)
+
+    e1.strftime(fmt)
+    e2.strftime(fmt)
+
+    e1, e2 = inDaylightSavings(e1, e2)
+
+    e1.strftime(fmt)
+    e2.strftime(fmt)
+
+    e1 = chi.normalize(e1)
+    e2 = chi.normalize(e2)
+
+    return e1, e2
+
+def inDaylightSavings(e1, e2):
+    DSTMonths = [4, 5, 6, 7, 8, 9, 10]
+
+    if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
+        e1 = e1 + datetime.timedelta(hours = 0)
+        e2 = e2 + datetime.timedelta(hours = 0)
+    else:
+        e1 = e1 + datetime.timedelta(hours = 1)
+        e2 = e2 + datetime.timedelta(hours = 1)
+
+    return e1, e2
+
+def findAvailableTimes(duration, deadLine):
     global nowDay
     global nowHour
     global nowMinute
 
     estTimeMin = duration * 60
-
     estMins = estTimeMin % 60
     estHours = (estTimeMin - estMins) / 60
 
-    # Eventually these values will be taken as user input
-    openStartTime = 6
-    openEndTime = 23
-
     availableTimes = []
 
-    events = getCalendarEvents(deadLine, credentials)
+    events = getCalendarEvents(deadLine)
 
     for i in range(len(events) - 1):
         event1 = events[i]
         event2 = events[i + 1]
 
-        fmt = '%Y-%m-%dT%H:%M:%S%z'
-
-        e1str = event1['end'].get('dateTime')
-        e2str = event2['start'].get('dateTime')
-
-        e1str = e1str[:22] + e1str[23:]
-        e2str = e2str[:22] + e2str[23:]
-
-        e1 = datetime.datetime.strptime(e1str, fmt)
-        e2 = datetime.datetime.strptime(e2str, fmt)
-
-        utc = timezone('UTC')
-        chi = timezone('America/Chicago')
-
-        e1 = e1.astimezone(utc)
-        e2 = e2.astimezone(utc)
-
-        e1.strftime(fmt)
-        e2.strftime(fmt)
-
-        DSTMonths = [4, 5, 6, 7, 8, 9, 10]
-
-        if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
-            e1 = e1 + datetime.timedelta(hours = 0)
-            e2 = e2 + datetime.timedelta(hours = 0)
-        else:
-            e1 = e1 + datetime.timedelta(hours = 1)
-            e2 = e2 + datetime.timedelta(hours = 1)
-
-        e1.strftime(fmt)
-        e2.strftime(fmt)
-
-        e1 = chi.normalize(e1)
-        e2 = chi.normalize(e2)
-
-        print(e1)
-        print(e2)
+        e1, e2 = formatEvent(event1, event2)
 
         sameDay = (e1.day == e2.day)
 
@@ -241,8 +249,9 @@ def findAvailableTimes(duration, deadLine, credentials):
         # Ensures that the entire scheduled event would be within the open working hours
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
-        openHours = range(openStartTime, openEndTime)
-        openMinutes = range(openStartTime * 60, openEndTime * 60)
+        # openHours = range(openStartTime, openEndTime)
+        # openMinutes = range(openStartTime * 60, openEndTime * 60)
+        openHours, openMinutes = openTimeWindow(6,23)
 
         if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))
                 or (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):

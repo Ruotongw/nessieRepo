@@ -75,7 +75,7 @@
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 				<div class="form-container">
 					<strong>Assignment</strong>
-					   <form id="addEventForm" action="/" method="POST">
+					   <form id="addEventForm" method="POST">
 			               Assignment Title: <input id="eventName" type="text" name="Title" value=""><br>
 			               Estimated Time: <input id="eventDuration" type="number" min="0" name="est" ><br>
 			               Deadline: <input id="dueDate" type="date" name="dead" value=""><br>
@@ -121,7 +121,9 @@
 
     <script>
     function signInCallback(authResult) {
+      console.log('test from callBack')
       if (authResult['code']) {
+        console.log("we are in")
 
         // Hide the sign-in button now that the user is authorized, for example:
         $('#signinButton').attr('style', 'display: none');
@@ -137,6 +139,7 @@
           },
           contentType: 'application/octet-stream; charset=utf-8',
           success: function(result) {
+            console.log("down the hole we go")
             // Handle or verify the server response.
           },
           processData: false,

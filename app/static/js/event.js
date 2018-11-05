@@ -83,6 +83,8 @@ function allDay() {
 // Updating the clicked event
 //
 function updateEvent(e) {
+	console.log('got into updateEvent');
+
 	e.preventDefault();
 
 	$("#error").text("");
@@ -116,7 +118,7 @@ function updateEvent(e) {
 			$("#status").text(data["result"]);
 			$("#justForShowEvent").remove();
 			$("#addEvent").hide();
-			refreshAllEvents();
+			// refreshAllEvents();
 		});
 	}
 }
@@ -126,8 +128,10 @@ function updateEvent(e) {
 //
 function event_rectangle_clicked(event) {
 	event.stopPropagation();
-	closeEveBox(event);
+	console.log('stopPropogation passed');
 
+	closeEveBox(event);
+	console.log('got into event_rectangle_clicked');
 	// console.log(event);
 	$(".viewEveBoxName").text(event.target.innerHTML);
 	var event_id = event.target.id;
@@ -181,7 +185,7 @@ function deleteEve(event) {
 	$.getJSON("deleteEvent/", {eventId: event_id}, function(data) {
 		$("#status").text(data["result"]);
 		closeEveBox(event);
-		refreshAllEvents();
+		// refreshAllEvents();
 	});
 }
 
@@ -222,52 +226,53 @@ function editEve(event) {
 			$("#addEvent").show().css({position: "absolute", top: (event.pageY - 235), left: (event.pageX - 110)});
 		}
 	});
-}
+// }
 
 //
 // Refresh all events
 //
-function refreshAllEvents() {
-
-	$(".event-rectangles").remove();
-
-	$.get("allEvents/", function(data) {
-		console.log(data)
-		// var event_id_end_date = data.split(" ");
-		var event_list = [];
-		for (var i = 0; i < data.length; i++) {
-			event_list.push({event_id: data[i].summary, end_time: data[i].end.dateTime, start_time:data[i].start.dateTime});
-		}
-
-		console.log(event_list)
-
-		for (var i = 0; i < event_list.length; i++) {
-			var eventStartDate = event_list[i].start_time.substring(0, 10);
-			// console.log(eventStartDate);
-			var eventEndDate = event_list[i].end_time.substr(0, 10);
-			var eventId = event_list[i].event_id;
-
-			if (eventStartDate == eventEndDate) {
-				eventDivId = parseInt(eventStartDate.substr(8, 2)) + month_names[month_number.indexOf(eventStartDate.substr(5, 2))];
-				console.log(eventDivId);
-				$("#" + eventDivId).append("<div onclick='event_rectangle_clicked(event);' class='event-rectangles' id='" + eventId +"'> " + eventId + "</div>");
-			} else {
-				var Date1 = eventStartDate;
-				var Date2 = eventEndDate;
-				Date1 = new Date(Date1.replace(/-/g,'/'));
-				Date2 = new Date(Date2.replace(/-/g,'/'));
-				var timeDiff = Math.abs(Date2.getTime() - Date1.getTime());
-				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-				// console.log(diffDays);
-
-				for (var j = 0; j <= diffDays; j++) {
-					eventDivId = parseInt(eventStartDate.substr(8, 2)) + j + month_names[month_number.indexOf(eventStartDate.substr(5, 2))];
-					// console.log(eventDivId);
-					$("#" + eventDivId).append("<div onclick='event_rectangle_clicked(event);' class='event-rectangles joint-event' id='" + eventId +"'>Event " + (i + 1) + "</div>");
-				}
-			}
-		}
-	});
+// function refreshAllEvents() {
+//
+// 	$(".event-rectangles").remove();
+//
+// 	$.get("allEvents/", function(data) {
+// 		console.log('test from js')
+// 		console.log(data)
+// 		// var event_id_end_date = data.split(" ");
+// 		var event_list = [];
+// 		for (var i = 0; i < data.length; i++) {
+// 			event_list.push({event_id: data[i].summary, end_time: data[i].end.dateTime, start_time:data[i].start.dateTime});
+// 		}
+//
+// 		console.log(event_list)
+//
+// 		for (var i = 0; i < event_list.length; i++) {
+// 			var eventStartDate = event_list[i].start_time.substring(0, 10);
+// 			// console.log(eventStartDate);
+// 			var eventEndDate = event_list[i].end_time.substr(0, 10);
+// 			var eventId = event_list[i].event_id;
+//
+// 			if (eventStartDate == eventEndDate) {
+// 				eventDivId = parseInt(eventStartDate.substr(8, 2)) + month_names[month_number.indexOf(eventStartDate.substr(5, 2))];
+// 				console.log(eventDivId);
+// 				$("#" + eventDivId).append("<div onclick='event_rectangle_clicked(event);' class='event-rectangles' id='" + eventId +"'> " + eventId + "</div>");
+// 			} else {
+// 				var Date1 = eventStartDate;
+// 				var Date2 = eventEndDate;
+// 				Date1 = new Date(Date1.replace(/-/g,'/'));
+// 				Date2 = new Date(Date2.replace(/-/g,'/'));
+// 				var timeDiff = Math.abs(Date2.getTime() - Date1.getTime());
+// 				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+// 				// console.log(diffDays);
+//
+// 				for (var j = 0; j <= diffDays; j++) {
+// 					eventDivId = parseInt(eventStartDate.substr(8, 2)) + j + month_names[month_number.indexOf(eventStartDate.substr(5, 2))];
+// 					// console.log(eventDivId);
+// 					$("#" + eventDivId).append("<div onclick='event_rectangle_clicked(event);' class='event-rectangles joint-event' id='" + eventId +"'>Event " + (i + 1) + "</div>");
+// 				}
+// 			}
+// 		}
+// 	});
 
 	// $.get("allEvents/", function(data) {
 	// 	console.log(data)

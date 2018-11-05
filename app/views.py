@@ -32,27 +32,13 @@ nowMinute = 0
 credentials = 0
 Dedline = '2018-11-30T11:25:00-05:00'
 
-# @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
-def form(credentials):
-    print("test")
-    # redirect("/form")
-    # render_template('index.html')
-    if request.method == 'POST': #this block is only entered when the form is submitted
-        if not request.headers.get('X-Requested-With'):
-
-            title = request.form.get('Title')
-            timeEst = int(request.form.get('est'))
-            DedLine = request.form.get('dead')
-            print ('phase 1')
-            # setUp()
-            createEvent(title, timeEst, DedLine, credentials)
-    return render_template('newIndex.html')
-
 @app.route('/', methods=['GET','POST'])
 def main():
 
 
     if request.method == "POST":
+        print ("main data = ")
+        print (request.data)
         if request.headers.get('X-Requested-With'):
             auth_code = request.data
             print (auth_code)
@@ -81,7 +67,28 @@ def main():
 
             # redirect(url_for('form'))
             return form(credentials)
+
     return render_template('newIndex.html')
+
+@app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
+def form(credentials):
+    print("we are in the form")
+    # redirect("/form")
+    # render_template('index.html')
+    if request.method == 'POST': #this block is only entered when the form is submitted
+        if not request.headers.get('X-Requested-With'):
+
+            title = request.form.get('Title')
+            timeEst = int(request.form.get('est'))
+            DedLine = request.form.get('dead')
+            print ('phase 1')
+            # setUp()
+            createEvent(title, timeEst, DedLine, credentials)
+        else:
+            print ("else case")
+            # render_template('newIndex.html')
+    return render_template('newIndex.html')
+
 
 # def setUp():
 
@@ -145,10 +152,12 @@ def getCalendarEvents(deadLine, credentials):
 
 @app.route('/allEvents/', methods=['GET','POST'])
 def getDisplayEvents():
+    print ("SOS")
     # events= getCalendarEvents('2018-11-30T11:25:00-05:00')
     eventsJSON = jsonify('2018-11-30T11:25:00-05:00')
     eventsJSON.status_code = 200
     print(eventsJSON)
+    redirect("/")
     return eventsJSON
 
 

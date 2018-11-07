@@ -20,6 +20,7 @@
 
 		<div id="right-area">
 			<!-- <i class="fa fa-arrow-left"></i> -->
+			<button id="signinButton">Sign in with Google</button>
 			<i class="fa fa-arrow-left" onclick="prevMonth();"></i>
 			<span class="month"></span> <span class="year"></span>
 			<i class="fa fa-arrow-right" onclick="nextMonth();"></i>
@@ -30,6 +31,7 @@
 					<button id="add-event" onclick="td_click(event)">Add Event</button>
 					<button id="pReferences" onclick="myPreferences()">Preferences</button>
 
+
 			</div>
 			<div class="container"></div>
 
@@ -39,12 +41,12 @@
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 				<div class="form-container">
 					<strong>Assignment</strong>
-					   <form id="addEventForm" action="/form" method="POST">
+					   <div css="text-align:center"><form id="addEventForm" action="/form" method="POST">
 			               Assignment Title: <input id="eventName" type="text" name="Title" value=""><br>
 			               Estimated Time: <input id="eventDuration" type="number" min="0" name="est" ><br>
 			               Deadline: <input id="dueDate" type="date" name="dead" value=""><br>
 			               <input type="submit" id="eventSaveButton" value="Create"><br>
-			           </form>
+			           </form></div>
 				</div>
 			</div>
 

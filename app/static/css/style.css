@@ -19,7 +19,7 @@ body {
 #signinButton{
 	color: #424D76;
 	height: 50px;
-	text-align: right;
+	text-align: left;
 
 }
 #menu-bar {
@@ -81,6 +81,14 @@ body {
 	padding-right: 10px;
 } */
 
+#pReferences{
+	background-color: #424D76;
+	color: white;
+	border: none;
+	padding: 10px 15px 10px 15px;
+	margin-right: 10px;
+}
+
 table {
 	border: none;
 	border-bottom: 1px solid #F8F9F7;
@@ -125,7 +133,11 @@ td {
 	display: none;
 	z-index: 100;
 	background-color: white;
-	padding-bottom: 10px;
+	left: 50%;
+	top: 50%;
+	margin-left: -25%;
+	position: absolute;
+	margin-top: -25%;
 }
 
 .eveBoxClose {
@@ -333,7 +345,7 @@ textarea {
 	display: none;
 }
 
-#authorize-button {
+#signinButton {
 	background-color: #424D76;
 	color: white;
 	border: none;
@@ -395,7 +407,7 @@ textarea {
 		height: 30px;
 	}
 
-	#authorize-button {
+	#signinButton {
 		position: fixed;
 		left: 50px;
 	}

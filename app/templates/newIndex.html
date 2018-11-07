@@ -1,6 +1,12 @@
 <!DOCTYPE HTML>
-<html lang="en-US">
-	<head>
+<html itemscope itemtype="http://schema.org/Article">
+<head>
+  <!-- BEGIN Pre-requisites -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+  </script>
+
 		<!-- <meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
@@ -12,9 +18,28 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/style.css') }}">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='./favicon.png') }}">
-	</head>
+    <script>
+      function start() {
+        gapi.load('auth2', function() {
+          auth2 = gapi.auth2.init({
+            client_id: '333626695075-ldu172t8tcfaek30cv9ln66h6jpp0khj.apps.googleusercontent.com',
+            // Scopes to request in addition to 'profile' and 'email'
+            scope: 'https://www.googleapis.com/auth/calendar'
+          });
+        });
+      }
+    </script>
+  </head>
+
 	<body>
 
+    <button id="signinButton">Sign in with Google</button>
+    <script>
+      $('#signinButton').click(function() {
+        // signInCallback defined in step 6.
+        auth2.grantOfflineAccess().then(signInCallback);
+      });
+    </script>
 
 
 
@@ -50,7 +75,7 @@
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 				<div class="form-container">
 					<strong>Assignment</strong>
-					   <form id="addEventForm" action="/form" method="POST">
+					   <form id="addEventForm" method="POST">
 			               Assignment Title: <input id="eventName" type="text" name="Title" value=""><br>
 			               Estimated Time: <input id="eventDuration" type="number" min="0" name="est" ><br>
 			               Deadline: <input id="dueDate" type="date" name="dead" value=""><br>
@@ -63,27 +88,7 @@
 			<div id="preferences">
 				<span class="Preferences"></span>
 				<span class="eveBoxClose" onclick="closeEveBox(preferences);">x</span>
-				<div class="form-container">
-					<strong>Preferences</strong>
-					<form id="addpreferencesForm" onsubmit="updatePreferences();">
-						<input type="text" id="eventId" value="" hidden>
-						<br>
-						<label for="earliestWorkTime">Earliest time to start work:</label>
-						<input type="time" id="earliestWorkTime" name="earliestWorkTime" required>
-						<label for="latestWorkTime">Latest time to work until:</label>
-						<input type="time"  id="latestWorkTime" name ="latestWorkTime" required />
-						<!-- <label for="preferredStartTime">Preferred Start Times</label>
-						<input type="time" id="preferredStartTime" name="preferredStartTime" required>
-						<label for="preferredEndTime">Preferred End Times</label>
-						<input type="time" id="preferredEndTime" name="preferredEndTime" required> -->
-						<br>
-						<div id="error"></div>
-						<br>
-						<button id="eventCancelButton" onclick="closeEveBox(preferences);">Cancel</button>
-						<input type="submit" id="eventUpdateButton" value= "Update">
-						<br><br>
-					</form>
-				</div>
+
 			</div>
 
 
@@ -110,13 +115,41 @@
 		</div>
 
 		<!-- jQuery, Weather script, events script, calender creation, clock, google calender sync, google calender check login status on load -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script src="{{ url_for('static', filename='./js/event.js') }}" ></script>
 		<script src="{{ url_for('static', filename='./js/calender.js') }}"></script>
 		<script src="{{ url_for('static', filename='./js/google_calender.js') }}"></script>
-		<script async defer src="https://apis.google.com/js/api.js"
-			onload="this.onload=function(){};handleClientLoad()"
-			onreadystatechange="if (this.readyState === 'complete') this.onload()">
-		</script>
+
+    <script>
+    function signInCallback(authResult) {
+      console.log('test from callBack')
+      if (authResult['code']) {
+        console.log("we are in")
+
+        // Hide the sign-in button now that the user is authorized, for example:
+        $('#signinButton').attr('style', 'display: none');
+
+        // Send the code to the server
+        $.ajax({
+          type: 'POST',
+          url: '/',
+          // Always include an `X-Requested-With` header in every AJAX request,
+          // to protect against CSRF attacks.
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          contentType: 'application/octet-stream; charset=utf-8',
+          success: function(result) {
+            console.log("down the hole we go")
+            // Handle or verify the server response.
+          },
+          processData: false,
+          data: authResult['code']
+        });
+      } else {
+        // There was an error.
+      }
+    }
+    </script>
+
 	</body>
 </html>

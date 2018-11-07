@@ -63,9 +63,9 @@ function calender(month, year) {
     $(".year").attr('id', year);
 }
 
-// 
+//
 // Display next month in Calender
-// 
+//
 function nextMonth() {
     if ($(".month").attr('id') != 11) {
         var nextMon = Number($(".month").attr('id')) + 1;
@@ -77,12 +77,12 @@ function nextMonth() {
     // console.log(nextmon);
     calender(nextMon, year);
     // calculateWeather();
-    refreshAllEvents();
+    // refreshAllEvents();
 }
 
-// 
+//
 // Display previous month in Calender
-// 
+//
 function prevMonth() {
     if ($(".month").attr('id') != 0) {
         var prevMon = Number($(".month").attr('id')) - 1;
@@ -94,26 +94,26 @@ function prevMonth() {
     // console.log(prevmon);
     calender(prevMon, year);
     calculateWeather();
-    refreshAllEvents();
+    // refreshAllEvents();
 }
 
-// 
+//
 // Load calender and weather
-// 
+//
 if (window.addEventListener) {
     calender(currentMonth, currentYear);
     // calculateWeather();
-    refreshAllEvents();
+    // refreshAllEvents();
 } else if (window.attachEvent) {
     calender(currentMonth, currentYear);
     // calculateWeather();
-    refreshAllEvents();
+    // refreshAllEvents();
 }
 
-// 
+//
 // Whenever window is resized, page is reloaded so as to change full day names to short names to ensure responsiveness.
 // Eg - Wednesday -> Wed
-// 
+//
 $(window).resize(function() {
     if ($(window).width() < 750) {
         $(".table-header").html("<th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th>");

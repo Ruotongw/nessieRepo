@@ -22,85 +22,94 @@ from tzlocal import get_localzone
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 
-store = file.Storage('app/static/token.json')
-creds = store.get()
-service = build('calendar', 'v3', http=creds.authorize(Http()))
+# store = file.Storage('app/static/token.json')
+# creds = store.get()
+# service = build('calendar', 'v3', http=creds.authorize(Http()))
 
-
-
-
-@app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
-def form():
-    # print("test")
-    render_template('index.html')
-    # print("test")
-    redirect("/form")
-    render_template('index.html')
-    if request.method == 'POST': #this block is only entered when the form is submitted
-        print("request.data")
-        title = request.form.get('Title')
-        timeEst = int(request.form.get('est'))
-        global DedLine
-        DedLine = request.form.get('dead')
-
-        setUp()
-        createEvent(title, timeEst, DedLine)
-    return render_template('index.html')
-    return render_template('index.html')
+nowDay = 0
+nowHour = 0
+nowMinute = 0
+credentials = 0
+Dedline = '2018-11-30T11:25:00-05:00'
 
 @app.route('/', methods=['GET','POST'])
 def main():
 
 
     if request.method == "POST":
-        auth_code = request.data
-        print (auth_code)
+        print ("main data = ")
+        print (request.data)
+        if request.headers.get('X-Requested-With'):
+            auth_code = request.data
+            print (auth_code)
+            if not request.headers.get('X-Requested-With'):
+                print ('403')
+
+            # Set path to the Web application client_secret_*.json file you downloaded from the
+            # Google API Console: https://console.developers.google.com/apis/credentials
+            CLIENT_SECRET_FILE = 'app/static/client_secret.json'
+
+            # Exchange auth code for access token, refresh token, and ID token
+            credentials = client.credentials_from_clientsecrets_and_code(
+                CLIENT_SECRET_FILE,
+                ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
+                auth_code)
+
+            # Call Google API
+            http_auth = credentials.authorize(httplib2.Http())
+            service = discovery.build('calendar', 'v3', http=http_auth)
+
+            # Get profile info from ID token
+            # userid = credentials.id_token['sub']
+            # email = credentials.id_token['email']
+            # form(credentials)
+            now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+
+            # redirect(url_for('form'))
+            return form(credentials)
+
+    return render_template('newIndex.html')
+
+@app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
+def form(credentials):
+    print("we are in the form")
+    # redirect("/form")
+    # render_template('index.html')
+    if request.method == 'POST': #this block is only entered when the form is submitted
         if not request.headers.get('X-Requested-With'):
-            print ('403')
 
-        # Set path to the Web application client_secret_*.json file you downloaded from the
-        # Google API Console: https://console.developers.google.com/apis/credentials
-        CLIENT_SECRET_FILE = 'app/static/client_secret.json'
+            title = request.form.get('Title')
+            timeEst = int(request.form.get('est'))
+            DedLine = request.form.get('dead')
+            print ('phase 1')
+            # setUp()
+            createEvent(title, timeEst, DedLine, credentials)
+        else:
+            print ("else case")
+            # render_template('newIndex.html')
+    return render_template('newIndex.html')
 
-        # Exchange auth code for access token, refresh token, and ID token
-        credentials = client.credentials_from_clientsecrets_and_code(
-            CLIENT_SECRET_FILE,
-            ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
-            auth_code)
 
-        # Call Google API
-        http_auth = credentials.authorize(httplib2.Http())
-        service = discovery.build('calendar', 'v3', http=http_auth)
+# def setUp():
 
-        # Get profile info from ID token
-        # userid = credentials.id_token['sub']
-        # email = credentials.id_token['email']
+    # store = file.Storage('app/static/token.json')
+    # creds = store.get()
+    #
+    # if not credentials or credentials.invalid:
+    #     flow = client.flow_from_clientsecrets('app/static/credentials.json', SCOPES)
+    #     credentials = tools.run_flow(flow, store)
 
-        now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-        return redirect(url_for('form'))
-    return render_template('base.html')
 
-def setUp():
 
-    store = file.Storage('app/static/token.json')
-    creds = store.get()
-
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('app/static/credentials.json', SCOPES)
-        creds = tools.run_flow(flow, store)
-
-nowDay = 0
-nowHour = 0
-nowMinute = 0
-
-def getCalendarEvents(deadLine):
+def getCalendarEvents(deadLine, credentials):
     global nowDay
     global nowHour
     global nowMinute
 
-    store = file.Storage('app/static/token.json')
-    creds = store.get()
-    service = build('calendar', 'v3', http=creds.authorize(Http()))
+    # store = file.Storage('app/static/token.json')
+    # creds = store.get()
+    http_auth = credentials.authorize(httplib2.Http())
+    service = discovery.build('calendar', 'v3', http=http_auth)
     dueDate = deadLine
 
 
@@ -110,7 +119,8 @@ def getCalendarEvents(deadLine):
     # Retrieves the current time in UTC time, converts it to Chicago time,
     # and formats it
     utcDt = datetime.datetime.utcnow()
-    localDt = utcDt.astimezone(chi)
+    # localDt = utcDt.astimezone(chi)
+    localDt = utcDt.replace(tzinfo=chi)
     localDt.strftime(fmt)
 
     # Offsets the time from UTC to Chicago
@@ -138,15 +148,17 @@ def getCalendarEvents(deadLine):
 
     if not events:
         print('No upcoming events found.')
-
+    print (events)
     return events
 
 @app.route('/allEvents/', methods=['GET','POST'])
 def getDisplayEvents():
-    events= getCalendarEvents(DedLine)
-    eventsJSON = jsonify(events)
+    print ("SOS")
+    # events= getCalendarEvents('2018-11-30T11:25:00-05:00')
+    eventsJSON = jsonify('2018-11-30T11:25:00-05:00')
     eventsJSON.status_code = 200
     print(eventsJSON)
+    redirect("/")
     return eventsJSON
 
 def openTimeWindow(openStartTime, openEndTime):
@@ -171,8 +183,11 @@ def formatEvent(event1, event2):
     utc = timezone('UTC')
     chi = timezone('America/Chicago')
 
-    e1 = e1.astimezone(utc)
-    e2 = e2.astimezone(utc)
+    # e1 = e1.astimezone(utc)
+    # e2 = e2.astimezone(utc)
+
+    e1 = e1.replace(tzinfo=utc)
+    e2 = e2.replace(tzinfo=utc)
 
     e1.strftime(fmt)
     e2.strftime(fmt)
@@ -264,9 +279,8 @@ def findAvailableTimes(duration, deadLine):
     print(availableTimes)
     return availableTimes
 
-
-def getEventTime(duration, deadLine):
-    availableTimes = findAvailableTimes(duration, deadLine)
+def getEventTime(duration, deadLine, credentials):
+    availableTimes = findAvailableTimes(duration, deadLine, credentials)
 
     length = len(availableTimes)
     if (length != 0):
@@ -279,7 +293,10 @@ def getEventTime(duration, deadLine):
         return  '''<h1>Oops</h1>'''
 
 event = {}
-def createEvent(newTitle, duration, deadLine):
+def createEvent(newTitle, duration, deadLine, credentials):
+
+    print ('phase 2')
+
     global event
     eventTime = getEventTime(duration, deadLine)
 

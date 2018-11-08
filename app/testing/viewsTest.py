@@ -26,15 +26,11 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 # creds = store.get()
 # service = build('calendar', 'v3', http=creds.authorize(Http()))
 
-nowDay = 0
-nowHour = 0
-nowMinute = 0
 credentials = 0
-Dedline = '2018-11-30T11:25:00-05:00'
+# Dedline = '2018-11-30T11:25:00-05:00'
 
 @app.route('/', methods=['GET','POST'])
 def main():
-
 
     if request.method == "POST":
         print ("main data = ")
@@ -102,17 +98,27 @@ def form(credentials):
 
 
 def getCalendarEvents(deadLine, credentials):
-    global nowDay
-    global nowHour
-    global nowMinute
-
     # store = file.Storage('app/static/token.json')
     # creds = store.get()
     http_auth = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http_auth)
     dueDate = deadLine
 
+    now = currentTime()
 
+    dueDateFormatted = str(dueDate) + 'T00:00:00-06:00'
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                    timeMax = dueDateFormatted, singleEvents=True,
+                                    orderBy = 'startTime').execute()
+
+    events = events_result.get('items', [])
+
+    if not events:
+        print('No upcoming events found.')
+    print (events)
+    return events
+
+def currentTime():
     chi = timezone('America/Chicago')
     fmt = '%Y-%m-%dT%H:%M:%S%z'
 
@@ -129,27 +135,17 @@ def getCalendarEvents(deadLine, credentials):
 
     # Normalizes it to change the offset depending on DST
     now = chi.normalize(offset)
-
-    # Used later in the algorithm
-    nowDay = now.day
-    nowHour = now.hour
-    nowMinute = now.minute
-
     # Formats and adds necessary colon
     now = now.strftime(fmt)
     now = now[:22] + ':' + now[22:]
+    return now
 
-    dueDateFormatted = str(dueDate) + 'T00:00:00-06:00'
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                    timeMax = dueDateFormatted, singleEvents=True,
-                                    orderBy = 'startTime').execute()
+def getNowDHM(currentTime):
+    nowDay = currentTime.day
+    nowHour = currentTime.hour
+    nowMinute = currentTime.minute
+    return nowDay, nowHour, nowMinute
 
-    events = events_result.get('items', [])
-
-    if not events:
-        print('No upcoming events found.')
-    print (events)
-    return events
 
 @app.route('/allEvents/', methods=['GET','POST'])
 def getDisplayEvents():
@@ -162,8 +158,6 @@ def getDisplayEvents():
     return eventsJSON
 
 def openTimeWindow(openStartTime, openEndTime):
-    openStartTime = 6
-    openEndTime = 23
     openHours = range(openStartTime, openEndTime)
     openMinutes = range(openStartTime * 60, openEndTime * 60)
     return openHours, openMinutes
@@ -214,18 +208,13 @@ def inDaylightSavings(e1, e2):
 
     return e1, e2
 
-def findAvailableTimes(duration, deadLine):
-    global nowDay
-    global nowHour
-    global nowMinute
+def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events):
 
     estTimeMin = duration * 60
     estMins = estTimeMin % 60
     estHours = (estTimeMin - estMins) / 60
 
     availableTimes = []
-
-    events = getCalendarEvents(deadLine)
 
     for i in range(len(events) - 1):
         event1 = events[i]
@@ -251,7 +240,7 @@ def findAvailableTimes(duration, deadLine):
 
         # openHours = range(openStartTime, openEndTime)
         # openMinutes = range(openStartTime * 60, openEndTime * 60)
-        openHours, openMinutes = openTimeWindow(6,23)
+        openHours, openMinutes = openTimeWindow(workStart,workEnd)
 
         if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))
                 or (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
@@ -280,7 +269,12 @@ def findAvailableTimes(duration, deadLine):
     return availableTimes
 
 def getEventTime(duration, deadLine, credentials):
-    availableTimes = findAvailableTimes(duration, deadLine, credentials)
+    nowDay, nowHour, nowMinute = getNowDHM(currentTime())
+    workStart = 6
+    workEnd = 23
+    events = getCalendarEvents(deadLine, credentials)
+
+    availableTimes = findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
     length = len(availableTimes)
     if (length != 0):

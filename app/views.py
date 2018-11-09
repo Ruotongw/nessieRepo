@@ -34,12 +34,11 @@ Dedline = '2018-11-30T11:25:00-05:00'
 
 @app.route('/', methods=['GET','POST'])
 def main():
-
-
     if request.method == "POST":
         print ("main data = ")
         print (request.data)
         if request.headers.get('X-Requested-With'):
+            print('----------------------')
             auth_code = request.data
             print (auth_code)
             if not request.headers.get('X-Requested-With'):
@@ -67,7 +66,6 @@ def main():
 
             # redirect(url_for('form'))
             return form(credentials)
-
     return render_template('index.html')
 
 @app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests

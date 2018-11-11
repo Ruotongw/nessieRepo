@@ -28,9 +28,12 @@ def main():
     'end': {'dateTime': '2018-11-08T16:30:00-05:00', 'timeZone': 'America/Chicago'}}
 
     event4 = {'start': {'dateTime': '2018-11-11T13:30:00-05:00', 'timeZone': 'America/Chicago'},
-    'end': {'dateTime': '2018-11-09T15:30:00-05:00', 'timeZone': 'America/Chicago'}}
+    'end': {'dateTime': '2018-11-11T15:30:00-05:00', 'timeZone': 'America/Chicago'}}
 
-    events = [event1, event2, event3, event4]
+    event5 = {'start': {'dateTime': '2018-11-11T22:00:00-05:00', 'timeZone': 'America/Chicago'},
+    'end': {'dateTime': '2018-11-11T23:30:00-05:00', 'timeZone': 'America/Chicago'}}
+
+    events = [event1, event2, event3, event4, event5]
 
     findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events)
 

@@ -162,6 +162,10 @@ def openTimeWindow(openStartTime, openEndTime):
     openMinutes = range(openStartTime * 60, openEndTime * 60)
     return openHours, openMinutes
 
+def getOpenStartTime():
+    openStartTime=6
+    return openStartTime
+
 def formatEvent(event1, event2):
     fmt = '%Y-%m-%dT%H:%M:%S%z'
 
@@ -208,6 +212,43 @@ def inDaylightSavings(e1, e2):
 
     return e1, e2
 
+def morningTimeSlot(event2, duration):
+    event2Min = (event2.hour * 60) + event2.minute
+    duration = duration * 60
+
+    startTime = event2Min - duration - 15
+    startMin = startTime % 60
+    startHour = (startTime - startMin) / 60
+
+    endTime = event2Min -15
+    endMin = endTime % 60
+    endHour = (endTime - endMin)/60
+
+    eventStart = formatDT2(e2.year, e2.month, e2.day, startHour, startMin, e2.second)
+    eventEnd = formatDT2(e2.year, e2.month, e2.day, endHour, endMin, e2.second)
+
+    timeSlot = [eventStart, eventEnd]
+    return timeSlot
+
+def generalTimeSlot(event1, duration):
+    event1Min = (event1.hour * 60) + event1.minute
+    duration = duration * 60
+
+    startTime = event1Min + 15
+    startMin = startTime % 60
+    startHour = (startTime - startMin) / 60
+
+    endTime = startTime + duration
+    endMin = endTime % 60
+    endHour = (endTime - endMin)/60
+
+    eventStart = formatDT2(e1.year, e1.month, e1.day, startHour, startMin, e1.second)
+    eventEnd = formatDT2(e1.year, e1.month, e1.day, endHour, endMin, e1.second)
+
+    timeSlot = [eventStart, eventEnd]
+    return timeSlot
+
+
 def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events):
 
     estTimeMin = duration * 60
@@ -223,6 +264,10 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
         e1, e2 = formatEvent(event1, event2)
 
         sameDay = (e1.day == e2.day)
+
+        #for time in morning before eventTime
+        morningTime = (e2.hour * 60 + e2.minute) - (workStart*60)
+        enoughMorningTime = morningTime >= estTimeMin + 30
 
         # For events on the same day
         timeDiff = (e2.hour * 60 + e2.minute) - (e1.hour * 60 + e1.minute)
@@ -244,27 +289,14 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
 
         if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))
                 or (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
-
-            startHour = e1.hour
-
-            startMinute = e1.minute
-            if startMinute + estMins >= 45:
-                startHour += 1
-                startMinute = 60 - startMinute
-                startMinute = abs(startMinute - 15)
-            else:
-                startMinute += 15
-
-            endHour = startHour + estHours
-            endMinute = startMinute + estMins
-
-            eventStart = formatDT2(e1.year, e1.month, e1.day, startHour, startMinute, e1.second)
-            eventEnd = formatDT2(e1.year, e1.month, e1.day, endHour, endMinute, e1.second)
-
-            timeSlot = [eventStart, eventEnd]
+            timeSlot = generalTimeSlot(e1, duration)
             availableTimes.append(timeSlot)
-            print (len(availableTimes))
 
+        else if(not sameDay and not enoughTime2 and (timeWindow not in openMinutes) and enoughMorningTime):
+            timeSlot = morningTimeSlot(e2, duration)
+            availableTimes.append(timeSlot)
+
+    # print (len(availableTimes))
     print(availableTimes)
     return availableTimes
 

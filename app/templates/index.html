@@ -11,46 +11,71 @@
 		<!-- Font Awesome served from CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/style.css') }}">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='./favicon.png') }}">
 	</head>
 	<body>
 
-		<div class="calendar calendar-lg">
-  <!-- calendar navbar structure -->
-
-		  <div class="calendar-container">
-		    <!-- calendar header structure -->
-
-		    <div class="calendar-body">
-		      <!-- calendar date with events -->
-		      <div class="calendar-date">
-		        <button class="date-item active">20</button>
-		        <div class="calendar-events">
-		          <a class="calendar-event bg-success text-light" href="#calendars">Spring Equinox</a>
-		        </div>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-
-
 		<div id="right-area">
 			<!-- <i class="fa fa-arrow-left"></i> -->
 			<button id="signinButton">Sign in with Google</button>
-			<i class="fa fa-arrow-left" onclick="prevMonth();"></i>
+			<!-- <i class="fa fa-arrow-left" onclick="prevMonth();"></i>
 			<span class="month"></span> <span class="year"></span>
-			<i class="fa fa-arrow-right" onclick="nextMonth();"></i>
+			<i class="fa fa-arrow-right" onclick="nextMonth();"></i> -->
 			<!-- <i class="fa fa-arrow-right"></i> -->
 			<div id="menu-bar">
 					<!-- <button id="authorize-button">Sign In</button> -->
 					<!-- <button id="add-event" onclick="td_click(event)">Add Event</button> -->
 					<button id="add-event" onclick="td_click(event)">Add Event</button>
 					<button id="pReferences" onclick="myPreferences()">Preferences</button>
-
-
 			</div>
-			<div class="container"></div>
+
+			<div class="container">
+				<div class="calendar calendar-lg">
+		  			<!-- calendar navbar structure -->
+		  		    <div class="calendar-nav navbar">
+					    <button class="btn btn-action btn-link btn-lg">
+					      <i class="icon icon-arrow-left" onclick="prevMonth();"></i>
+					    </button>
+
+					    <!-- <div class="navbar-primary">March 2017</div> -->
+					    <span class="month"></span> <span class="year"></span>
+
+					    <button class="btn btn-action btn-link btn-lg" >
+					      <i class="icon icon-arrow-right" onclick="nextMonth();"></i>
+					    </button>
+					</div>
+
+				  <div class="calendar-container">
+				    <!-- calendar header structure -->
+				    <div class="calendar-header">
+				      <div class="calendar-date">Sun</div>
+				      <div class="calendar-date">Mon</div>
+				      <div class="calendar-date">Tue</div>
+				      <div class="calendar-date">Wed</div>
+				      <div class="calendar-date">Thu</div>
+				      <div class="calendar-date">Fri</div>
+				      <div class="calendar-date">Sat</div>
+				    </div>
+
+				    <div class="calendar-body">
+				      <!-- calendar date with events -->
+				      <div class="calendar-date">
+				        <button class="date-item active">20</button>
+				        <div class="calendar-events">
+				          <a class="calendar-event bg-success text-light" href="#calendars">Spring Equinox</a>
+				        </div>
+				      </div>
+
+
+
+				    </div>
+
+				  </div>
+				</div> 
+			</div>
 
 			<!-- Box for adding and updating events -->
 			<div id="addEvent">
@@ -89,8 +114,6 @@
 					</form>
 				</div>
 			</div>
-
-
 
 			<!-- Box for viewing events -->
 			<div id="viewEvent">

@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+/*@import url('https://fonts.googleapis.com/css?family=Inconsolata');*/
 
 body {
 	margin: 30px;
-	font-family: 'Inconsolata', sans-serif;
+	/*font-family: 'Inconsolata', sans-serif;*/
 	font-weight: 900;
 	background-color: #98B9DB
 }

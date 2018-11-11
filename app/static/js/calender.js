@@ -6,6 +6,7 @@ var currentYear = current.getFullYear();
 function calender(month, year) {
     var padding = "";
 
+    // ***** Setting up calendar info ******//
     // Determining if Feb has 28 or 29 days
     febDays = ((currentYear % 100 !== 0) && (currentYear % 4 === 0) || (currentYear % 400 === 0)) ? 29 : 28;
 
@@ -19,6 +20,7 @@ function calender(month, year) {
     var firstDay = firstDate.getDay();
     var totalDays = numberOfDays[month];
 
+    // ***** Putting Event onto interface ******//
     // After getting the first day of the week for the month, padding the other days for that week with the previous months days, i.e., if the first day of the week is on a Thursday, then this fills in Sun - Wed with the last months dates, counting down from the last day on Wed, until Sunday.
     for (var i = 0; i < firstDay; i++) {
         padding += "<td class='preMonth'></td>";
@@ -46,17 +48,17 @@ function calender(month, year) {
 
     // Output the calender onto the site.  Also, putting in the month name and days of the week.
     var calenderTable = "<table>";
-    if ($(window).width() < 750) {
-        calenderTable += "<tr class='table-header'> <th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th> </tr>";
-    } else {
-        calenderTable += "<tr class='table-header'> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th> </tr>";
-    }
+    // if ($(window).width() < 750) {
+    //     calenderTable += "<tr class='table-header'> <th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th> </tr>";
+    // } else {
+    //     calenderTable += "<tr class='table-header'> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th> </tr>";
+    // }
     calenderTable += "<tr>";
     calenderTable += padding;
     calenderTable += generateCal;
     calenderTable += "</tr></table>";
 
-    $(".container").html(calenderTable);
+    $(".calendar-body").html(calenderTable);
     $(".month").text(monthNames[month]);
     $(".month").attr('id', month);
     $(".year").text(year);
@@ -93,31 +95,31 @@ function prevMonth() {
     }
     // console.log(prevmon);
     calender(prevMon, year);
-    calculateWeather();
+    // calculateWeather();
     // refreshAllEvents();
 }
 
 //
 // Load calender and weather
 //
-if (window.addEventListener) {
-    calender(currentMonth, currentYear);
-    // calculateWeather();
-    // refreshAllEvents();
-} else if (window.attachEvent) {
-    calender(currentMonth, currentYear);
-    // calculateWeather();
-    // refreshAllEvents();
-}
+// if (window.addEventListener) {
+//     calender(currentMonth, currentYear);
+//     // calculateWeather();
+//     // refreshAllEvents();
+// } else if (window.attachEvent) {
+//     calender(currentMonth, currentYear);
+//     // calculateWeather();
+//     // refreshAllEvents();
+// }
 
 //
 // Whenever window is resized, page is reloaded so as to change full day names to short names to ensure responsiveness.
 // Eg - Wednesday -> Wed
 //
-$(window).resize(function() {
-    if ($(window).width() < 750) {
-        $(".table-header").html("<th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th>");
-    } else {
-        $(".table-header").html("<th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>");
-    }
-});
+// $(window).resize(function() {
+//     if ($(window).width() < 750) {
+//         $(".table-header").html("<th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th>");
+//     } else {
+//         $(".table-header").html("<th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>");
+//     }
+// });

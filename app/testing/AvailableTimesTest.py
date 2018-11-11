@@ -10,7 +10,7 @@ import time
 
 def main():
     duration = 2
-    deadLine = '2018-11-09T00:00:00-05:00'
+    deadLine = '2018-11-10T00:00:00-05:00'
     nowDay = 7
     nowHour = 17
     nowMinute = 30
@@ -26,8 +26,14 @@ def main():
 
     event3 = {'start': {'dateTime': '2018-11-08T13:20:00-05:00', 'timeZone': 'America/Chicago'},
     'end': {'dateTime': '2018-11-08T16:30:00-05:00', 'timeZone': 'America/Chicago'}}
-    events = [event1, event2, event3]
 
+    event4 = {'start': {'dateTime': '2018-11-11T13:30:00-05:00', 'timeZone': 'America/Chicago'},
+    'end': {'dateTime': '2018-11-11T15:30:00-05:00', 'timeZone': 'America/Chicago'}}
+
+    event5 = {'start': {'dateTime': '2018-11-11T22:00:00-05:00', 'timeZone': 'America/Chicago'},
+    'end': {'dateTime': '2018-11-11T23:30:00-05:00', 'timeZone': 'America/Chicago'}}
+
+    events = [event1, event2, event3, event4, event5]
 
     findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
@@ -43,7 +49,13 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
         event1 = events[i]
         event2 = events[i + 1]
 
+        # print(event1['end'])
+        # print(event2['start'])
+
         e1, e2 = formatEvent(event1, event2)
+
+        # print(e1)
+        # print(e2)
 
         sameDay = (e1.day == e2.day)
 
@@ -97,7 +109,7 @@ def openTimeWindow(openStartTime, openEndTime):
     return openHours, openMinutes
 
 def formatEvent(event1, event2):
-    fmt = '%Y-%m-%dT%H:%M:%S%z'
+    fmt = '%Y-%m-%dT%H:%M:%S'
 
     e1str = event1['end'].get('dateTime')
     e2str = event2['start'].get('dateTime')
@@ -105,8 +117,8 @@ def formatEvent(event1, event2):
     e1str = e1str[:22] + e1str[23:]
     e2str = e2str[:22] + e2str[23:]
 
-    e1 = datetime.datetime.strptime(e1str, fmt)
-    e2 = datetime.datetime.strptime(e2str, fmt)
+    e1 = datetime.datetime.strptime(e1str[:19], fmt)
+    e2 = datetime.datetime.strptime(e2str[:19], fmt)
 
     utc = timezone('UTC')
     chi = timezone('America/Chicago')
@@ -120,13 +132,18 @@ def formatEvent(event1, event2):
     e1.strftime(fmt)
     e2.strftime(fmt)
 
-    e1, e2 = inDaylightSavings(e1, e2)
+    # e1, e2 = inDaylightSavings(e1, e2)
 
-    e1.strftime(fmt)
-    e2.strftime(fmt)
+    e1.strftime(fmt) + '-05:00'
+    e2.strftime(fmt) + '-05:00'
 
-    e1 = chi.normalize(e1)
-    e2 = chi.normalize(e2)
+    # e1 = chi.normalize(e1)
+    # e2 = chi.normalize(e2)
+
+    print('-----------------------------------------')
+    print(e1)
+    print(e2)
+    print('-----------------------------------------')
 
     return e1, e2
 
@@ -141,5 +158,39 @@ def inDaylightSavings(e1, e2):
         e2 = e2 + datetime.timedelta(hours = 1)
 
     return e1, e2
+
+def formatDT2(year, month, day, hour, minute, second):
+    year = str(year)
+
+    month = int(month)
+    month = str(month)
+    if int(month) < 10:
+        month = '0' + month
+
+    day = int(day)
+    day = str(day)
+    if int(day) < 10:
+        day = '0' + day
+
+    hour = int(hour)
+    hour = str(hour)
+    if int(hour) < 10:
+        hour = '0' + hour
+
+    minute = int(minute)
+    minute = str(minute)
+    if int(minute) < 10:
+        minute = '0' + minute
+
+    second = int(second)
+    second = str(second)
+    if int(second) < 10:
+        second = '0' + second
+
+    dt = (year + '-' + month + '-' + day +
+                    'T' + hour + ':' + minute + ':' +
+                    second + '-05:00')
+
+    return dt
 
 main()

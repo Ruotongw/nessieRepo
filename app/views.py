@@ -26,19 +26,16 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 # creds = store.get()
 # service = build('calendar', 'v3', http=creds.authorize(Http()))
 
-nowDay = 0
-nowHour = 0
-nowMinute = 0
 credentials = 0
-Dedline = '2018-11-30T11:25:00-05:00'
+# Dedline = '2018-11-30T11:25:00-05:00'
 
 @app.route('/', methods=['GET','POST'])
 def main():
+
     if request.method == "POST":
         print ("main data = ")
         print (request.data)
         if request.headers.get('X-Requested-With'):
-            print('----------------------')
             auth_code = request.data
             print (auth_code)
             if not request.headers.get('X-Requested-With'):
@@ -66,7 +63,8 @@ def main():
 
             # redirect(url_for('form'))
             return form(credentials)
-    return render_template('index.html')
+
+    return render_template('newIndex.html')
 
 @app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
 def form(credentials):
@@ -85,7 +83,7 @@ def form(credentials):
         else:
             print ("else case")
             # render_template('newIndex.html')
-    return render_template('index.html')
+    return render_template('newIndex.html')
 
 
 # def setUp():
@@ -100,17 +98,27 @@ def form(credentials):
 
 
 def getCalendarEvents(deadLine, credentials):
-    global nowDay
-    global nowHour
-    global nowMinute
-
     # store = file.Storage('app/static/token.json')
     # creds = store.get()
     http_auth = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http_auth)
     dueDate = deadLine
 
+    now = currentTime()
 
+    dueDateFormatted = str(dueDate) + 'T00:00:00-06:00'
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                    timeMax = dueDateFormatted, singleEvents=True,
+                                    orderBy = 'startTime').execute()
+
+    events = events_result.get('items', [])
+
+    if not events:
+        print('No upcoming events found.')
+    print (events)
+    return events
+
+def currentTime():
     chi = timezone('America/Chicago')
     fmt = '%Y-%m-%dT%H:%M:%S%z'
 
@@ -127,27 +135,17 @@ def getCalendarEvents(deadLine, credentials):
 
     # Normalizes it to change the offset depending on DST
     now = chi.normalize(offset)
-
-    # Used later in the algorithm
-    nowDay = now.day
-    nowHour = now.hour
-    nowMinute = now.minute
-
     # Formats and adds necessary colon
     now = now.strftime(fmt)
     now = now[:22] + ':' + now[22:]
+    return now
 
-    dueDateFormatted = str(dueDate) + 'T00:00:00-06:00'
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                    timeMax = dueDateFormatted, singleEvents=True,
-                                    orderBy = 'startTime').execute()
+def getNowDHM(currentTime):
+    nowDay = currentTime.day
+    nowHour = currentTime.hour
+    nowMinute = currentTime.minute
+    return nowDay, nowHour, nowMinute
 
-    events = events_result.get('items', [])
-
-    if not events:
-        print('No upcoming events found.')
-    print (events)
-    return events
 
 @app.route('/allEvents/', methods=['GET','POST'])
 def getDisplayEvents():
@@ -160,11 +158,13 @@ def getDisplayEvents():
     return eventsJSON
 
 def openTimeWindow(openStartTime, openEndTime):
-    openStartTime = 6
-    openEndTime = 23
     openHours = range(openStartTime, openEndTime)
     openMinutes = range(openStartTime * 60, openEndTime * 60)
     return openHours, openMinutes
+
+def getOpenStartTime():
+    openStartTime=6
+    return openStartTime
 
 def formatEvent(event1, event2):
     fmt = '%Y-%m-%dT%H:%M:%S%z'
@@ -200,6 +200,7 @@ def formatEvent(event1, event2):
 
     return e1, e2
 
+
 def inDaylightSavings(e1, e2):
     DSTMonths = [4, 5, 6, 7, 8, 9, 10]
 
@@ -212,10 +213,43 @@ def inDaylightSavings(e1, e2):
 
     return e1, e2
 
-def findAvailableTimes(duration, deadLine):
-    global nowDay
-    global nowHour
-    global nowMinute
+def morningTimeSlot(event2, duration):
+    event2Min = (event2.hour * 60) + event2.minute
+    duration = duration * 60
+
+    startTime = event2Min - duration - 15
+    startMin = startTime % 60
+    startHour = (startTime - startMin) / 60
+
+    endTime = event2Min -15
+    endMin = endTime % 60
+    endHour = (endTime - endMin)/60
+
+    eventStart = formatDT2(event2.year, event2.month, event2.day, startHour, startMin, event2.second)
+    eventEnd = formatDT2(event2.year, event2.month, event2.day, endHour, endMin, event2.second)
+
+    timeSlot = [eventStart, eventEnd]
+    return timeSlot
+
+def generalTimeSlot(event1, duration):
+    event1Min = (event1.hour * 60) + event1.minute
+    duration = duration * 60
+
+    startTime = event1Min + 15
+    startMin = startTime % 60
+    startHour = (startTime - startMin) / 60
+
+    endTime = startTime + duration
+    endMin = endTime % 60
+    endHour = (endTime - endMin)/60
+
+    eventStart = formatDT2(event1.year, event1.month, event1.day, startHour, startMin, event1.second)
+    eventEnd = formatDT2(event1.year, event1.month, event1.day, endHour, endMin, event1.second)
+
+    timeSlot = [eventStart, eventEnd]
+    return timeSlot
+
+def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events):
 
     estTimeMin = duration * 60
     estMins = estTimeMin % 60
@@ -223,7 +257,9 @@ def findAvailableTimes(duration, deadLine):
 
     availableTimes = []
 
-    events = getCalendarEvents(deadLine)
+    # openHours = range(openStartTime, openEndTime)
+    # openMinutes = range(openStartTime * 60, openEndTime * 60)
+    openHours, openMinutes = openTimeWindow(workStart,workEnd)
 
     for i in range(len(events) - 1):
         event1 = events[i]
@@ -232,6 +268,10 @@ def findAvailableTimes(duration, deadLine):
         e1, e2 = formatEvent(event1, event2)
 
         sameDay = (e1.day == e2.day)
+
+        #for time in morning before eventTime
+        morningTime = (e2.hour * 60 + e2.minute) - (workStart*60)
+        enoughMorningTime = morningTime >= estTimeMin + 30
 
         # For events on the same day
         timeDiff = (e2.hour * 60 + e2.minute) - (e1.hour * 60 + e1.minute)
@@ -247,38 +287,51 @@ def findAvailableTimes(duration, deadLine):
         # Ensures that the entire scheduled event would be within the open working hours
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
-        # openHours = range(openStartTime, openEndTime)
-        # openMinutes = range(openStartTime * 60, openEndTime * 60)
-        openHours, openMinutes = openTimeWindow(6,23)
+        print(timeWindow not in openMinutes)
 
-        if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))
-                or (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
-
-            startHour = e1.hour
-
-            startMinute = e1.minute
-            if startMinute + estMins >= 45:
-                startHour += 1
-                startMinute = 60 - startMinute
-                startMinute = abs(startMinute - 15)
-            else:
-                startMinute += 15
-
-            endHour = startHour + estHours
-            endMinute = startMinute + estMins
-
-            eventStart = formatDT2(e1.year, e1.month, e1.day, startHour, startMinute, e1.second)
-            eventEnd = formatDT2(e1.year, e1.month, e1.day, endHour, endMinute, e1.second)
-
-            timeSlot = [eventStart, eventEnd]
+        if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))):
+            timeSlot = generalTimeSlot(e1, duration)
             availableTimes.append(timeSlot)
-            print (len(availableTimes))
+
+        if(currentTime and (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
+            timeSlot = generalTimeSlot(e1, duration)
+            availableTimes.append(timeSlot)
+
+        if(not sameDay and enoughMorningTime):
+            timeSlot = morningTimeSlot(e2, duration)
+            availableTimes.append(timeSlot)
+
+    lastEvent = events[len(events) - 1]
+    lastEnd, lastStart = formatEvent(lastEvent, lastEvent)
+
+    timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
+
+    beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart*60)
+    enoughBeforeTime = beforeTime >= estTimeMin + 30
+
+    timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
+    enoughTime = timeDiff >= (estTimeMin + 30)
+
+    diffDays = lastStart.day != nowDay
+
+    if(enoughBeforeTime and (enoughTime or diffDays)):
+        timeSlot = morningTimeSlot(lastStart, duration)
+        availableTimes.append(timeSlot)
+
+    if((lastEnd.hour in openHours) and (timeWindow in openMinutes)):
+        timeSlot = generalTimeSlot(lastEnd, duration)
+        availableTimes.append(timeSlot)
 
     print(availableTimes)
     return availableTimes
 
 def getEventTime(duration, deadLine, credentials):
-    availableTimes = findAvailableTimes(duration, deadLine, credentials)
+    nowDay, nowHour, nowMinute = getNowDHM(currentTime())
+    workStart = 6
+    workEnd = 23
+    events = getCalendarEvents(deadLine, credentials)
+
+    availableTimes = findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
     length = len(availableTimes)
     if (length != 0):

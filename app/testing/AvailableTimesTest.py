@@ -10,30 +10,30 @@ import time
 
 def main():
     duration = 2
-    deadLine = '2018-11-10T00:00:00-05:00'
-    nowDay = 7
+    deadLine = '2018-11-02T00:00:00-05:00'
+    nowDay = 29
     nowHour = 17
     nowMinute = 30
     workStart = 6
     workEnd = 23
-    event1 = {'start': {'dateTime': '2018-11-07T20:00:00-05:00', 'timeZone': 'America/Chicago'},
-    'end': {'dateTime': '2018-11-07T22:00:00-05:00', 'timeZone': 'America/Chicago'}}
+    event1 = {'start': {'dateTime': '2018-10-31T14:00:00-05:00', 'timeZone': 'America/Chicago'},
+    'end': {'dateTime': '2018-10-31T15:00:00-05:00', 'timeZone': 'America/Chicago'}}
 
 
-    event2 = {'start': {'dateTime': '2018-11-08T09:40:00-05:00', 'timeZone': 'America/Chicago'},
-    'end': {'dateTime': '2018-11-08T10:40:00-05:00', 'timeZone': 'America/Chicago'}}
+    # event2 = {'start': {'dateTime': '2019-01-01T14:00:00-05:00', 'timeZone': 'America/Chicago'},
+    # 'end': {'dateTime': '2019-01-01T15:00:00-05:00', 'timeZone': 'America/Chicago'}}
 
 
-    event3 = {'start': {'dateTime': '2018-11-08T13:20:00-05:00', 'timeZone': 'America/Chicago'},
-    'end': {'dateTime': '2018-11-08T16:30:00-05:00', 'timeZone': 'America/Chicago'}}
+    # event3 = {'start': {'dateTime': '2018-11-08T13:20:00-05:00', 'timeZone': 'America/Chicago'},
+    # 'end': {'dateTime': '2018-11-08T16:30:00-05:00', 'timeZone': 'America/Chicago'}}
+    #
+    # event4 = {'start': {'dateTime': '2018-11-11T13:30:00-05:00', 'timeZone': 'America/Chicago'},
+    # 'end': {'dateTime': '2018-11-11T15:30:00-05:00', 'timeZone': 'America/Chicago'}}
+    #
+    # event5 = {'start': {'dateTime': '2018-11-11T22:00:00-05:00', 'timeZone': 'America/Chicago'},
+    # 'end': {'dateTime': '2018-11-11T23:30:00-05:00', 'timeZone': 'America/Chicago'}}
 
-    event4 = {'start': {'dateTime': '2018-11-11T13:30:00-05:00', 'timeZone': 'America/Chicago'},
-    'end': {'dateTime': '2018-11-11T15:30:00-05:00', 'timeZone': 'America/Chicago'}}
-
-    event5 = {'start': {'dateTime': '2018-11-11T22:00:00-05:00', 'timeZone': 'America/Chicago'},
-    'end': {'dateTime': '2018-11-11T23:30:00-05:00', 'timeZone': 'America/Chicago'}}
-
-    events = [event1, event2, event3, event4, event5]
+    events = [event1]
 
     findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
@@ -45,19 +45,21 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
 
     availableTimes = []
 
+    # openHours = range(openStartTime, openEndTime)
+    # openMinutes = range(openStartTime * 60, openEndTime * 60)
+    openHours, openMinutes = openTimeWindow(workStart,workEnd)
+
     for i in range(len(events) - 1):
         event1 = events[i]
         event2 = events[i + 1]
 
-        # print(event1['end'])
-        # print(event2['start'])
-
         e1, e2 = formatEvent(event1, event2)
 
-        # print(e1)
-        # print(e2)
-
         sameDay = (e1.day == e2.day)
+
+        #for time in morning before eventTime
+        morningTime = (e2.hour * 60 + e2.minute) - (workStart*60)
+        enoughMorningTime = morningTime >= estTimeMin + 30
 
         # For events on the same day
         timeDiff = (e2.hour * 60 + e2.minute) - (e1.hour * 60 + e1.minute)
@@ -73,35 +75,79 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
         # Ensures that the entire scheduled event would be within the open working hours
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
-        # openHours = range(openStartTime, openEndTime)
-        # openMinutes = range(openStartTime * 60, openEndTime * 60)
-        openHours, openMinutes = openTimeWindow(workStart,workEnd)
+        print(timeWindow not in openMinutes)
 
-        if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))
-                or (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
-
-            startHour = e1.hour
-
-            startMinute = e1.minute
-            if startMinute + estMins >= 45:
-                startHour += 1
-                startMinute = 60 - startMinute
-                startMinute = abs(startMinute - 15)
-            else:
-                startMinute += 15
-
-            endHour = startHour + estHours
-            endMinute = startMinute + estMins
-
-            eventStart = formatDT2(e1.year, e1.month, e1.day, startHour, startMinute, e1.second)
-            eventEnd = formatDT2(e1.year, e1.month, e1.day, endHour, endMinute, e1.second)
-
-            timeSlot = [eventStart, eventEnd]
+        if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))):
+            timeSlot = generalTimeSlot(e1, duration)
             availableTimes.append(timeSlot)
-            print (len(availableTimes))
+
+        if(currentTime and (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
+            timeSlot = generalTimeSlot(e1, duration)
+            availableTimes.append(timeSlot)
+
+        if(not sameDay and enoughMorningTime):
+            timeSlot = morningTimeSlot(e2, duration)
+            availableTimes.append(timeSlot)
+
+    lastEvent = events[len(events) - 1]
+    lastEnd, lastStart = formatEvent(lastEvent, lastEvent)
+
+    timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
+
+    beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart*60)
+    enoughBeforeTime = beforeTime >= estTimeMin + 30
+
+    timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
+    enoughTime = timeDiff >= (estTimeMin + 30)
+
+    diffDays = lastStart.day != nowDay
+
+    if(enoughBeforeTime and (enoughTime or diffDays)):
+        timeSlot = morningTimeSlot(lastStart, duration)
+        availableTimes.append(timeSlot)
+
+    if((lastEnd.hour in openHours) and (timeWindow in openMinutes)):
+        timeSlot = generalTimeSlot(lastEnd, duration)
+        availableTimes.append(timeSlot)
 
     print(availableTimes)
     return availableTimes
+
+def morningTimeSlot(event2, duration):
+    event2Min = (event2.hour * 60) + event2.minute
+    duration = duration * 60
+
+    startTime = event2Min - duration - 15
+    startMin = startTime % 60
+    startHour = (startTime - startMin) / 60
+
+    endTime = event2Min -15
+    endMin = endTime % 60
+    endHour = (endTime - endMin)/60
+
+    eventStart = formatDT2(event2.year, event2.month, event2.day, startHour, startMin, event2.second)
+    eventEnd = formatDT2(event2.year, event2.month, event2.day, endHour, endMin, event2.second)
+
+    timeSlot = [eventStart, eventEnd]
+    return timeSlot
+
+def generalTimeSlot(event1, duration):
+    event1Min = (event1.hour * 60) + event1.minute
+    duration = duration * 60
+
+    startTime = event1Min + 15
+    startMin = startTime % 60
+    startHour = (startTime - startMin) / 60
+
+    endTime = startTime + duration
+    endMin = endTime % 60
+    endHour = (endTime - endMin)/60
+
+    eventStart = formatDT2(event1.year, event1.month, event1.day, startHour, startMin, event1.second)
+    eventEnd = formatDT2(event1.year, event1.month, event1.day, endHour, endMin, event1.second)
+
+    timeSlot = [eventStart, eventEnd]
+    return timeSlot
 
 def openTimeWindow(openStartTime, openEndTime):
     openHours = range(openStartTime, openEndTime)

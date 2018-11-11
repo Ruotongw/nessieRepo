@@ -200,6 +200,7 @@ def formatEvent(event1, event2):
 
     return e1, e2
 
+
 def inDaylightSavings(e1, e2):
     DSTMonths = [4, 5, 6, 7, 8, 9, 10]
 
@@ -224,8 +225,8 @@ def morningTimeSlot(event2, duration):
     endMin = endTime % 60
     endHour = (endTime - endMin)/60
 
-    eventStart = formatDT2(e2.year, e2.month, e2.day, startHour, startMin, e2.second)
-    eventEnd = formatDT2(e2.year, e2.month, e2.day, endHour, endMin, e2.second)
+    eventStart = formatDT2(event2.year, event2.month, event2.day, startHour, startMin, event2.second)
+    eventEnd = formatDT2(event2.year, event2.month, event2.day, endHour, endMin, event2.second)
 
     timeSlot = [eventStart, eventEnd]
     return timeSlot
@@ -242,12 +243,11 @@ def generalTimeSlot(event1, duration):
     endMin = endTime % 60
     endHour = (endTime - endMin)/60
 
-    eventStart = formatDT2(e1.year, e1.month, e1.day, startHour, startMin, e1.second)
-    eventEnd = formatDT2(e1.year, e1.month, e1.day, endHour, endMin, e1.second)
+    eventStart = formatDT2(event1.year, event1.month, event1.day, startHour, startMin, event1.second)
+    eventEnd = formatDT2(event1.year, event1.month, event1.day, endHour, endMin, event1.second)
 
     timeSlot = [eventStart, eventEnd]
     return timeSlot
-
 
 def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events):
 
@@ -256,6 +256,10 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
     estHours = (estTimeMin - estMins) / 60
 
     availableTimes = []
+
+    # openHours = range(openStartTime, openEndTime)
+    # openMinutes = range(openStartTime * 60, openEndTime * 60)
+    openHours, openMinutes = openTimeWindow(workStart,workEnd)
 
     for i in range(len(events) - 1):
         event1 = events[i]
@@ -283,20 +287,41 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
         # Ensures that the entire scheduled event would be within the open working hours
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
-        # openHours = range(openStartTime, openEndTime)
-        # openMinutes = range(openStartTime * 60, openEndTime * 60)
-        openHours, openMinutes = openTimeWindow(workStart,workEnd)
+        print(timeWindow not in openMinutes)
 
-        if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))
-                or (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
+        if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))):
             timeSlot = generalTimeSlot(e1, duration)
             availableTimes.append(timeSlot)
 
-        else if(not sameDay and not enoughTime2 and (timeWindow not in openMinutes) and enoughMorningTime):
+        if(currentTime and (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
+            timeSlot = generalTimeSlot(e1, duration)
+            availableTimes.append(timeSlot)
+
+        if(not sameDay and enoughMorningTime):
             timeSlot = morningTimeSlot(e2, duration)
             availableTimes.append(timeSlot)
 
-    # print (len(availableTimes))
+    lastEvent = events[len(events) - 1]
+    lastEnd, lastStart = formatEvent(lastEvent, lastEvent)
+
+    timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
+
+    beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart*60)
+    enoughBeforeTime = beforeTime >= estTimeMin + 30
+
+    timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
+    enoughTime = timeDiff >= (estTimeMin + 30)
+
+    diffDays = lastStart.day != nowDay
+
+    if(enoughBeforeTime and (enoughTime or diffDays)):
+        timeSlot = morningTimeSlot(lastStart, duration)
+        availableTimes.append(timeSlot)
+
+    if((lastEnd.hour in openHours) and (timeWindow in openMinutes)):
+        timeSlot = generalTimeSlot(lastEnd, duration)
+        availableTimes.append(timeSlot)
+
     print(availableTimes)
     return availableTimes
 

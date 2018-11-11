@@ -10,12 +10,29 @@
 
 		<!-- Font Awesome served from CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/style.css') }}">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='./favicon.png') }}">
 	</head>
 	<body>
 
+		<div class="calendar calendar-lg">
+  <!-- calendar navbar structure -->
 
+		  <div class="calendar-container">
+		    <!-- calendar header structure -->
+
+		    <div class="calendar-body">
+		      <!-- calendar date with events -->
+		      <div class="calendar-date">
+		        <button class="date-item active">20</button>
+		        <div class="calendar-events">
+		          <a class="calendar-event bg-success text-light" href="#calendars">Spring Equinox</a>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 
 
 		<div id="right-area">

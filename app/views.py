@@ -62,7 +62,7 @@ def main():
             # redirect(url_for('form'))
             return form(credentials)
 
-    return render_template('newIndex.html')
+    return render_template('index.html')
 
 
 @app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
@@ -143,6 +143,7 @@ def currentTime():
 
     return now
 
+
 @app.route('/allEvents/', methods=['GET','POST'])
 def getDisplayEvents():
     print ("SOS")
@@ -152,6 +153,7 @@ def getDisplayEvents():
     print(eventsJSON)
     redirect("/")
     return eventsJSON
+
 
 def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events):
     '''Calculates every available time slot in relation to the events on the user's
@@ -250,6 +252,7 @@ def getEventTime(duration, deadLine, credentials):
     else:
         return  '''<h1>Oops</h1>'''
 
+
 event = {}
 def createEvent(newTitle, duration, deadLine, credentials):
     '''Creates a Google Calendar event based on the randomly chosen time slot
@@ -305,6 +308,9 @@ def credentials_to_dict(credentials):
 # The following are helper functions for findAvailableTimes()
 
 def getNowDHM(currentTime):
+    currentTime = currentTime[:22] + currentTime[23:]
+    currentTime = datetime.datetime.strptime(currentTime, '%Y-%m-%dT%H:%M:%S%z')
+
     nowDay = currentTime.day
     nowHour = currentTime.hour
     nowMinute = currentTime.minute

@@ -133,16 +133,6 @@ def currentTime():
 
     return now
 
-@app.route('/allEvents/', methods=['GET','POST'])
-def getDisplayEvents():
-    print ("SOS")
-    # events= getCalendarEvents('2018-11-30T11:25:00-05:00')
-    eventsJSON = jsonify('2018-11-30T11:25:00-05:00')
-    eventsJSON.status_code = 200
-    print(eventsJSON)
-    redirect("/")
-    return eventsJSON
-
 def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     '''Calculates every available time slot in relation to the events on the user's
     calender from now until the assignment due date. Returns a list of these time slots.'''

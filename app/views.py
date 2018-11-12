@@ -135,7 +135,7 @@ def getCalendarEvents():
 
     # store = file.Storage('app/static/token.json')
     # creds = store.get()
-    dueDate = 2018-11-30
+    dueDate = "2018-11-20"
 
     now = currentTime()
 
@@ -150,3 +150,26 @@ def getCalendarEvents():
         print('No upcoming events found.')
     print (events)
     return events
+
+def currentTime():
+    '''Returns the current Chicago time, accounting for daylight savings and
+    in the correct string format to use with Google's API.'''
+
+    chi = timezone('America/Chicago')
+    fmt = '%Y-%m-%dT%H:%M:%S%z'
+
+    utcDt = datetime.datetime.utcnow()
+    localDt = utcDt.replace(tzinfo=chi)
+    localDt.strftime(fmt)
+
+    # Offsets the time from UTC to Chicago
+    offset = localDt - datetime.timedelta(hours = 5)
+    offset.strftime(fmt)
+
+    now = chi.normalize(offset)
+
+    # Formats and adds necessary colon
+    now = now.strftime(fmt)
+    now = now[:22] + ':' + now[22:]
+
+    return now

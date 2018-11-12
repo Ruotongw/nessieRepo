@@ -58,7 +58,7 @@ def main():
             # redirect(url_for('form'))
             return form()
 
-    return render_template('index.html')
+    return render_template('newIndex.html')
 
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests

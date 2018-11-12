@@ -20,13 +20,6 @@ from tzlocal import get_localzone
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
-# store = file.Storage('app/static/token.json')
-# creds = store.get()
-# service = build('calendar', 'v3', http=creds.authorize(Http()))
-
-# credentials = 0
-# Dedline = '2018-11-30T11:25:00-05:00'
-
 @app.route('/', methods=['GET','POST'])
 def main():
 
@@ -55,10 +48,9 @@ def main():
 
             now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
 
-            # redirect(url_for('form'))
             return form()
 
-    return render_template('newIndex.html')
+    return render_template('base.html')
 
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
@@ -84,8 +76,7 @@ def form():
             createEvent()
         else:
             print ("else case")
-            # render_template('newIndex.html')
-    return render_template('newIndex.html')
+    return render_template('index.html')
 
 
 def getCalendarEvents():
@@ -272,15 +263,6 @@ def createEvent():
 def getScheduledEvent():
     global event
     return event
-
-
-# def credentials_to_dict(credentials):
-#   return {'token': credentials.token,
-#           'refresh_token': credentials.refresh_token,
-#           'token_uri': credentials.token_uri,
-#           'client_id': credentials.client_id,
-#           'client_secret': credentials.client_secret,
-#           'scopes': credentials.scopes}
 
 
 # The following are helper functions for findAvailableTimes()

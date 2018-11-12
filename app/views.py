@@ -29,7 +29,7 @@ def main():
         print ("main data = ")
         print (request.data)
         if request.headers.get('X-Requested-With'):
-            auth_code = request.data
+            auth_code = request.json['auth']
             print (auth_code)
 
 
@@ -53,12 +53,12 @@ def main():
             # form(credentials)
             now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
             print ('ok')
-            title = request.form['Title']
+            title = request.json['viewTitle']
             print (title)
-            timeEst = request.form['est']
+            timeEst = request.json['est']
             print (title)
 
-            DedLine = request.form['dead']
+            DedLine = request.json['dead']
             print (DedLine)
 
             print ('phase 1')
@@ -92,51 +92,49 @@ def main():
                         <button id="signinButton">Sign in with Google</button>
                         <script>
                           $('#signinButton').click(function() {
+                            console.log("test")
                             // signInCallback defined in step 6.
                             console.log("got to line 25");
                             auth2.grantOfflineAccess().then(signInCallback);
                           });
                           </script>
-                      <script>
-                      var t = $("Title").val();
-                      var e = $("est").val();
-                      var d = $("dead").val();
-                      console.log("got to line 35");
-                      function signInCallback(authResult) {
-                        console.log("got to line 37");
-                        console.log(authResult['code']);
-                        if (authResult['code']) {
-                          console.log("got to line 39");
+                          <script>
+                          function signInCallback(authResult) {
+                          console.log("got to line 35");
+                            console.log("got to line 37");
+                            console.log(authResult['code']);
+                            if (authResult['code']) {
+                              console.log("got to line 39");
+                              var text = { 'auth' : authResult['code'],
+                                            'Title' : $("Title").val(),
+                                            'est' : $("est").val(),
+                                            'dead' : $("dead").val(),};
 
-                          // Hide the sign-in button now that the user is authorized, for example:
-                          $('#signinButton').attr('style', 'display: none');
+                              // Hide the sign-in button now that the user is authorized, for example:
+                              $('#signinButton').attr('style', 'display: none');
 
-                          // Send the code to the server
-                          $.ajax({
-                            type: 'POST',
-                            url: '/',
-                            // Always include an `X-Requested-With` header in every AJAX request,
-                            // to protect against CSRF attacks.
-                            headers: {
-                              'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            contentType: 'application/octet-stream; charset=utf-8',
-                            success: function(result) {
-                              console.log("the authentication was a success");
-                              },
-                            processData: false,
-                            data: authResult['code'],
-                            Title: t,
-                            est: e,
-                            dead: d
+                              // Send the code to the server
+                              $.ajax({
+                                type: 'POST',
+                                url: '/',
+                                // Always include an `X-Requested-With` header in every AJAX request,
+                                // to protect against CSRF attacks.
+                                headers: {
+                                  'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                contentType: 'application/octet-stream; charset=utf-8',
+                                success: function(result) {
+                                  console.log("the authentication was a success");
+                                  },
+                                processData: false,
+                                data: JSON.stringify(text),
 
-
-                          });
-                        } else {
-                          // There was an error.
-                        }
-                      }
-                    </script>
+                              });
+                            } else {
+                              // There was an error.
+                            }
+                          }
+                        </script>
 
                   </body>
                 </html>'''

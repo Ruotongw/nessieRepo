@@ -24,12 +24,15 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 @app.route('/', methods=['GET','POST'])
 def main():
 
+    global service
 
     if request.method == "POST":
         print ("main data = ")
         print (request.data)
         if request.headers.get('X-Requested-With'):
-            auth_code = request.json['auth']
+
+            auth_code = request.data
+
             print (auth_code)
 
 
@@ -46,23 +49,15 @@ def main():
             # Call Google API
             http_auth = credentials.authorize(httplib2.Http())
             service = discovery.build('calendar', 'v3', http=http_auth)
-
+            print (service)
             # Get profile info from ID token
             # userid = credentials.id_token['sub']
             # email = credentials.id_token['email']
             # form(credentials)
             now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-            print ('ok')
-            title = request.json['viewTitle']
-            print (title)
-            timeEst = request.json['est']
-            print (title)
-
-            DedLine = request.json['dead']
-            print (DedLine)
 
             print ('phase 1')
-
+            return form()
             # redirect(url_for('form'))
             # return form(credentials)
 
@@ -105,10 +100,6 @@ def main():
                             console.log(authResult['code']);
                             if (authResult['code']) {
                               console.log("got to line 39");
-                              var text = { 'auth' : authResult['code'],
-                                            'Title' : $("Title").val(),
-                                            'est' : $("est").val(),
-                                            'dead' : $("dead").val(),};
 
                               // Hide the sign-in button now that the user is authorized, for example:
                               $('#signinButton').attr('style', 'display: none');
@@ -125,10 +116,9 @@ def main():
                                 contentType: 'application/octet-stream; charset=utf-8',
                                 success: function(result) {
                                   console.log("the authentication was a success");
-                                  },
+                                },
                                 processData: false,
-                                data: JSON.stringify(text),
-
+                                data: authResult['code']
                               });
                             } else {
                               // There was an error.
@@ -140,24 +130,24 @@ def main():
                 </html>'''
 
 @app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
-def form(credentials):
-    print("we are in the form")
+def form():
+    print (service)
     # redirect("/form")
-    # render_template('index.html')
-    if request.method == 'POST': #this block is only entered when the form is submitted
-        # if not request.headers.get('X-Requested-With'):
-
-        title = request.Title
-        print (title)
-        timeEst = request.est
-        print (title)
-
-        DedLine = request.dead
-        print (DedLine)
-
-        print ('phase 1')
-        # setUp()
-        createEvent(title, timeEst, DedLine, credentials)
+    # # render_template('index.html')
+    # if request.method == 'POST': #this block is only entered when the form is submitted
+    #     # if not request.headers.get('X-Requested-With'):
+    #
+    #     title = request.Title
+    #     print (title)
+    #     timeEst = request.est
+    #     print (title)
+    #
+    #     DedLine = request.dead
+    #     print (DedLine)
+    #
+    #     print ('phase 1')
+    #     # setUp()
+    #     createEvent(title, timeEst, DedLine, credentials)
         # else:
         #     print ("else case")
             # render_template('newIndex.html')

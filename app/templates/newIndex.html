@@ -75,7 +75,7 @@
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 				<div class="form-container">
 					<strong>Assignment</strong>
-					   <form id="addEventForm" method="POST">
+					   <form id="addEventForm" action="/form" method="POST">
 			               Assignment Title: <input id="eventName" type="text" name="Title" value=""><br>
 			               Estimated Time: <input id="eventDuration" type="number" min="0" name="est" ><br>
 			               Deadline: <input id="dueDate" type="date" name="dead" value=""><br>
@@ -140,6 +140,7 @@
           contentType: 'application/octet-stream; charset=utf-8',
           success: function(result) {
             console.log("down the hole we go")
+            window.location = "/form"
             // Handle or verify the server response.
           },
           processData: false,

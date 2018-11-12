@@ -76,8 +76,9 @@ def form():
             global timeEst
             timeEst = int(request.form.get('est'))
 
-            global deadline
+            global deadLine
             deadLine = request.form.get('dead')
+            print (deadLine)
             print ('phase 1')
             # setUp()
             createEvent()
@@ -106,7 +107,6 @@ def getCalendarEvents():
 
     if not events:
         print('No upcoming events found.')
-    print (events)
     return events
 
 
@@ -172,15 +172,15 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
         if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))):
-            timeSlot = generalTimeSlot(e1, timeEst)
+            timeSlot = generalTimeSlot(e1)
             availableTimes.append(timeSlot)
 
         if(currentTime and (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
-            timeSlot = generalTimeSlot(e1, timeEst)
+            timeSlot = generalTimeSlot(e1)
             availableTimes.append(timeSlot)
 
         if(not sameDay and enoughMorningTime):
-            timeSlot = morningTimeSlot(e2, timeEst)
+            timeSlot = morningTimeSlot(e2)
             availableTimes.append(timeSlot)
 
     # Accounts for the possible time slot after the last event before the due date.
@@ -199,11 +199,11 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     diffDays = lastStart.day != nowDay
 
     if(enoughBeforeTime and (enoughTime or diffDays)):
-        timeSlot = morningTimeSlot(lastStart, timeEst)
+        timeSlot = morningTimeSlot(lastStart)
         availableTimes.append(timeSlot)
 
     if((lastEnd.hour in openHours) and (timeWindow in openMinutes)):
-        timeSlot = generalTimeSlot(lastEnd, timeEst)
+        timeSlot = generalTimeSlot(lastEnd)
         availableTimes.append(timeSlot)
 
     print(availableTimes)
@@ -260,7 +260,7 @@ def createEvent():
 
         print(event)
 
-        # event = service.events().insert(calendarId = 'primary', body = event).execute()
+        event = service.events().insert(calendarId = 'primary', body = event).execute()
         print ('Event created: %s' % (event.get('summary')))
         print ('time: %s' % (eventStart))
         return redirect('https://calendar.google.com/calendar/', code=302)
@@ -366,10 +366,12 @@ def morningTimeSlot(event2):
     given that there is enough time between that event and the start of working
     hours.'''
 
-    event2Min = (event2.hour * 60) + event2.minute
-    timeEst = timeEst * 60
+    localizedTime = timeEst
 
-    startTime = event2Min - timeEst - 15
+    event2Min = (event2.hour * 60) + event2.minute
+    localizedTime = localizedTime * 60
+
+    startTime = event2Min - localizedTime - 15
     startMin = startTime % 60
     startHour = (startTime - startMin) / 60
 
@@ -387,15 +389,16 @@ def morningTimeSlot(event2):
 def generalTimeSlot(event1):
     '''Returns the time slot after event1. Used for most scheduling cases, hence
     the name generalTimeSlot.'''
+    localizedTime = timeEst
 
     event1Min = (event1.hour * 60) + event1.minute
-    timeEst = timeEst * 60
+    localizedTime = localizedTime * 60
 
     startTime = event1Min + 15
     startMin = startTime % 60
     startHour = (startTime - startMin) / 60
 
-    endTime = startTime + timeEst
+    endTime = startTime + localizedTime
     endMin = endTime % 60
     endHour = (endTime - endMin)/60
 

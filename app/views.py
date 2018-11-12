@@ -57,7 +57,7 @@ def main():
             now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
 
             print ('phase 1')
-            return form()
+            return getCalendarEvents()
             # redirect(url_for('form'))
             # return form(credentials)
 
@@ -129,31 +129,24 @@ def main():
                   </body>
                 </html>'''
 
-@app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
-def form():
-    print (service)
-    # redirect("/form")
-    # # render_template('index.html')
-    # if request.method == 'POST': #this block is only entered when the form is submitted
-    #     # if not request.headers.get('X-Requested-With'):
-    #
-    #     title = request.Title
-    #     print (title)
-    #     timeEst = request.est
-    #     print (title)
-    #
-    #     DedLine = request.dead
-    #     print (DedLine)
-    #
-    #     print ('phase 1')
-    #     # setUp()
-    #     createEvent(title, timeEst, DedLine, credentials)
-        # else:
-        #     print ("else case")
-            # render_template('newIndex.html')
-    return       '''<form method="POST">
-                       Assignment Title: <input type="text" name="Title"><br>
-                       Estimated Time: <input type="number" min="0" name="est"><br>
-                       Deadline: <input type="date" name="dead"><br>
-                       <input type="submit" value="Create"><br>
-                   </form>'''
+def getCalendarEvents():
+    '''Returns a list with every event on the user's primary Google Calendar
+    from now unti the due date in cronological order. Each event is a dictionary.'''
+
+    # store = file.Storage('app/static/token.json')
+    # creds = store.get()
+    dueDate = 2018-11-30
+
+    now = currentTime()
+
+    dueDateFormatted = str(dueDate) + 'T00:00:00-06:00'
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                    timeMax = dueDateFormatted, singleEvents=True,
+                                    orderBy = 'startTime').execute()
+
+    events = events_result.get('items', [])
+
+    if not events:
+        print('No upcoming events found.')
+    print (events)
+    return events

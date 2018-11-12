@@ -3,12 +3,13 @@
 from __future__ import print_function
 from apiclient import discovery
 import httplib2
-from flask import request, render_template, Flask, json, redirect, url_for, jsonify, make_response
+from flask import request, render_template, Flask, json, redirect, url_for, jsonify, make_response, session
 import os
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 import google.oauth2.credentials
+from oauth2client.contrib.flask_util import UserOAuth2
 from app import app
 import datetime
 import random
@@ -34,13 +35,14 @@ Dedline = '2018-11-30T11:25:00-05:00'
 
 @app.route('/', methods=['GET','POST'])
 def main():
-    print ("damn")
+    # print ("damn")
     if request.method == "POST":
-        print ("main data = ")
-        print (request.data)
+        # print ("main data = ")
+        # print (request.data)
         if request.headers.get('X-Requested-With'):
             auth_code = request.data
             print (auth_code)
+
             if not request.headers.get('X-Requested-With'):
                 print ('403')
 
@@ -53,6 +55,9 @@ def main():
                 CLIENT_SECRET_FILE,
                 ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
                 auth_code)
+
+            session['profile'] = "credentials"
+            print(session['profile'])
 
             # Call Google API
             http_auth = credentials.authorize(httplib2.Http())

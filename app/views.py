@@ -149,7 +149,7 @@ def getCalendarEvents():
     if not events:
         print('No upcoming events found.')
     print (events)
-    return events
+    return render_template("index.html")
 
 def currentTime():
     '''Returns the current Chicago time, accounting for daylight savings and

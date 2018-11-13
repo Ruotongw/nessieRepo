@@ -20,25 +20,18 @@ from tzlocal import get_localzone
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
-# store = file.Storage('app/static/token.json')
-# creds = store.get()
-# service = build('calendar', 'v3', http=creds.authorize(Http()))
-
-credentials = 0
-# Dedline = '2018-11-30T11:25:00-05:00'
-
 @app.route('/', methods=['GET','POST'])
 def main():
 
+    global service
+    print ("test")
     if request.method == "POST":
         print ("main data = ")
         print (request.data)
         if request.headers.get('X-Requested-With'):
+
             auth_code = request.data
             print (auth_code)
-            if not request.headers.get('X-Requested-With'):
-                print ('403')
-
             # Set path to the Web application client_secret_*.json file you downloaded from the
             # Google API Console: https://console.developers.google.com/apis/credentials
             CLIENT_SECRET_FILE = 'app/static/client_secret.json'
@@ -53,61 +46,52 @@ def main():
             http_auth = credentials.authorize(httplib2.Http())
             service = discovery.build('calendar', 'v3', http=http_auth)
 
-            # Get profile info from ID token
-            # userid = credentials.id_token['sub']
-            # email = credentials.id_token['email']
-            # form(credentials)
             now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
 
-            # redirect(url_for('form'))
-            return form(credentials)
-
-    return render_template('Index.html')
+            return form()
+    return render_template('base.html')
 
 
-@app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
-def form(credentials):
+
+@app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
+def form():
     print("we are in the form")
+    print(service)
     # redirect("/form")
     # render_template('index.html')
     if request.method == 'POST': #this block is only entered when the form is submitted
         if not request.headers.get('X-Requested-With'):
 
+            global title
             title = request.form.get('Title')
+
+            global timeEst
             timeEst = int(request.form.get('est'))
-            DedLine = request.form.get('dead')
+
+            global deadLine
+            deadLine = request.form.get('dead')
+            print (deadLine)
             print ('phase 1')
             # setUp()
-            createEvent(title, timeEst, DedLine, credentials)
+            createEvent()
         else:
             print ("else case")
-            # render_template('newIndex.html')
-    return render_template('Index.html')
+
+    return render_template('index.html')
 
 
-# def setUp():
 
-    # store = file.Storage('app/static/token.json')
-    # creds = store.get()
-    #
-    # if not credentials or credentials.invalid:
-    #     flow = client.flow_from_clientsecrets('app/static/credentials.json', SCOPES)
-    #     credentials = tools.run_flow(flow, store)
-
-
-def getCalendarEvents(deadLine, credentials):
+def getCalendarEvents():
     '''Returns a list with every event on the user's primary Google Calendar
     from now unti the due date in cronological order. Each event is a dictionary.'''
 
     # store = file.Storage('app/static/token.json')
     # creds = store.get()
-    http_auth = credentials.authorize(httplib2.Http())
-    service = discovery.build('calendar', 'v3', http=http_auth)
-    dueDate = deadLine
-
+    # http_auth = credentials.authorize(httplib2.Http())
+    # service = discovery.build('calendar', 'v3', http=http_auth)
     now = currentTime()
 
-    dueDateFormatted = str(dueDate) + 'T00:00:00-06:00'
+    dueDateFormatted = str(deadLine) + 'T00:00:00-06:00'
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
@@ -116,7 +100,6 @@ def getCalendarEvents(deadLine, credentials):
 
     if not events:
         print('No upcoming events found.')
-    print (events)
     return events
 
 
@@ -143,21 +126,11 @@ def currentTime():
 
     return now
 
-@app.route('/allEvents/', methods=['GET','POST'])
-def getDisplayEvents():
-    print ("SOS")
-    # events= getCalendarEvents('2018-11-30T11:25:00-05:00')
-    eventsJSON = jsonify('2018-11-30T11:25:00-05:00')
-    eventsJSON.status_code = 200
-    print(eventsJSON)
-    redirect("/")
-    return eventsJSON
-
-def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events):
+def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     '''Calculates every available time slot in relation to the events on the user's
     calender from now until the assignment due date. Returns a list of these time slots.'''
 
-    estTimeMin = duration * 60
+    estTimeMin = timeEst * 60
     estMins = estTimeMin % 60
     estHours = (estTimeMin - estMins) / 60
 
@@ -192,15 +165,15 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
         if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))):
-            timeSlot = generalTimeSlot(e1, duration)
+            timeSlot = generalTimeSlot(e1)
             availableTimes.append(timeSlot)
 
         if(currentTime and (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
-            timeSlot = generalTimeSlot(e1, duration)
+            timeSlot = generalTimeSlot(e1)
             availableTimes.append(timeSlot)
 
         if(not sameDay and enoughMorningTime):
-            timeSlot = morningTimeSlot(e2, duration)
+            timeSlot = morningTimeSlot(e2)
             availableTimes.append(timeSlot)
 
     # Accounts for the possible time slot after the last event before the due date.
@@ -219,26 +192,26 @@ def findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart
     diffDays = lastStart.day != nowDay
 
     if(enoughBeforeTime and (enoughTime or diffDays)):
-        timeSlot = morningTimeSlot(lastStart, duration)
+        timeSlot = morningTimeSlot(lastStart)
         availableTimes.append(timeSlot)
 
     if((lastEnd.hour in openHours) and (timeWindow in openMinutes)):
-        timeSlot = generalTimeSlot(lastEnd, duration)
+        timeSlot = generalTimeSlot(lastEnd)
         availableTimes.append(timeSlot)
 
     print(availableTimes)
     return availableTimes
 
 
-def getEventTime(duration, deadLine, credentials):
+def getEventTime():
     '''Returns a randomly selected time slot from all of the available times slots.
     If there are no time slots, it returns an exception instead of breaking.'''
     nowDay, nowHour, nowMinute = getNowDHM(currentTime())
     workStart = 6
     workEnd = 23
-    events = getCalendarEvents(deadLine, credentials)
+    events = getCalendarEvents()
 
-    availableTimes = findAvailableTimes(duration, deadLine, nowDay, nowHour, nowMinute, workStart, workEnd, events)
+    availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
     length = len(availableTimes)
     if (length != 0):
@@ -250,15 +223,16 @@ def getEventTime(duration, deadLine, credentials):
     else:
         return  '''<h1>Oops</h1>'''
 
+
 event = {}
-def createEvent(newTitle, duration, deadLine, credentials):
+def createEvent():
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and adds it to the user's primary calendar.'''
 
     print ('phase 2')
 
     global event
-    eventTime = getEventTime(duration, deadLine)
+    eventTime = getEventTime()
 
     # print(eventTime)
 
@@ -266,7 +240,7 @@ def createEvent(newTitle, duration, deadLine, credentials):
         eventStart = eventTime[0]
         eventEnd = eventTime[1]
         event = {
-            'summary': newTitle,
+            'summary': title,
             'start': {
                 'dateTime': eventStart,
                 'timeZone': 'America/Chicago',
@@ -293,18 +267,12 @@ def getScheduledEvent():
     return event
 
 
-def credentials_to_dict(credentials):
-  return {'token': credentials.token,
-          'refresh_token': credentials.refresh_token,
-          'token_uri': credentials.token_uri,
-          'client_id': credentials.client_id,
-          'client_secret': credentials.client_secret,
-          'scopes': credentials.scopes}
-
-
 # The following are helper functions for findAvailableTimes()
 
 def getNowDHM(currentTime):
+    currentTime = currentTime[:22] + currentTime[23:]
+    currentTime = datetime.datetime.strptime(currentTime, '%Y-%m-%dT%H:%M:%S%z')
+
     nowDay = currentTime.day
     nowHour = currentTime.hour
     nowMinute = currentTime.minute
@@ -377,15 +345,17 @@ def inDaylightSavings(e1, e2):
     return e1, e2
 
 
-def morningTimeSlot(event2, duration):
+def morningTimeSlot(event2):
     '''Returns the time slot before event2. Used for the first event of the day,
     given that there is enough time between that event and the start of working
     hours.'''
 
-    event2Min = (event2.hour * 60) + event2.minute
-    duration = duration * 60
+    localizedTime = timeEst
 
-    startTime = event2Min - duration - 15
+    event2Min = (event2.hour * 60) + event2.minute
+    localizedTime = localizedTime * 60
+
+    startTime = event2Min - localizedTime - 15
     startMin = startTime % 60
     startHour = (startTime - startMin) / 60
 
@@ -400,18 +370,19 @@ def morningTimeSlot(event2, duration):
     return timeSlot
 
 
-def generalTimeSlot(event1, duration):
+def generalTimeSlot(event1):
     '''Returns the time slot after event1. Used for most scheduling cases, hence
     the name generalTimeSlot.'''
+    localizedTime = timeEst
 
     event1Min = (event1.hour * 60) + event1.minute
-    duration = duration * 60
+    localizedTime = localizedTime * 60
 
     startTime = event1Min + 15
     startMin = startTime % 60
     startHour = (startTime - startMin) / 60
 
-    endTime = startTime + duration
+    endTime = startTime + localizedTime
     endMin = endTime % 60
     endHour = (endTime - endMin)/60
 

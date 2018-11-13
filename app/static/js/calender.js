@@ -47,7 +47,7 @@ function calender(month, year) {
     }
 
     //padding the cells before the first day of next month 
-    var totalDaysMonth = parseInt(firstDay) + parseInt(totalDays )
+    var totalDaysMonth = parseInt(firstDay) + parseInt(totalDays)
     var lastDay = totalDaysMonth%7;
     if (lastDay != 0) {
         for (var i = 0; i < 7-lastDay; i++) {
@@ -55,6 +55,7 @@ function calender(month, year) {
         }
     }
     
+    console.log(lastDay)
     // Output the calender onto the site.  Also, putting in the month name and days of the week.
     var calenderTable = "<div class='container-fluid'>";
     var monthYear = "<h4 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><h4> <div class='arrow'><h5 class='display-4 mb-4 text-center'><i class='fa fa-arrow-left' onclick='prevMonth();'></i> <i class='fa fa-arrow-right' onclick='nextMonth();'></i></h5></div>"
@@ -71,7 +72,7 @@ function calender(month, year) {
 
     console.log(calenderTable)
 
-    $(".container").html(calenderTable);
+    $(".calender").html(calenderTable);
     $(".month").text(monthNames[month]);
     $(".month").attr('id', month);
     $(".year").text(year);

@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/style.css') }}"> -->
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
 		<!-- <link rel="shortcut icon" href="{{ url_for('static', filename='./favicon.png') }}"> -->
 	</head>
 
@@ -26,7 +27,7 @@
 			</nav>
 
 			<!-- Calender View -->
-			<div class="container">
+			<div class="calender container">
 				
 
 			</div>
@@ -34,41 +35,44 @@
 
 
 			<!-- Box for adding and updating events -->
-			<div id="addEvent" style="display: hide">
+			<div id="addEvent" style="display: none" class="border border-info">
 				<form class="bg-light text-dark" id="addEventForm" action="/form" method="POST">
-					<span class="New Event"></span>
-					<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
-					<div class="form-group row">
-					   <label for="eventName" class="col-sm-2 col-form-label">Assignment Title</label>
-					   <div class="col-sm-10">
-					    <input type="text" class="form-control" id="eventName" name="Title" value="">
-					   </div>
+					<div class="formContent container">
+						<span class="New Event"></span>
+						<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
+						<div class="form-group row">
+						   <label for="eventName" class="col-sm-2 col-form-label">Assignment Title</label>
+						   <div class="col-sm-10">
+						    <input type="text" class="form-control" id="eventName" name="Title" value="">
+						   </div>
+						</div>
+						<div class="form-group row">
+						   <label for="eventDuration" class="col-sm-2 col-form-label">Estimated Time (h)</label>
+						   <div class="col-sm-10">
+						    <input class="form-control" id="eventDuration" type="number" min="0" name="est">
+						   </div>
+						</div>
+						<div class="form-group row">
+						   <label for="dueDate" class="col-sm-2 col-form-label">Deadline</label>
+						   <div class="col-sm-10">
+						    <input type="date" class="form-control" id="dueDate" name="dead" value="">
+						   </div>
+						</div>
+						  <div class="form-group row">
+						    <div class="col-sm-10">
+						      <button type="submit" class="btn btn-primary">Add</button>
+						    </div>
+						  </div>	
 					</div>
-					<div class="form-group row">
-					   <label for="eventDuration" class="col-sm-2 col-form-label">Estimated Time (h)</label>
-					   <div class="col-sm-10">
-					    <input class="form-control" id="eventDuration" type="number" min="0" name="est">
-					   </div>
-					</div>
-					<div class="form-group row">
-					   <label for="dueDate" class="col-sm-2 col-form-label">Deadline</label>
-					   <div class="col-sm-10">
-					    <input type="date" class="form-control" id="dueDate" name="dead" value="">
-					   </div>
-					</div>
-					  <div class="form-group row">
-					    <div class="col-sm-10">
-					      <button type="submit" class="btn btn-primary">Add</button>
-					    </div>
-					  </div>	
+					
 				</form>
 			</div>
 
 			<!-- Box for adding and updating events -->
-			<div id="preferences" style="display: hide">
+			<div id="preferences" style="display: none">
 				<span class="Preferences"></span>
 				<span class="eveBoxClose" onclick="closeEveBox(preferences);">x</span>
-				<div class="form-container">
+				<div class="form-container container">
 					<strong>Preferences</strong>
 					<form id="addpreferencesForm" onsubmit="updatePreferences();">
 						<input type="text" id="eventId" value="" hidden>
@@ -90,7 +94,7 @@
 
 
 			<!-- Box for viewing events -->
-			<div id="viewEvent" style="display: hide">
+			<div id="viewEvent" style="display: none">
 				<span class="viewEveBoxName"></span>
 				<span id="viewEveBoxEveId"></span>
 				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>

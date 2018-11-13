@@ -19,7 +19,12 @@ function add_event() {
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
 	
-	$("#addEvent").show().css({margin-left: (25%), margin-right:(25%)});
+	$("#addEvent").show().css({
+		"position": "fixed", 
+		"width":"50%",
+		"top":"40%",
+		"left":"25%"
+	});
 	
 	console.log(windowHeight);
 }

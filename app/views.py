@@ -62,7 +62,7 @@ def main():
             # redirect(url_for('form'))
             return form(credentials)
 
-    return render_template('newIndex.html')
+    return render_template('Index.html')
 
 
 @app.route('/', methods=['GET', 'POST']) #allow both GET and POST requests
@@ -82,7 +82,7 @@ def form(credentials):
         else:
             print ("else case")
             # render_template('newIndex.html')
-    return render_template('newIndex.html')
+    return render_template('Index.html')
 
 
 # def setUp():

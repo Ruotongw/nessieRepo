@@ -25,12 +25,9 @@ def main():
 
     global service
     if request.method == "POST":
-        # print ("main data = ")
-        # print (request.data)
         if request.headers.get('X-Requested-With'):
 
             auth_code = request.data
-            # print (auth_code)
             # Set path to the Web application client_secret_*.json file you downloaded from the
             # Google API Console: https://console.developers.google.com/apis/credentials
             CLIENT_SECRET_FILE = 'app/static/client_secret.json'
@@ -58,29 +55,29 @@ def form():
     # print(service)
     # redirect("/form")
     # render_template('index.html')
-    if request.method == 'POST': #this block is only entered when the form is submitted
-        if not request.headers.get('X-Requested-With'):
+    try:
+        print (service)
+        if request.method == 'POST': #this block is only entered when the form is submitted
+            if not request.headers.get('X-Requested-With'):
 
-            global title
-            title = request.form.get('Title')
+                global title
+                title = request.form.get('Title')
 
-            global timeEst
-            timeEst = int(request.form.get('est'))
+                global timeEst
+                timeEst = int(request.form.get('est'))
 
-            global deadLine
-            deadLine = request.form.get('dead')
-            # print (deadLine)
-            # print ('phase 1')
-            # setUp()
-            createEvent()
-        else:
-            print ("else case")
+                global deadLine
+                deadLine = request.form.get('dead')
+                createEvent()
+            else:
+                print ("else case")
 
-    return render_template('index.html')
+        return render_template('index.html')
+    except:
+        return redirect('/')
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
-    print ("SOS")
     # '2018-11-30T11:25:00-05:00'
     events= getCalendarEvents()
     eventsJSON = jsonify(events)
@@ -88,16 +85,11 @@ def getEvents():
     print(eventsJSON)
     # redirect("/")
     return eventsJSON
-    # return 
-    
+    # return
+
 def getCalendarEvents():
     '''Returns a list with every event on the user's primary Google Calendar
     from now unti the due date in cronological order. Each event is a dictionary.'''
-
-    # store = file.Storage('app/static/token.json')
-    # creds = store.get()
-    # http_auth = credentials.authorize(httplib2.Http())
-    # service = discovery.build('calendar', 'v3', http=http_auth)
     now = currentTime()
 
     dueDateFormatted = str(deadLine) + 'T00:00:00-06:00'

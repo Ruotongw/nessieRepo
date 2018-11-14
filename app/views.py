@@ -190,6 +190,9 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
     enoughTime = timeDiff >= (estTimeMin + 30)
 
+    timeDiffEvent = (lastEvent.hour * 60 + lastEvent.minute) - (events[len(events) - 2].hour * 60 + events[len(events) - 2].minute)
+    enoughTimeEvent = timeDiffEvent >= (estTimeMin + 30)
+
     diffDays = lastStart.day != nowDay
 
     if(enoughBeforeTime and (enoughTime or diffDays)):

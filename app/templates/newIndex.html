@@ -35,10 +35,13 @@
 
     <button id="signinButton">Sign in with Google</button>
     <script>
+    window.start = function(){
       $('#signinButton').click(function() {
         // signInCallback defined in step 6.
         auth2.grantOfflineAccess().then(signInCallback);
       });
+    };
+
     </script>
 
 

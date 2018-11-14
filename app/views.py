@@ -31,14 +31,13 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 def main():
 
     global service
-    print ("test")
     if request.method == "POST":
-        print ("main data = ")
-        print (request.data)
+        # print ("main data = ")
+        # print (request.data)
         if request.headers.get('X-Requested-With'):
 
             auth_code = request.data
-            print (auth_code)
+            # print (auth_code)
             # Set path to the Web application client_secret_*.json file you downloaded from the
             # Google API Console: https://console.developers.google.com/apis/credentials
             CLIENT_SECRET_FILE = 'app/static/client_secret.json'
@@ -63,8 +62,8 @@ def main():
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
-    print("we are in the form")
-    print(service)
+    # print("we are in the form")
+    # print(service)
     # redirect("/form")
     # render_template('index.html')
     if request.method == 'POST': #this block is only entered when the form is submitted
@@ -78,8 +77,8 @@ def form():
 
             global deadLine
             deadLine = request.form.get('dead')
-            print (deadLine)
-            print ('phase 1')
+            # print (deadLine)
+            # print ('phase 1')
             # setUp()
             createEvent()
         else:
@@ -236,7 +235,7 @@ def createEvent():
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and adds it to the user's primary calendar.'''
 
-    print ('phase 2')
+    # print ('phase 2')
 
     global event
     eventTime = getEventTime()

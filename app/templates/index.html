@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 		<meta name="author" content="Anirudh Goel" /> -->
 
-		<title>Calender</title>
+		<title>Calendar</title>
 
 		<!-- Font Awesome served from CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
@@ -17,12 +17,12 @@
 	</head>
 
 	<body>
-		<div id="right-area">	
+		<div id="right-area">
 			<nav class="navbar navbar-light top-right justify-content-end" style="background-color: #e3f2fd;">
 				<div>
 					<div class='mx-auto d-inline'>
 						<h6 id="arrow" class='d-inline'>
-							<i class='fa fa-arrow-left' onclick='prevMonth();'></i> 
+							<i class='fa fa-arrow-left' onclick='prevMonth();'></i>
 							<i class='fa fa-arrow-right' onclick='nextMonth();'></i>
 						</h6>
 					</div>
@@ -33,7 +33,7 @@
 
 			<!-- Calender View -->
 			<div class="calender container">
-				
+
 
 			</div>
 
@@ -67,9 +67,9 @@
 						    <div class="col-sm-10">
 						      <button type="submit" class="btn btn-primary">Add</button>
 						    </div>
-						  </div>	
+						  </div>
 					</div>
-					
+
 				</form>
 			</div>
 
@@ -131,7 +131,7 @@
 		<script src="{{ url_for('static', filename='./js/google_calender.js') }}"></script>
 		<script src="{{ url_for('static', filename='./js/event.js') }}" ></script>
 		<script src="{{ url_for('static', filename='./js/calender.js') }}"></script>
-		
+
 		<script async defer src="https://apis.google.com/js/api.js"
 			onload="this.onload=function(){};handleClientLoad()"
 			onreadystatechange="if (this.readyState === 'complete') this.onload()">

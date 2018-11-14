@@ -24,28 +24,32 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 def main():
 
     global service
-    if request.method == "POST":
-        if request.headers.get('X-Requested-With'):
+    try:
+        print (service)
+        return redirect('/form')
+    except:
+        if request.method == "POST":
+            if request.headers.get('X-Requested-With'):
 
-            auth_code = request.data
-            # Set path to the Web application client_secret_*.json file you downloaded from the
-            # Google API Console: https://console.developers.google.com/apis/credentials
-            CLIENT_SECRET_FILE = 'app/static/client_secret.json'
+                auth_code = request.data
+                # Set path to the Web application client_secret_*.json file you downloaded from the
+                # Google API Console: https://console.developers.google.com/apis/credentials
+                CLIENT_SECRET_FILE = 'app/static/client_secret.json'
 
-            # Exchange auth code for access token, refresh token, and ID token
-            credentials = client.credentials_from_clientsecrets_and_code(
-                CLIENT_SECRET_FILE,
-                ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
-                auth_code)
+                # Exchange auth code for access token, refresh token, and ID token
+                credentials = client.credentials_from_clientsecrets_and_code(
+                    CLIENT_SECRET_FILE,
+                    ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
+                    auth_code)
 
-            # Call Google API
-            http_auth = credentials.authorize(httplib2.Http())
-            service = discovery.build('calendar', 'v3', http=http_auth)
+                # Call Google API
+                http_auth = credentials.authorize(httplib2.Http())
+                service = discovery.build('calendar', 'v3', http=http_auth)
 
-            now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+                now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
 
-            return form()
-    return render_template('base.html')
+                return form()
+        return render_template('base.html')
 
 
 
@@ -79,7 +83,8 @@ def form():
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
     # '2018-11-30T11:25:00-05:00'
-    events= getCalendarEvents()
+    now = currentTime() #this is super temporary
+    events = getCalendarEvents(now, deadLine) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200
     print(eventsJSON)
@@ -87,13 +92,14 @@ def getEvents():
     return eventsJSON
     # return
 
-def getCalendarEvents():
+def getCalendarEvents(min, max):
     '''Returns a list with every event on the user's primary Google Calendar
     from now unti the due date in cronological order. Each event is a dictionary.'''
-    now = currentTime()
 
-    dueDateFormatted = str(deadLine) + 'T00:00:00-06:00'
-    events_result = service.events().list(calendarId='primary', timeMin=now,
+    #this could be an issue since [min] is formatted and [max] is not
+
+    dueDateFormatted = str(max) + 'T00:00:00-06:00'
+    events_result = service.events().list(calendarId='primary', timeMin=min,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
 
@@ -213,7 +219,8 @@ def getEventTime():
     nowDay, nowHour, nowMinute = getNowDHM(currentTime())
     workStart = 6
     workEnd = 23
-    events = getCalendarEvents()
+    now = currentTime()
+    events = getCalendarEvents(now, deadLine)
 
     availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
 

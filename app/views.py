@@ -88,8 +88,8 @@ def getEvents():
     print(eventsJSON)
     # redirect("/")
     return eventsJSON
-    # return 
-    
+    # return
+
 def getCalendarEvents():
     '''Returns a list with every event on the user's primary Google Calendar
     from now unti the due date in cronological order. Each event is a dictionary.'''
@@ -318,11 +318,8 @@ def formatEvent(event1, event2):
     utc = timezone('UTC')
     chi = timezone('America/Chicago')
 
-    # e1 = e1.astimezone(utc)
-    # e2 = e2.astimezone(utc)
-
-    e1 = e1.replace(tzinfo=utc)
-    e2 = e2.replace(tzinfo=utc)
+    e1 = e1.astimezone(utc)
+    e2 = e2.astimezone(utc)
 
     e1.strftime(fmt)
     e2.strftime(fmt)

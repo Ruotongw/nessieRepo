@@ -38,6 +38,14 @@
 }
 
 .currentday {
-    background-color: #25add1;
+    background-color: #f2d43b;
     color: white;
+}
+
+.day {
+    overflow-y: scroll;
+}
+
+body {
+    margin-bottom: 30px;
 }

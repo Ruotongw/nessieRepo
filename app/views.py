@@ -79,8 +79,18 @@ def form():
 
     return render_template('index.html')
 
-
-
+@app.route('/allEvents', methods=['GET', 'POST'])
+def getEvents():
+    print ("SOS")
+    # '2018-11-30T11:25:00-05:00'
+    events= getCalendarEvents()
+    eventsJSON = jsonify(events)
+    eventsJSON.status_code = 200
+    print(eventsJSON)
+    # redirect("/")
+    return eventsJSON
+    # return 
+    
 def getCalendarEvents():
     '''Returns a list with every event on the user's primary Google Calendar
     from now unti the due date in cronological order. Each event is a dictionary.'''

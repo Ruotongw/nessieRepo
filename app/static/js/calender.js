@@ -59,7 +59,7 @@ function calender(month, year) {
     // Output the calender onto the site.  Also, putting in the month name and days of the week.
     var calenderTable = "<div class='container-fluid'>";
     var monthYear = "<h5 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><h5> "
-    if ($(window).width() < 750) {
+    if ($(window).width() < 768) {
         calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sun</h5> <h5 class='col-sm p-1 text-center'>Mon</h5> <h5 class='col-sm p-1 text-center'>Tues</h5> <h5 class='col-sm p-1 text-center'>Wed</h5> <h5 class='col-sm p-1 text-center'>Thur</h5> <h5 class='col-sm p-1 text-center'>Fri</h5> <h5 class='col-sm p-1 text-center'>Sat</h5> </div></header>";
     } else {
         calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sunday</h5> <h5 class='col-sm p-1 text-center'>Monday</h5> <h5 class='col-sm p-1 text-center'>Tuesday</h5> <h5 class='col-sm p-1 text-center'>Wednesday</h5> <h5 class='col-sm p-1 text-center'>Thurday</h5> <h5 class='col-sm p-1 text-center'>Friday</h5> <h5 class='col-sm p-1 text-center'>Saturday</h5> </div></header>";
@@ -93,7 +93,7 @@ function nextMonth() {
     // console.log(nextmon);
     calender(nextMon, year);
     // calculateWeather();
-    // refreshAllEvents();
+    refreshAllEvents();
 }
 
 //
@@ -110,7 +110,7 @@ function prevMonth() {
     // console.log(prevmon);
     calender(prevMon, year);
     // calculateWeather();
-    // refreshAllEvents();
+    refreshAllEvents();
 }
 
 //
@@ -119,19 +119,21 @@ function prevMonth() {
 if (window.addEventListener) {
     calender(currentMonth, currentYear);
     // calculateWeather();
-    // refreshAllEvents();
+    refreshAllEvents();
 } else if (window.attachEvent) {
     calender(currentMonth, currentYear);
     // calculateWeather();
-    // refreshAllEvents();
+    refreshAllEvents();
 }
+
+console.log("load calendar");
 
 //
 // Whenever window is resized, page is reloaded so as to change full day names to short names to ensure responsiveness.
 // Eg - Wednesday -> Wed
 //
 $(window).resize(function() {
-    if ($(window).width() < 750) {
+    if ($(window).width() < 768) {
         $(".table-header").html("<th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th>");
     } else {
         $(".table-header").html("<th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>");

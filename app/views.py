@@ -83,7 +83,8 @@ def form():
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
     # '2018-11-30T11:25:00-05:00'
-    events= getCalendarEvents()
+    now = currentTime() #this is super temporary
+    events = getCalendarEvents(now, deadLine) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200
     print(eventsJSON)
@@ -91,13 +92,14 @@ def getEvents():
     return eventsJSON
     # return
 
-def getCalendarEvents():
+def getCalendarEvents(min, max):
     '''Returns a list with every event on the user's primary Google Calendar
     from now unti the due date in cronological order. Each event is a dictionary.'''
-    now = currentTime()
 
-    dueDateFormatted = str(deadLine) + 'T00:00:00-06:00'
-    events_result = service.events().list(calendarId='primary', timeMin=now,
+    #this could be an issue since [min] is formatted and [max] is not
+
+    dueDateFormatted = str(max) + 'T00:00:00-06:00'
+    events_result = service.events().list(calendarId='primary', timeMin=min,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
 
@@ -214,7 +216,8 @@ def getEventTime():
     nowDay, nowHour, nowMinute = getNowDHM(currentTime())
     workStart = 6
     workEnd = 23
-    events = getCalendarEvents()
+    now = currentTime()
+    events = getCalendarEvents(now, deadLine)
 
     availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
 

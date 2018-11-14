@@ -1,0 +1,51 @@
+@media (max-width:575px) {
+    .display-4 {
+        font-size: 1.5rem;
+    }
+    .day h5 {
+        background-color: #f8f9fa;
+        padding: 3px 5px 5px;
+        margin: -8px -8px 8px -8px;
+    }
+    .date {
+        padding-left: 4px;
+    }
+}
+
+@media (min-width: 576px) {
+    .day {
+        height: 9vw;
+    }
+}
+
+#form-content{
+    width: 90%;
+    margin-left: auto; 
+    height: 100%;
+}
+
+#addEvent {
+    /*border: 5px solid red;*/
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.border-info {
+    border-width:5px !important;
+}
+
+#arrow {
+    font-size: 1.5rem;
+}
+
+.currentday {
+    background-color: #f2d43b;
+    color: white;
+}
+
+.day {
+    overflow-y: scroll;
+}
+
+body {
+    margin-bottom: 30px;
+}

@@ -5,6 +5,7 @@ var currentYear = current.getFullYear();
 
 function calender(month, year) {
     var padding = "";
+    var postPadding = "";
 
     // Determining if Feb has 28 or 29 days
     febDays = ((currentYear % 100 !== 0) && (currentYear % 4 === 0) || (currentYear % 400 === 0)) ? 29 : 28;
@@ -21,7 +22,7 @@ function calender(month, year) {
 
     // After getting the first day of the week for the month, padding the other days for that week with the previous months days, i.e., if the first day of the week is on a Thursday, then this fills in Sun - Wed with the last months dates, counting down from the last day on Wed, until Sunday.
     for (var i = 0; i < firstDay; i++) {
-        padding += "<td class='preMonth'></td>";
+        padding += "<div class='preMonth day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted'></div>";
     }
 
     var generateDay = firstDay;
@@ -30,33 +31,48 @@ function calender(month, year) {
     for (var i = 1; i <= totalDays; i++) {
         // Determining when to start a new row
         if (generateDay > 6) {
-            generateCal += "</tr><tr>";
+            generateCal += "<div class='w-100'></div>";
             generateDay = 0;
         }
 
         // Checking to see if i is equal to the current day, if so then we are making the color of that cell a different color using CSS.
         if (i == currentDate && month == currentMonth) {
-            generateCal += "<td onclick='td_click(event);' class='currentday' id='" + i + monthNames[month] + "'><span class='date'>" + i + "</span></td>";
+            generateCal += "<div class='currentday day col-sm p-2 border border-left-0 border-top-0 text-truncate ' id='" + i + monthNames[month] + "'><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5></div>";
         } else {
-            generateCal += "<td onclick='td_click(event);'  id='" + i + monthNames[month] + "'><span class='date'>" + i + "</span></td>";
+            generateCal += "<div class='day col-sm p-2 border border-left-0 border-top-0 text-truncate ' id='" + i + monthNames[month] + "'><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5></div>";
         }
+        //onclick='cell_click(event);'
 
         generateDay++;
     }
 
-    // Output the calender onto the site.  Also, putting in the month name and days of the week.
-    var calenderTable = "<table>";
-    if ($(window).width() < 750) {
-        calenderTable += "<tr class='table-header'> <th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th> </tr>";
-    } else {
-        calenderTable += "<tr class='table-header'> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th> </tr>";
+    //padding the cells before the first day of next month 
+    var totalDaysMonth = parseInt(firstDay) + parseInt(totalDays)
+    var lastDay = totalDaysMonth%7;
+    if (lastDay != 0) {
+        for (var i = 0; i < 7-lastDay; i++) {
+            postPadding += "<div class='preMonth day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted'></div>";
+        }
     }
-    calenderTable += "<tr>";
+    
+    console.log(lastDay)
+    // Output the calender onto the site.  Also, putting in the month name and days of the week.
+    var calenderTable = "<div class='container-fluid'>";
+    var monthYear = "<h5 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><h5> "
+    if ($(window).width() < 768) {
+        calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sun</h5> <h5 class='col-sm p-1 text-center'>Mon</h5> <h5 class='col-sm p-1 text-center'>Tues</h5> <h5 class='col-sm p-1 text-center'>Wed</h5> <h5 class='col-sm p-1 text-center'>Thur</h5> <h5 class='col-sm p-1 text-center'>Fri</h5> <h5 class='col-sm p-1 text-center'>Sat</h5> </div></header>";
+    } else {
+        calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sunday</h5> <h5 class='col-sm p-1 text-center'>Monday</h5> <h5 class='col-sm p-1 text-center'>Tuesday</h5> <h5 class='col-sm p-1 text-center'>Wednesday</h5> <h5 class='col-sm p-1 text-center'>Thurday</h5> <h5 class='col-sm p-1 text-center'>Friday</h5> <h5 class='col-sm p-1 text-center'>Saturday</h5> </div></header>";
+    }
+    calenderTable += "<div class='row border border-right-0 border-bottom-0'>";
     calenderTable += padding;
     calenderTable += generateCal;
-    calenderTable += "</tr></table>";
+    calenderTable += postPadding;
+    calenderTable += "</div></div>";
 
-    $(".container").html(calenderTable);
+    console.log(calenderTable)
+
+    $(".calender").html(calenderTable);
     $(".month").text(monthNames[month]);
     $(".month").attr('id', month);
     $(".year").text(year);
@@ -77,7 +93,7 @@ function nextMonth() {
     // console.log(nextmon);
     calender(nextMon, year);
     // calculateWeather();
-    // refreshAllEvents();
+    refreshAllEvents();
 }
 
 //
@@ -93,8 +109,8 @@ function prevMonth() {
     }
     // console.log(prevmon);
     calender(prevMon, year);
-    calculateWeather();
-    // refreshAllEvents();
+    // calculateWeather();
+    refreshAllEvents();
 }
 
 //
@@ -103,19 +119,21 @@ function prevMonth() {
 if (window.addEventListener) {
     calender(currentMonth, currentYear);
     // calculateWeather();
-    // refreshAllEvents();
+    refreshAllEvents();
 } else if (window.attachEvent) {
     calender(currentMonth, currentYear);
     // calculateWeather();
-    // refreshAllEvents();
+    refreshAllEvents();
 }
+
+console.log("load calendar");
 
 //
 // Whenever window is resized, page is reloaded so as to change full day names to short names to ensure responsiveness.
 // Eg - Wednesday -> Wed
 //
 $(window).resize(function() {
-    if ($(window).width() < 750) {
+    if ($(window).width() < 768) {
         $(".table-header").html("<th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th>");
     } else {
         $(".table-header").html("<th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>");

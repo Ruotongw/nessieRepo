@@ -58,7 +58,7 @@ function calender(month, year) {
     console.log(lastDay)
     // Output the calender onto the site.  Also, putting in the month name and days of the week.
     var calenderTable = "<div class='container-fluid'>";
-    var monthYear = "<h5 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><h5> "
+    var monthYear = "<h5 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><div class='mx-auto'><h6 id='arrow' class='d-inline'><i class='fa fa-arrow-left' onclick='prevMonth();'></i><i class='fa fa-arrow-right' onclick='nextMonth();'></i></h6></div><h5>"
     if ($(window).width() < 768) {
         calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sun</h5> <h5 class='col-sm p-1 text-center'>Mon</h5> <h5 class='col-sm p-1 text-center'>Tues</h5> <h5 class='col-sm p-1 text-center'>Wed</h5> <h5 class='col-sm p-1 text-center'>Thur</h5> <h5 class='col-sm p-1 text-center'>Fri</h5> <h5 class='col-sm p-1 text-center'>Sat</h5> </div></header>";
     } else {

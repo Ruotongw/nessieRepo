@@ -17,6 +17,7 @@ import pytz
 from pytz import timezone
 import time
 from tzlocal import get_localzone
+import calendar
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
@@ -82,9 +83,15 @@ def form():
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
+    from datetime import date
     # '2018-11-30T11:25:00-05:00'
-    now = currentTime() #this is super temporary
-    events = getCalendarEvents(now, deadLine) #replace deadline with something else
+    # now = currentTime() #this is super temporary
+    firstDay = str(date.today().year)+"-"+str(date.today().month)+"-01"
+    numDay = calendar.monthrange(date.today().year, date.today().month)[1] 
+    lastDay= str(date.today().year)+"-"+str(date.today().month)+"-"+str(numDay)
+    print(firstDay)
+    print(lastDay)
+    events = getCalendarEvents(firstDay, lastDay) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200
     print(eventsJSON)
@@ -97,14 +104,14 @@ def getCalendarEvents(min, max):
     from now unti the due date in cronological order. Each event is a dictionary.'''
 
     #this could be an issue since [min] is formatted and [max] is not
-
+    initDateFormatted = str(min) + 'T00:00:00-06:00'
     dueDateFormatted = str(max) + 'T00:00:00-06:00'
-    events_result = service.events().list(calendarId='primary', timeMin=min,
+    events_result = service.events().list(calendarId='primary', timeMin=initDateFormatted,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
 
     events = events_result.get('items', [])
-
+    print(events)
     if not events:
         print('No upcoming events found.')
     return events

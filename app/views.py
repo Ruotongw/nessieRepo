@@ -60,7 +60,7 @@ def form():
     # redirect("/form")
     # render_template('index.html')
     try:
-        print (service)
+        # print (service)
         if request.method == 'POST': #this block is only entered when the form is submitted
             if not request.headers.get('X-Requested-With'):
 
@@ -72,7 +72,8 @@ def form():
 
                 global deadLine
                 deadLine = request.form.get('dead')
-                createEvent()
+                print('test1')
+                addEvent(createEvent())
             else:
                 print ("else case")
 
@@ -87,7 +88,7 @@ def getEvents():
     events = getCalendarEvents(now, deadLine) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200
-    print(eventsJSON)
+    # print(eventsJSON)
     # redirect("/")
     return eventsJSON
     # return
@@ -141,6 +142,7 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     estMins = estTimeMin % 60
     estHours = (estTimeMin - estMins) / 60
 
+    global availableTimes
     availableTimes = []
 
     openHours, openMinutes = openTimeWindow(workStart,workEnd)
@@ -229,14 +231,20 @@ def getEventTime():
         # print (length)
         x = random.randrange(0, length)
 
-        eventTime = availableTimes[x]
-        return eventTime
+        global timeSlot
+        timeSlot = availableTimes[x]
+        return timeSlot
     else:
         return  '''<h1>Oops</h1>'''
 
+def rescheduleEvent():
+    availableTimes.remove(timeSlot)
+    timeSlot = getEventTime()
+    return timeSlot
 
 event = {}
 def createEvent():
+    print('test2')
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and adds it to the user's primary calendar.'''
 
@@ -265,12 +273,20 @@ def createEvent():
         print(event)
 
         event = service.events().insert(calendarId = 'primary', body = event).execute()
-        print ('Event created: %s' % (event.get('summary')))
-        print ('time: %s' % (eventStart))
-        return redirect('https://calendar.google.com/calendar/', code=302)
+        # print ('Event created: %s' % (event.get('summary')))
+        # print ('time: %s' % (eventStart))
+        # return redirect('https://calendar.google.com/calendar/', code=302)
+        return event
 
     else:
         print("No available times")
+
+
+def addEvent(event):
+    event = service.events().insert(calendarId = 'primary', body = event).execute()
+    print ('Event created: %s' % (event.get('summary')))
+    print ('time: %s' % (eventStart))
+    return redirect('https://calendar.google.com/calendar/', code=302)
 
 
 def getScheduledEvent():

@@ -73,8 +73,7 @@ def form():
 
                 global deadLine
                 deadLine = request.form.get('dead')
-                print('test1')
-                addEvent(createEvent())
+                addEvent()
             else:
                 print ("else case")
 
@@ -88,11 +87,11 @@ def getEvents():
     # '2018-11-30T11:25:00-05:00'
     # now = currentTime() #this is super temporary
     firstDay = str(date.today().year)+"-"+str(date.today().month)+"-01"
-    numDay = calendar.monthrange(date.today().year, date.today().month)[1] 
+    numDay = calendar.monthrange(date.today().year, date.today().month)[1]
     lastDay= str(date.today().year)+"-"+str(date.today().month)+"-"+str(numDay)
-    print(firstDay)
-    print(lastDay)
-    events = getCalendarEvents(firstDay, lastDay) #replace deadline with something else
+    # print(firstDay)
+    # print(lastDay)
+    events = getCalendarEvents(firstDay + 'T00:00:00-06:00', lastDay) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200
     # print(eventsJSON)
@@ -105,20 +104,21 @@ def getCalendarEvents(min, max):
     from now unti the due date in cronological order. Each event is a dictionary.'''
 
     #this could be an issue since [min] is formatted and [max] is not
-    initDateFormatted = str(min) + 'T00:00:00-06:00'
+    # initDateFormatted = str(min) + 'T00:00:00-06:00'
     dueDateFormatted = str(max) + 'T00:00:00-06:00'
-    events_result = service.events().list(calendarId='primary', timeMin=initDateFormatted,
+    events_result = service.events().list(calendarId='primary', timeMin=min,
                                     timeMax = dueDateFormatted, singleEvents=True,
                                     orderBy = 'startTime').execute()
 
     events = events_result.get('items', [])
-    print(events)
+    # print(events)
     if not events:
         print('No upcoming events found.')
     return events
 
 
 def currentTime():
+    print('in currentTime')
     '''Returns the current Chicago time, accounting for daylight savings and
     in the correct string format to use with Google's API.'''
 
@@ -205,8 +205,8 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
     enoughTime = timeDiff >= (estTimeMin + 30)
 
-    timeDiffEvent = (lastEvent.hour * 60 + lastEvent.minute) - (events[len(events) - 2].hour * 60 + events[len(events) - 2].minute)
-    enoughTimeEvent = timeDiffEvent >= (estTimeMin + 30)
+    # timeDiffEvent = (lastEvent.hour * 60 + lastEvent.minute) - (events[len(events) - 2].hour * 60 + events[len(events) - 2].minute)
+    # enoughTimeEvent = timeDiffEvent >= (estTimeMin + 30)
 
     diffDays = lastStart.day != nowDay
 
@@ -218,7 +218,7 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
         timeSlot = generalTimeSlot(lastEnd)
         availableTimes.append(timeSlot)
 
-    print(availableTimes)
+    # print(availableTimes)
     return availableTimes
 
 
@@ -251,16 +251,11 @@ def rescheduleEvent():
 
 event = {}
 def createEvent():
-    print('test2')
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and adds it to the user's primary calendar.'''
 
-    # print ('phase 2')
-
     global event
     eventTime = getEventTime()
-
-    # print(eventTime)
 
     if (eventTime != '''<h1>Oops</h1>'''):
         eventStart = eventTime[0]
@@ -277,9 +272,7 @@ def createEvent():
             },
         }
 
-        print(event)
-
-        event = service.events().insert(calendarId = 'primary', body = event).execute()
+        # event = service.events().insert(calendarId = 'primary', body = event).execute()
         # print ('Event created: %s' % (event.get('summary')))
         # print ('time: %s' % (eventStart))
         # return redirect('https://calendar.google.com/calendar/', code=302)
@@ -289,10 +282,11 @@ def createEvent():
         print("No available times")
 
 
-def addEvent(event):
+def addEvent():
+    event = createEvent()
     event = service.events().insert(calendarId = 'primary', body = event).execute()
     print ('Event created: %s' % (event.get('summary')))
-    print ('time: %s' % (eventStart))
+    print ('time: %s' % (eventTime[0]))
     return redirect('https://calendar.google.com/calendar/', code=302)
 
 

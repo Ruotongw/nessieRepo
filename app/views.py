@@ -197,20 +197,28 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     lastEvent = events[len(events) - 1]
     lastEnd, lastStart = formatEvent(lastEvent, lastEvent)
 
+    secondToLast = events[len(events) - 2]
+    secondEnd, secondStart = formatEvent(secondToLast, secondToLast)
+
     timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
 
     beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart*60)
-    enoughBeforeTime = beforeTime >= estTimeMin + 30
+    enoughBeforeTime = (beforeTime >= estTimeMin + 30)
 
     timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
-    enoughTime = timeDiff >= (estTimeMin + 30)
+    enoughTime = (timeDiff >= (estTimeMin + 30))
 
-    # timeDiffEvent = (lastEvent.hour * 60 + lastEvent.minute) - (events[len(events) - 2].hour * 60 + events[len(events) - 2].minute)
-    # enoughTimeEvent = timeDiffEvent >= (estTimeMin + 30)
+    print('got to timeDiffEvent')
+    timeDiffEvent = (lastStart.hour * 60 + lastStart.minute) - (secondEnd.hour * 60 + secondEnd.minute)
+    print('got to enoughTimeEvent')
+    enoughTimeEvent = (timeDiffEvent >= (estTimeMin + 30))
+    print('got past enoughTimeEvent')
 
     diffDays = lastStart.day != nowDay
+    diffEventDays = lastStart.day != secondEnd.day
+    print('got past diffEventDays')
 
-    if(enoughBeforeTime and (enoughTime or diffDays)):
+    if(enoughBeforeTime and (enoughTime or diffDays) and (diffEventDays or enoughTimeEvent)):
         timeSlot = morningTimeSlot(lastStart)
         availableTimes.append(timeSlot)
 
@@ -218,7 +226,7 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
         timeSlot = generalTimeSlot(lastEnd)
         availableTimes.append(timeSlot)
 
-    # print(availableTimes)
+    print(availableTimes)
     return availableTimes
 
 

@@ -40,13 +40,13 @@ body {
 }
 
 .bg-light {
-    
+
     /*border-color: #9f9a9a !important;*/
 }
 
 #form-content{
     width: 90%;
-    margin-left: auto; 
+    margin-left: auto;
     height: 100%;
 }
 
@@ -72,4 +72,3 @@ body {
 .day {
     overflow-y: scroll;
 }
-

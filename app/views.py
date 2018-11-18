@@ -18,6 +18,8 @@ from pytz import timezone
 import time
 from tzlocal import get_localzone
 import calendar
+from .format import *
+from .timeSlot import *
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
@@ -149,6 +151,12 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     estMins = estTimeMin % 60
     estHours = (estTimeMin - estMins) / 60
 
+    global format
+    format = Format()
+
+    global timeSlot
+    timeSlot = TimeSlot(timeEst)
+
     global availableTimes
     availableTimes = []
 
@@ -158,7 +166,7 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
         event1 = events[i]
         event2 = events[i + 1]
 
-        e1, e2 = formatEvent(event1, event2)
+        e1, e2 = format.formatEvent(event1, event2)
 
         sameDay = (e1.day == e2.day)
 
@@ -181,24 +189,27 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
         if(currentTime and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))):
-            timeSlot = generalTimeSlot(e1)
+            print("before after")
+            timeSlot = timeSlot.afterTimeSlot(e1)
             availableTimes.append(timeSlot)
 
         if(currentTime and (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
-            timeSlot = generalTimeSlot(e1)
+            print("before after")
+            timeSlot = timeSlot.afterTimeSlot(e1)
             availableTimes.append(timeSlot)
 
         if(not sameDay and enoughMorningTime):
-            timeSlot = morningTimeSlot(e2)
+            timeSlot = timeSlot.beforeTimeSlot(e2)
             availableTimes.append(timeSlot)
 
     # Accounts for the possible time slot after the last event before the due date.
     # Also accounts for if there's only one event before the due date.
     lastEvent = events[len(events) - 1]
-    lastEnd, lastStart = formatEvent(lastEvent, lastEvent)
+    lastEnd, lastStart = format.formatEvent(lastEvent, lastEvent)
+    print("lastEnd reached", lastEnd)
 
     secondToLast = events[len(events) - 2]
-    secondEnd, secondStart = formatEvent(secondToLast, secondToLast)
+    secondEnd, secondStart = format.formatEvent(secondToLast, secondToLast)
 
     timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
 
@@ -208,22 +219,19 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
     enoughTime = (timeDiff >= (estTimeMin + 30))
 
-    print('got to timeDiffEvent')
     timeDiffEvent = (lastStart.hour * 60 + lastStart.minute) - (secondEnd.hour * 60 + secondEnd.minute)
-    print('got to enoughTimeEvent')
     enoughTimeEvent = (timeDiffEvent >= (estTimeMin + 30))
-    print('got past enoughTimeEvent')
 
     diffDays = lastStart.day != nowDay
     diffEventDays = lastStart.day != secondEnd.day
-    print('got past diffEventDays')
 
     if(enoughBeforeTime and (enoughTime or diffDays) and (diffEventDays or enoughTimeEvent)):
-        timeSlot = morningTimeSlot(lastStart)
+        timeSlot = timeSlot.beforeTimeSlot(lastStart)
         availableTimes.append(timeSlot)
 
     if((lastEnd.hour in openHours) and (timeWindow in openMinutes)):
-        timeSlot = generalTimeSlot(lastEnd)
+        print("before after")
+        timeSlot = timeSlot.afterTimeSlot(lastEnd)
         availableTimes.append(timeSlot)
 
     print(availableTimes)
@@ -323,153 +331,3 @@ def openTimeWindow(openStartTime, openEndTime):
     openHours = range(openStartTime, openEndTime)
     openMinutes = range(openStartTime * 60, openEndTime * 60)
     return openHours, openMinutes
-
-
-def formatEvent(event1, event2):
-    '''Returns event1 and event2 in the correct datetime format to use in
-    findAvailableTimes(). This requires turning the start and end time strings
-    into dateTime objects, converting them to UTC time, and normalizing them to
-    account for daylight savings time.'''
-
-    fmt = '%Y-%m-%dT%H:%M:%S%z'
-
-    e1str = event1['end'].get('dateTime')
-    e2str = event2['start'].get('dateTime')
-
-    e1str = e1str[:22] + e1str[23:]
-    e2str = e2str[:22] + e2str[23:]
-
-    e1 = datetime.datetime.strptime(e1str, fmt)
-    e2 = datetime.datetime.strptime(e2str, fmt)
-
-    utc = timezone('UTC')
-    chi = timezone('America/Chicago')
-
-    e1 = e1.astimezone(utc)
-    e2 = e2.astimezone(utc)
-
-    e1.strftime(fmt)
-    e2.strftime(fmt)
-
-    e1, e2 = inDaylightSavings(e1, e2)
-
-    e1.strftime(fmt)
-    e2.strftime(fmt)
-
-    e1 = chi.normalize(e1)
-    e2 = chi.normalize(e2)
-
-    return e1, e2
-
-
-def inDaylightSavings(e1, e2):
-    '''Checks whether event1 and e2 are in daylight savings time and adds an
-    hour accordingly.'''
-
-    DSTMonths = [4, 5, 6, 7, 8, 9, 10]
-
-    if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
-        e1 = e1 + datetime.timedelta(hours = 0)
-        e2 = e2 + datetime.timedelta(hours = 0)
-    else:
-        e1 = e1 + datetime.timedelta(hours = 1)
-        e2 = e2 + datetime.timedelta(hours = 1)
-
-    return e1, e2
-
-
-def morningTimeSlot(event2):
-    '''Returns the time slot before event2. Used for the first event of the day,
-    given that there is enough time between that event and the start of working
-    hours.'''
-
-    localizedTime = timeEst
-
-    event2Min = (event2.hour * 60) + event2.minute
-    localizedTime = localizedTime * 60
-
-    startTime = event2Min - localizedTime - 15
-    startMin = startTime % 60
-    startHour = (startTime - startMin) / 60
-
-    endTime = event2Min -15
-    endMin = endTime % 60
-    endHour = (endTime - endMin)/60
-
-    eventStart = formatDT2(event2.year, event2.month, event2.day, startHour, startMin, event2.second)
-    eventEnd = formatDT2(event2.year, event2.month, event2.day, endHour, endMin, event2.second)
-
-    timeSlot = [eventStart, eventEnd]
-    return timeSlot
-
-
-def generalTimeSlot(event1):
-    '''Returns the time slot after event1. Used for most scheduling cases, hence
-    the name generalTimeSlot.'''
-    localizedTime = timeEst
-
-    event1Min = (event1.hour * 60) + event1.minute
-    localizedTime = localizedTime * 60
-
-    startTime = event1Min + 15
-    startMin = startTime % 60
-    startHour = (startTime - startMin) / 60
-
-    endTime = startTime + localizedTime
-    endMin = endTime % 60
-    endHour = (endTime - endMin)/60
-
-    eventStart = formatDT2(event1.year, event1.month, event1.day, startHour, startMin, event1.second)
-    eventEnd = formatDT2(event1.year, event1.month, event1.day, endHour, endMin, event1.second)
-
-    timeSlot = [eventStart, eventEnd]
-    return timeSlot
-
-
-def formatDT1(dt):
-    '''Returns a datetime string of the given datetime object formatted
-    correctly for the Google API.'''
-
-    fmt = '%Y-%m-%dT%H:%M:%S%z'
-    dt = dt.strftime(fmt)
-    dt = dt[:22] + ':' + e2[22:]
-
-    return dt
-
-
-def formatDT2(year, month, day, hour, minute, second):
-    '''Returns a datetime string with the given integers formatted correctly
-    for the Google API.'''
-
-    year = str(year)
-
-    month = int(month)
-    month = str(month)
-    if int(month) < 10:
-        month = '0' + month
-
-    day = int(day)
-    day = str(day)
-    if int(day) < 10:
-        day = '0' + day
-
-    hour = int(hour)
-    hour = str(hour)
-    if int(hour) < 10:
-        hour = '0' + hour
-
-    minute = int(minute)
-    minute = str(minute)
-    if int(minute) < 10:
-        minute = '0' + minute
-
-    second = int(second)
-    second = str(second)
-    if int(second) < 10:
-        second = '0' + second
-
-    dt = (year + '-' + month + '-' + day +
-                    'T' + hour + ':' + minute + ':' +
-                    second + '-05:00')
-
-    return dt

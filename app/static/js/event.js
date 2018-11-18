@@ -1,3 +1,4 @@
+// display events on the calendar and add interactivity to bottoms 
 
 // Initializing variables
 var month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -5,19 +6,18 @@ var month_number = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", 
 var day_name = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var year = parseInt($(".year").attr('id'));
 
-console.log("load event");
+// console.log("load event");
 
-//If empty space or weather part of any date is clicked, create new event box
+// 
+//If the add event button is clicked, create new event box
+// 
 function add_event() {
 	// Initializing new event box's input field as blank
 	$("#eventName").val("");
 	$("#eventDuration").val("");
 	$("#eventDescription").val("");
 
-	//
 	// Displaying new event box at apt location
-	//
-	// $("#add-event").append("<div id='justForShowEvent'></div>");
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
 	
@@ -28,56 +28,7 @@ function add_event() {
 		"left":"25%"
 	});
 	
-	console.log(windowHeight);
-}
-
-// function cell_click(event) {
-// 	// event.stopPropagation();
-// 	closeEveBox(event);
-
-// 	var td_id = event.target.id;
-// 	if (td_id == "") {
-// 		td_id = event.target.closest("td").id;
-// 	}
-
-// 	// Initializing new event box's input field as blank
-// 	$("#eventName").val("");
-// 	$("#eventDuration").val("");
-// 	$("#eventDescription").val("");
-
-
-// 	//
-// 	// Automatically setting start and end date in New event box
-// 	//
-// 	var td_date = parseInt(td_id);
-// 	var td_month = td_id.substr(td_date.toString().length);
-// 	setStartEndDate(td_date, td_month);
-// 	$(".eveBoxDate").text(td_date + " " + td_month + " " + year);
-
-// 	//
-// 	// Displaying new event box at apt location
-// 	//
-// 	$("#" + td_id).append("<div id='justForShowEvent'></div>");
-// 	var td_left = $("#" + td_id).position().left;
-// 	var td_width = $("#" + td_id).width();
-// 	var windowWidth = $(window).width();
-// 	var eventBoxWidth = $("#addEvent").width();
-// 	if (td_left + td_width + eventBoxWidth > windowWidth) {
-// 		$("#addEvent").show().css({position:"absolute", top:(event.pageY - 120), left: (td_left - eventBoxWidth)});
-// 	} else {
-// 		$("#addEvent").show().css({position:"absolute", top:(event.pageY - 120), left: (td_left + td_width + 8)});
-// 	}
-// }
-
-//
-// Automatically setting the start and end date of event box's input field
-//
-function setStartEndDate(date, month) {
-	if (date < 10) {date = "0" + date};
-	month = month_number[month_names.indexOf(month)];
-
-	$("#eventStartDate").val(year + "-" + month + "-" + date);
-	$("#eventEndDate").val(year + "-" + month + "-" + date);
+	// console.log(windowHeight);
 }
 
 //
@@ -86,14 +37,12 @@ function setStartEndDate(date, month) {
 function closeEveBox(e) {
 	e.preventDefault();
 
-	$("#justForShowEvent").remove();
 	$(".event-rectangles").removeClass("event-rectangle-select");
 	$("#addEvent").hide();
-	$("#viewEvent").hide();
 }
 
 //
-// Check if the event is all day event by checking the Font Awesome Icon state
+// [NOT CURRENTLY USEING]Check if the event is all day event by checking the Font Awesome Icon state
 //
 function allDay() {
 	if ($(".fa-check-square-o").length) {
@@ -106,7 +55,7 @@ function allDay() {
 }
 
 //
-// Updating the clicked event
+// [NOT CURRENTLY USEING]Updating the clicked event
 //
 function updateEvent(e) {
 	console.log('got into updateEvent');
@@ -150,7 +99,7 @@ function updateEvent(e) {
 }
 
 //
-// Display clicked event's details when any event is clicked
+// [NOT CURRENTLY USEING]Display clicked event's details when any event is clicked
 //
 function event_rectangle_clicked(event) {
 	event.stopPropagation();
@@ -200,7 +149,7 @@ function event_rectangle_clicked(event) {
 }
 
 //
-// Delete an event
+// [NOT CURRENTLY USEING]Delete an event
 //
 function deleteEve(event) {
 	event.preventDefault();
@@ -216,7 +165,7 @@ function deleteEve(event) {
 }
 
 //
-// Display Edit event box with clicked event's details when an event is clicked
+// [NOT CURRENTLY USEING]Display Edit event box with clicked event's details when an event is clicked
 //
 function editEve(event) {
 	event.preventDefault();
@@ -255,10 +204,8 @@ function editEve(event) {
 }
 
 //
-// Refresh all events
+// Get events from the server and add each event to the calendar 
 //
-
-
 function refreshAllEvents() {
 
 	$(".event-rectangles").remove();
@@ -284,7 +231,7 @@ function refreshAllEvents() {
 
 				if (eventStartDate == eventEndDate) {
 					eventDivId = parseInt(eventStartDate.substr(8, 2)) + month_names[month_number.indexOf(eventStartDate.substr(5, 2))];
-					console.log(eventDivId);
+					// console.log(eventDivId);
 					// <a id=eventId  onclick='event_rectangle_clicked(event);' class='event event-rectangles d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-info text-white'>eventId</a>
 					$("#" + eventDivId).append("<a id= "+eventId+" onclick='event_rectangle_clicked(event);' class='event event-rectangles d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-info text-white'>"+eventId+"</a>");
 				} else {
@@ -309,7 +256,6 @@ function refreshAllEvents() {
 			  // expected output: SyntaxError: unterminated string literal
 			  // Note - error messages will vary depending on browser
 			}
-
 
 		}
 	});

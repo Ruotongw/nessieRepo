@@ -1,23 +1,23 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 	<head>
-		<!-- <meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-		<meta name="author" content="Anirudh Goel" /> -->
+		<meta charset="UTF-8" />
 
 		<title>Calendar</title>
 
-		<!-- Font Awesome served from CDN -->
+		<!-- Font Awesome and Bootstrap served from CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+		<!-- CSS stylesheets -->
 		<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/style.css') }}"> -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='./favicon.png') }}">
 	</head>
 
 	<body>
-		<div id="right-area">
+		<div class="container">
+			<!-- nav bar on the top of the page, with two buttons -->
 			<nav class="navbar top-right justify-content-end">
 				<div>
 					<button id="add-event" class="btn btn-info" type="button" onclick="add_event()">Add Event</button>
@@ -113,22 +113,13 @@
 			</div>
 		</div>
 
-		<!-- jQuery, Weather script, events script, calender creation, clock, google calender sync, google calender check login status on load -->
+		<!-- jQuery, Bootstrap, events script, calender creation-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<!-- <script
-		  src="https://code.jquery.com/jquery-3.3.1.js"
-		  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-		  crossorigin="anonymous"></script> -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-		<script src="{{ url_for('static', filename='./js/google_calender.js') }}"></script>
 		<script src="{{ url_for('static', filename='./js/event.js') }}" ></script>
-		<!-- <script src="{{ url_for('static', filename='./js/calender.js') }}"></script> -->
+		<script src="{{ url_for('static', filename='./js/calender.js') }}"></script>
 
-		<script async defer src="https://apis.google.com/js/api.js"
-			onload="this.onload=function(){};handleClientLoad()"
-			onreadystatechange="if (this.readyState === 'complete') this.onload()">
-		</script>
 	</body>
 </html>

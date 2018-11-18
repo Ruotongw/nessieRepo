@@ -1,9 +1,12 @@
+// construct a calendar display on the page. 
+
 var current = new Date();
 var currentMonth = current.getMonth();
 var currentDate = current.getDate();
 var currentYear = current.getFullYear();
 
 function calender(month, year) {
+    // Creat spaces for days before the day of start and day after the month is ended 
     var padding = "";
     var postPadding = "";
 
@@ -25,6 +28,7 @@ function calender(month, year) {
         padding += "<div class='preMonth day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted'></div>";
     }
 
+    // Adding days in the month to the calendar display 
     var generateDay = firstDay;
     var generateCal = "";
 
@@ -41,7 +45,6 @@ function calender(month, year) {
         } else {
             generateCal += "<div class='day col-sm p-2 border border-left-0 border-top-0 text-truncate ' id='" + i + monthNames[month] + "'><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5></div>";
         }
-        //onclick='cell_click(event);'
 
         generateDay++;
     }
@@ -54,8 +57,8 @@ function calender(month, year) {
             postPadding += "<div class='preMonth day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted'></div>";
         }
     }
-    
-    console.log(lastDay)
+    // console.log(lastDay)
+
     // Output the calender onto the site.  Also, putting in the month name and days of the week.
     var calenderTable = "<div class='container-fluid'>";
     var monthYear = "<h5 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><div class='mx-auto'><h6 id='arrow' class='d-inline'><i class='fa fa-arrow-left' onclick='prevMonth();'></i><i class='fa fa-arrow-right' onclick='nextMonth();'></i></h6></div><h5>"
@@ -70,7 +73,7 @@ function calender(month, year) {
     calenderTable += postPadding;
     calenderTable += "</div></div>";
 
-    console.log(calenderTable)
+    // console.log(calenderTable)
 
     $(".calender").html(calenderTable);
     $(".month").text(monthNames[month]);
@@ -92,7 +95,6 @@ function nextMonth() {
     }
     // console.log(nextmon);
     calender(nextMon, year);
-    // calculateWeather();
     refreshAllEvents();
 }
 
@@ -109,24 +111,21 @@ function prevMonth() {
     }
     // console.log(prevmon);
     calender(prevMon, year);
-    // calculateWeather();
     refreshAllEvents();
 }
 
 //
-// Load calender and weather
+// Load calender
 //
 if (window.addEventListener) {
     calender(currentMonth, currentYear);
-    // calculateWeather();
     refreshAllEvents();
 } else if (window.attachEvent) {
     calender(currentMonth, currentYear);
-    // calculateWeather();
     refreshAllEvents();
 }
 
-console.log("load calendar");
+// console.log("load calendar");
 
 //
 // Whenever window is resized, page is reloaded so as to change full day names to short names to ensure responsiveness.

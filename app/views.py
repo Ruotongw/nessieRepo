@@ -26,6 +26,9 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 @app.route('/', methods=['GET','POST'])
 def main():
 
+    global workStart
+    global workEnd
+
     global service
     try:
         print (service)
@@ -58,6 +61,7 @@ def main():
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
     try:
+        print (service)
         if request.method == 'POST': #this block is only entered when the form is submitted
             if not request.headers.get('X-Requested-With'):
 
@@ -80,6 +84,7 @@ def form():
         return render_template('index.html')
     except:
         return redirect('/')
+
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():

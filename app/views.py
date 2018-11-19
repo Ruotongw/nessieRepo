@@ -26,6 +26,9 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 @app.route('/', methods=['GET','POST'])
 def main():
 
+    global workStart
+    global workEnd
+
     global service
     try:
         print (service)
@@ -73,7 +76,8 @@ def form():
 
                 global rep
                 rep = request.form.get('rep')
-                addEvent()
+                addEvent() 
+                # maybe move the add event to a new route
             else:
                 print ("else case")
 

@@ -31,6 +31,23 @@ function add_event() {
 	// console.log(windowHeight);
 }
 
+// 
+// popup display
+// 
+//appends an "active" class to .popup and .popup-content when the "Open" button is clicked
+$(".add-event").on("click", function(){
+  $(".popup-overlay, .popup-content").addClass("active");
+});
+
+//removes the "active" class to .popup and .popup-content when the "Close" button is clicked 
+$(".confirm, .popup-overlay").on("click", function(){
+  $(".popup-overlay, .popup-content").removeClass("active");
+});
+
+$(".reschedule, .popup-overlay").on("click", function(){
+  $(".popup-overlay, .popup-content").removeClass("active");
+});
+
 //
 // Close new event box and edit event box and remove color from selected event
 //

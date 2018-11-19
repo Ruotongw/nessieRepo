@@ -65,13 +65,29 @@
 						</div>
 						  <div class="form-group row">
 						    <div class="col-sm-10">
-						      <button type="submit" class="btn btn-primary">Add</button>
+						      <button type="submit" class="btn btn-primary add-event">Add</button>
 						    </div>
 						  </div>
 					</div>
 
 				</form>
 			</div>
+
+			<!-- Feedback popoup -->
+			<!--Creates the popup body-->
+			<div class="popup-overlay">
+			  <!--Creates the popup content-->
+			   <div class="popup-content">
+			      <h2>Attention!</h2>
+			      <p>You can add <span id="eventName-popup"></span> at <span id="eventTime-popup"></span>. Is this time convenient for you?</p>
+			     <!--popup's close button-->
+			     <button class="reschedule btn btn-info">No, find another time!</button> 
+			     <button class="confirm btn btn-info">Yes, add it to my calendar!</button>    
+			  </div>
+			</div>
+			<!--Content shown when popup is not displayed-->
+			<!-- <h2>jQuery Pop-Up Example</h2> -->
+			<!-- <button class="open">Open</button> -->
 
 			<!-- Box for adding and updating events -->
 			<div id="preferences" style="display: none">

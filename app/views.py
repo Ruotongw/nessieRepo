@@ -58,6 +58,7 @@ def main():
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
     try:
+        print (service)
         if request.method == 'POST': #this block is only entered when the form is submitted
             if not request.headers.get('X-Requested-With'):
 

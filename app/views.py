@@ -77,6 +77,7 @@ def form():
     except:
         return redirect('/')
 
+
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
     from datetime import date

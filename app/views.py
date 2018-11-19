@@ -72,7 +72,8 @@ def form():
 
                 global rep
                 rep = request.form.get('rep')
-                addEvent()
+                addEvent() 
+                # maybe move the add event to a new route
             else:
                 print ("else case")
 

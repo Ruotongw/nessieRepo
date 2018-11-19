@@ -26,6 +26,9 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 @app.route('/', methods=['GET','POST'])
 def main():
 
+    global workStart
+    global workEnd
+
     global service
     try:
         print (service)

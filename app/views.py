@@ -69,6 +69,9 @@ def form():
 
                 global deadLine
                 deadLine = request.form.get('dead')
+
+                global rep
+                rep = request.form.get('rep')
                 addEvent()
             else:
                 print ("else case")

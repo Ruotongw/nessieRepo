@@ -121,8 +121,6 @@ def findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events):
     format = Format()
     global timeSlot
     timeSlot = TimeSlot(timeEst)
-    global availableTimes
-    availableTimes = []
 
     for i in range(len(events) - 1):
         event1 = events[i]
@@ -222,6 +220,8 @@ def getEventTime():
 
     global current
     current = Now()
+    global availableTimes
+    availableTimes = []
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
@@ -229,7 +229,10 @@ def getEventTime():
     workEnd = 23
     events = getCalendarEvents(now, deadLine)
 
-    availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
+    if (len(availableTimes) != 0):
+        print ("i did something")
+    else:
+        availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
     length = len(availableTimes)
     if (length != 0):
@@ -244,8 +247,14 @@ def getEventTime():
 
 def rescheduleEvent():
     availableTimes.remove(eventSlot)
-    eventSlot = getEventTime()
-    return timeSlot
+
+    length = len(availableTimes)
+    if (length != 0):
+        x = random.randrange(0, length)
+        eventSlot = availableTimes[x]
+        return eventSlot
+    else:
+        return  '''<h1>Oops</h1>'''
 
 
 def createEvent():

@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+{% block title %}
+			<!--Creates the popup body-->
+			<div class="popup-overlay">
+			  <!--Creates the popup content-->
+			   <div class="popup-content">
+			      <h2>Attention!</h2>
+			      <p>You can add <span id="eventName-popup">{{ event["summary"] }}</span> at <span id="eventTime-popup">{{ event["start"].get("dateTime") }}</span>. Is this time convenient for you?</p>
+			     <!--popup's close button-->
+			     <button class="reschedule btn btn-info">No, find another time!</button> 
+			     <button class="confirm btn btn-info">Yes, add it to my calendar!</button>    
+			  </div>
+			</div>
+			<!--Content shown when popup is not displayed-->
+			<!-- <h2>jQuery Pop-Up Example</h2> -->
+			<!-- <button class="open">Open</button> -->
+{% endblock %}

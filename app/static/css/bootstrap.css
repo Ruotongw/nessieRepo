@@ -77,7 +77,7 @@ body {
 
 .popup-overlay{
   /*Hides pop-up when there is no "active" class*/
-  visibility:hidden;
+  visibility:active;
   position:fixed;
   background:#9f9a9a;
   border:3px solid #fc9e02;
@@ -96,7 +96,7 @@ body {
 
 .popup-content {
   /*Hides pop-up content when there is no "active" class */
- visibility:hidden;
+ visibility:active;
 }
 
 .popup-content.active {

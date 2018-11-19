@@ -76,7 +76,10 @@ def form():
 
                 global rep
                 rep = request.form.get('rep')
-                addEvent() 
+                createEvent()
+                return redirect('/popup')
+                # print("event added")
+                # redirect('/popup')
                 # maybe move the add event to a new route
             else:
                 print ("else case")
@@ -84,6 +87,10 @@ def form():
         return render_template('index.html')
     except:
         return redirect('/')
+
+@app.route('/popup', methods=['GET', 'POST'])
+def popup():
+    return render_template('popup.html', event=event)
 
 
 @app.route('/allEvents', methods=['GET', 'POST'])
@@ -286,15 +293,15 @@ def createEvent():
     else:
         print("No available times")
 
-
 def addEvent():
     '''Adds chosen event to the user's calendar.'''
 
     event = createEvent()
     event = service.events().insert(calendarId = 'primary', body = event).execute()
     print ('Event created: %s' % (event.get('summary')))
-    print ('time: %s' % (eventTime[0]))
-    return redirect('https://calendar.google.com/calendar/', code=302)
+    # print ('time: %s' % (eventTime[0]))
+    return redirect('/popup')
+    # return redirect('https://calendar.google.com/calendar/', code=302)
 
 
 def getScheduledEvent():

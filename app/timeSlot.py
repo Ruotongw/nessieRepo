@@ -1,26 +1,14 @@
 #timeSlot.py
 from __future__ import print_function
-from apiclient import discovery
-import httplib2
-from flask import render_template, Flask, request, json, redirect, url_for, jsonify
-import os
-from googleapiclient.discovery import build
-from httplib2 import Http
-from oauth2client import file, client, tools
-import google.oauth2.credentials
-from app import app
 import datetime
-import random
-import math
 import pytz
 from pytz import timezone
 import time
 from tzlocal import get_localzone
-import calendar
 from .format import *
 
+# Handles time slot behavior.
 class TimeSlot:
-
     def __init__(self, estimate):
         self.estimate = estimate
         global format
@@ -28,11 +16,7 @@ class TimeSlot:
 
 
     def beforeTimeSlot(self, event2):
-        '''Returns the time slot before event2. Used for the first event of the day,
-        given that there is enough time between that event and the start of working
-        hours.'''
-
-        print('entered before')
+        '''Returns the time slot before event2.'''
 
         localizedTime = self.estimate
 
@@ -55,12 +39,9 @@ class TimeSlot:
 
 
     def afterTimeSlot(self, event1):
-        '''Returns the time slot after event1. Used for most scheduling cases, hence
-        the name generalTimeSlot.'''
+        '''Returns the time slot after event1.'''
 
-        print('entered after')
         localizedTime = self.estimate
-        print("localized", localizedTime)
 
         event1Min = (event1.hour * 60) + event1.minute
         localizedTime = localizedTime * 60
@@ -73,12 +54,8 @@ class TimeSlot:
         endMin = endTime % 60
         endHour = (endTime - endMin)/60
 
-        print("before format")
-
         eventStart = format.formatDT2(event1.year, event1.month, event1.day, startHour, startMin, event1.second)
         eventEnd = format.formatDT2(event1.year, event1.month, event1.day, endHour, endMin, event1.second)
 
-        print("after format")
         timeSlot = [eventStart, eventEnd]
-        print("timeSlot", timeSlot)
         return timeSlot

@@ -1,28 +1,15 @@
-#formats.py
+#format.py
 from __future__ import print_function
-from apiclient import discovery
-import httplib2
-from flask import render_template, Flask, request, json, redirect, url_for, jsonify
-import os
-from googleapiclient.discovery import build
-from httplib2 import Http
-from oauth2client import file, client, tools
-import google.oauth2.credentials
-from app import app
 import datetime
-import random
-import math
 import pytz
 from pytz import timezone
 import time
 from tzlocal import get_localzone
-import calendar
 
+# Handles the formatting of dateTime objects.
 class Format:
-
     def __init__(self):
         pass
-
 
     def formatEvent(self, event1, event2):
         '''Returns event1 and event2 in the correct datetime format to use in
@@ -30,7 +17,6 @@ class Format:
         into dateTime objects, converting them to UTC time, and normalizing them to
         account for daylight savings time.'''
 
-        print("has entered")
         fmt = '%Y-%m-%dT%H:%M:%S%z'
 
         e1str = event1['end'].get('dateTime')
@@ -39,7 +25,6 @@ class Format:
         e1str = e1str[:22] + e1str[23:]
         e2str = e2str[:22] + e2str[23:]
 
-        print("About to use dateTime")
         e1 = datetime.datetime.strptime(e1str, fmt)
         e2 = datetime.datetime.strptime(e2str, fmt)
 
@@ -49,21 +34,16 @@ class Format:
         e1 = e1.astimezone(utc)
         e2 = e2.astimezone(utc)
 
-        print("String formatting")
         e1.strftime(fmt)
         e2.strftime(fmt)
 
-        print("After strings, before daylight")
-        print(e1, e2)
         e1, e2 = self.inDaylightSavings(e1, e2)
-        print("Used daylight savings")
 
         e1.strftime(fmt)
         e2.strftime(fmt)
 
         e1 = chi.normalize(e1)
         e2 = chi.normalize(e2)
-        print("E1,E2", e1, e2)
 
         return e1, e2
 
@@ -82,7 +62,6 @@ class Format:
         '''Returns a datetime string with the given integers formatted correctly
         for the Google API.'''
 
-        print("entered format")
         year = str(year)
 
         month = int(month)
@@ -113,7 +92,6 @@ class Format:
         dt = (year + '-' + month + '-' + day +
                         'T' + hour + ':' + minute + ':' +
                         second + '-05:00')
-        print("dt", dt)
 
         return dt
 
@@ -121,7 +99,6 @@ class Format:
         '''Checks whether event1 and e2 are in daylight savings time and adds an
         hour accordingly.'''
 
-        print("entered daylgiht savings")
         DSTMonths = [4, 5, 6, 7, 8, 9, 10]
 
         if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
@@ -131,5 +108,4 @@ class Format:
             e1 = e1 + datetime.timedelta(hours = 1)
             e2 = e2 + datetime.timedelta(hours = 1)
 
-        print("e1,e2", e1, e2)
         return e1, e2

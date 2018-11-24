@@ -90,8 +90,27 @@ def form():
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
-    return render_template('popup.html', event=event)
+    # try:
+    #     print (event)
+    #     if request.method == 'POST':
+    #         answer = request.data.get('b')
+    #         print (answer)
+    #         if answer == ("yes"):
+    #             print ("yes")
+    #             # return addEvent()
+    #             return redirect('/form')
+    #         elif answer == ('no'):
+    #             return rescheduleEvent()
+    #         else:
+    #             print ('WAT')
+    #             return redirect('/popup')
+    #
+    #     else:
+    #         return render_template('popup.html', event=event)
+    # except:
+    #     return redirect('/form')
 
+    return render_template('popup.html', event=event)
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
@@ -256,16 +275,31 @@ def getEventTime():
         return  '''<h1>Oops</h1>'''
 
 
+@app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
     availableTimes.remove(eventSlot)
 
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)
-        eventSlot = availableTimes[x]
-        return eventSlot
+        eventTime = availableTimes[x]
+
+        eventStart = eventTime[0]
+        eventEnd = eventTime[1]
+        event = {
+            'summary': title,
+            'start': {
+                'dateTime': eventStart,
+                'timeZone': 'America/Chicago',
+            },
+            'end': {
+                'dateTime': eventEnd,
+                'timeZone': 'America/Chicago'
+            },
+        }
+        return redirect('/popup')
     else:
-        return  '''<h1>Oops</h1>'''
+        print("No available times")
 
 
 def createEvent():
@@ -293,14 +327,15 @@ def createEvent():
     else:
         print("No available times")
 
+@app.route('/add', methods=['GET', 'POST'])
 def addEvent():
     '''Adds chosen event to the user's calendar.'''
 
-    event = createEvent()
+    # event = createEvent()
     event = service.events().insert(calendarId = 'primary', body = event).execute()
     print ('Event created: %s' % (event.get('summary')))
     # print ('time: %s' % (eventTime[0]))
-    return redirect('/popup')
+    return redirect('/form')
     # return redirect('https://calendar.google.com/calendar/', code=302)
 
 

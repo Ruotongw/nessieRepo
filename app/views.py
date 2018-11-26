@@ -28,6 +28,7 @@ def main():
 
     global workStart
     global workEnd
+    # global eventSlot
 
     global service
     try:
@@ -267,25 +268,41 @@ def getEventTime():
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)
+        # print("length:",length)
+        # print("x",x)
 
         global eventSlot
         eventSlot = availableTimes[x]
+        # print("global in get event time, ", globals())
+        # print("local in get event time, ", locals())
         return eventSlot
     else:
         return  '''<h1>Oops</h1>'''
 
+def reassignslot(start, end):
+    global eventSlot
+    eventSlot = [start,end]
+    # print("reassign eventSlot:",eventSlot)
+    # print("global in reassignslot, ", globals())
+    return eventSlot
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
+    # print("availableTimes ",availableTimes)
+    # print("eventSlot", eventSlot)
     availableTimes.remove(eventSlot)
 
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)
+        # print(x)
         eventTime = availableTimes[x]
 
         eventStart = eventTime[0]
         eventEnd = eventTime[1]
+        reassignslot(eventStart, eventEnd)
+        # print("post ", eventSlot)
+        global event
         event = {
             'summary': title,
             'start': {

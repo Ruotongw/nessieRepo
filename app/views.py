@@ -332,7 +332,7 @@ def addEvent():
     '''Adds chosen event to the user's calendar.'''
 
     # event = createEvent()
-    event = service.events().insert(calendarId = 'primary', body = event).execute()
+    add = service.events().insert(calendarId = 'primary', body = event).execute()
     print ('Event created: %s' % (event.get('summary')))
     # print ('time: %s' % (eventTime[0]))
     return redirect('/form')

@@ -91,26 +91,6 @@ def form():
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
-    # try:
-    #     print (event)
-    #     if request.method == 'POST':
-    #         answer = request.data.get('b')
-    #         print (answer)
-    #         if answer == ("yes"):
-    #             print ("yes")
-    #             # return addEvent()
-    #             return redirect('/form')
-    #         elif answer == ('no'):
-    #             return rescheduleEvent()
-    #         else:
-    #             print ('WAT')
-    #             return redirect('/popup')
-    #
-    #     else:
-    #         return render_template('popup.html', event=event)
-    # except:
-    #     return redirect('/form')
-
     return render_template('popup.html', event=event)
 
 @app.route('/allEvents', methods=['GET', 'POST'])

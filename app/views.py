@@ -91,7 +91,11 @@ def form():
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
-    return render_template('popup.html', event=event)
+    try:
+        print (event)
+        return render_template('popup.html', event=event)
+    except:
+        redirect("/form")
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():

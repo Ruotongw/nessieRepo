@@ -240,6 +240,8 @@ def getEventTime():
     workEnd = 23
     events = getCalendarEvents(now, deadLine)
 
+    workStart = workStart + 1
+
     if (len(availableTimes) != 0):
         print ("i did something")
     else:

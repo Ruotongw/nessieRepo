@@ -95,7 +95,7 @@ def popup():
         print (event)
         return render_template('popup.html', event=event)
     except:
-        redirect("/form")
+        return redirect("/form")
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():

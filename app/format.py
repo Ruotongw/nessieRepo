@@ -5,6 +5,7 @@ import pytz
 from pytz import timezone
 import time
 from tzlocal import get_localzone
+from .now import *
 
 # Handles the formatting of dateTime objects.
 class Format:
@@ -99,13 +100,41 @@ class Format:
         '''Checks whether event1 and e2 are in daylight savings time and adds an
         hour accordingly.'''
 
-        DSTMonths = [4, 5, 6, 7, 8, 9, 10]
+        global current
+        current = Now()
 
-        if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
+        now = current.currentTime()
+        nowDay, nowHour, nowMinute = current.getNowDHM(now)
+
+        lastSunday = e1.day - nowDay
+
+        if (e1.month < 3 or e1.month > 11):
+            e1 = e1 + datetime.timedelta(hours = 1)
+            e2 = e2 + datetime.timedelta(hours = 1)
+
+        elif (e1.month > 3 and e1.month <11):
             e1 = e1 + datetime.timedelta(hours = 0)
             e2 = e2 + datetime.timedelta(hours = 0)
+
+        elif (e1.month ==3 and marchSunday >=8):
+            e1 = e1 + datetime.timedelta(hours = 0)
+            e2 = e2 + datetime.timedelta(hours = 0)
+
+        elif (e1.month == 11 and novemberSunday <= 0):
+            e1 = e1 + datetime.timedelta(hours = 0)
+            e2 = e2 + datetime.timedelta(hours = 0)
+
         else:
             e1 = e1 + datetime.timedelta(hours = 1)
             e2 = e2 + datetime.timedelta(hours = 1)
+
+        # DSTMonths = [4, 5, 6, 7, 8, 9, 10]
+        #
+        # if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
+        #     e1 = e1 + datetime.timedelta(hours = 0)
+        #     e2 = e2 + datetime.timedelta(hours = 0)
+        # else:
+        #     e1 = e1 + datetime.timedelta(hours = 1)
+        #     e2 = e2 + datetime.timedelta(hours = 1)
 
         return e1, e2

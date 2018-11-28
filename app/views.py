@@ -225,27 +225,27 @@ def compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute):
         availableTimes.append(time)
 
 
-def getEventTime():
+def getEventTime(availableTimes):
     '''Returns a randomly selected time slot from all of the available times slots.
     If there are no time slots, it returns an exception instead of breaking.'''
 
-    global current
-    current = Now()
-    global availableTimes
-    availableTimes = []
-
-    now = current.currentTime()
-    nowDay, nowHour, nowMinute = current.getNowDHM(now)
-    workStart = 6
-    workEnd = 23
-    events = getCalendarEvents(now, deadLine)
-
-    workStart = workStart + 1
-
-    if (len(availableTimes) != 0):
-        print ("i did something")
-    else:
-        availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
+    # global current
+    # current = Now()
+    # global availableTimes
+    # availableTimes = []
+    #
+    # now = current.currentTime()
+    # nowDay, nowHour, nowMinute = current.getNowDHM(now)
+    # workStart = 6
+    # workEnd = 23
+    # events = getCalendarEvents(now, deadLine)
+    #
+    # workStart = workStart + 1
+    #
+    # if (len(availableTimes) != 0):
+    #     print ("i did something")
+    # else:
+    #     availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
     length = len(availableTimes)
     if (length != 0):
@@ -301,30 +301,67 @@ def rescheduleEvent():
         print("No available times")
 
 
+def createMultiEvent():
+    global availableTimes
+    global chosenTimeSlots
+    chosenTimeSlots = []
+
+    length = len(availableTimes)
+    size = length // rep
+
+    for i in range(rep - 1):
+        times = availableTimes[i * size, ((i + 1) * size) - 1]
+        chosenTimeSlots.append(times)
+
+    chosenTimeSlots.append(((rep + 1) * size) - 1, length)
+
+    return chosenTimeSlots
+
 def createEvent():
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and prepares it to be added to the user's calendar.'''
 
-    global event
-    eventTime = getEventTime()
+    global current
+    current = Now()
+    global availableTimes
+    availableTimes = []
 
-    if (eventTime != '''<h1>Oops</h1>'''):
-        eventStart = eventTime[0]
-        eventEnd = eventTime[1]
-        event = {
-            'summary': title,
-            'start': {
-                'dateTime': eventStart,
-                'timeZone': 'America/Chicago',
-            },
-            'end': {
-                'dateTime': eventEnd,
-                'timeZone': 'America/Chicago'
-            },
-        }
-        return event
-    else:
-        print("No available times")
+    now = current.currentTime()
+    nowDay, nowHour, nowMinute = current.getNowDHM(now)
+    workStart = 6
+    workEnd = 23
+    events = getCalendarEvents(now, deadLine)
+
+    workStart = workStart + 1
+
+    # if (len(availableTimes) != 0):
+    #     print ("i did something")
+    # else:
+    availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
+
+    if rep == 1:
+        global event
+        eventTime = getEventTime(availableTimes)
+
+        if (eventTime != '''<h1>Oops</h1>'''):
+            eventStart = eventTime[0]
+            eventEnd = eventTime[1]
+            event = {
+                'summary': title,
+                'start': {
+                    'dateTime': eventStart,
+                    'timeZone': 'America/Chicago',
+                },
+                'end': {
+                    'dateTime': eventEnd,
+                    'timeZone': 'America/Chicago'
+                },
+            }
+            return event
+        else:
+            print("No available times")
+    elif:
+        createMultiEvent()
 
 @app.route('/add', methods=['GET', 'POST'])
 def addEvent():

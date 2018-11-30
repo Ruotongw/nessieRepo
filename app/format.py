@@ -116,11 +116,11 @@ class Format:
             e1 = e1 + datetime.timedelta(hours = 0)
             e2 = e2 + datetime.timedelta(hours = 0)
 
-        elif (e1.month ==3 and marchSunday >=8):
+        elif (e1.month ==3 and lastSunday >=8):
             e1 = e1 + datetime.timedelta(hours = 0)
             e2 = e2 + datetime.timedelta(hours = 0)
 
-        elif (e1.month == 11 and novemberSunday <= 0):
+        elif (e1.month == 11 and lastSunday <= 0):
             e1 = e1 + datetime.timedelta(hours = 0)
             e2 = e2 + datetime.timedelta(hours = 0)
 

@@ -305,21 +305,21 @@ def rescheduleEvent():
         print("No available times")
 
 
-def createMultiEvent():
-    global availableTimes
-    global chosenTimeSlots
-    chosenTimeSlots = []
-
-    length = len(availableTimes)
-    size = length // rep
-
-    for i in range(rep - 1):
-        times = availableTimes[i * size, ((i + 1) * size) - 1]
-        chosenTimeSlots.append(times)
-
-    chosenTimeSlots.append(((rep + 1) * size) - 1, length)
-
-    return chosenTimeSlots
+# def createMultiEvent():
+#     global availableTimes
+#     global chosenTimeSlots
+#     chosenTimeSlots = []
+#
+#     length = len(availableTimes)
+#     size = length // rep
+#
+#     for i in range(rep - 1):
+#         times = availableTimes[i * size, ((i + 1) * size) - 1]
+#         chosenTimeSlots.append(times)
+#
+#     chosenTimeSlots.append(((rep + 1) * size) - 1, length)
+#
+#     return chosenTimeSlots
 
 def createEvent():
     '''Creates a Google Calendar event based on the randomly chosen time slot
@@ -343,30 +343,50 @@ def createEvent():
     # else:
     availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
-    if rep == 1:
-        global event
-        eventTime = getEventTime(availableTimes)
+    global event
+    eventTime = getEventTime(availableTimes)
 
-        if (eventTime != '''<h1>Oops</h1>'''):
-            eventStart = eventTime[0]
-            eventEnd = eventTime[1]
-            event = {
-                'summary': title,
-                'start': {
-                    'dateTime': eventStart,
-                    'timeZone': 'America/Chicago',
-                },
-                'end': {
-                    'dateTime': eventEnd,
-                    'timeZone': 'America/Chicago'
-                },
-            }
-            return event
-        else:
-            print("No available times")
-
+    if (eventTime != '''<h1>Oops</h1>'''):
+        eventStart = eventTime[0]
+        eventEnd = eventTime[1]
+        event = {
+            'summary': title,
+            'start': {
+                'dateTime': eventStart,
+                'timeZone': 'America/Chicago',
+            },
+            'end': {
+                'dateTime': eventEnd,
+                'timeZone': 'America/Chicago'
+            },
+        }
+        return event
     else:
-        createMultiEvent()
+        print("No available times")
+    # if rep == 1:
+    #     global event
+    #     eventTime = getEventTime(availableTimes)
+    #
+    #     if (eventTime != '''<h1>Oops</h1>'''):
+    #         eventStart = eventTime[0]
+    #         eventEnd = eventTime[1]
+    #         event = {
+    #             'summary': title,
+    #             'start': {
+    #                 'dateTime': eventStart,
+    #                 'timeZone': 'America/Chicago',
+    #             },
+    #             'end': {
+    #                 'dateTime': eventEnd,
+    #                 'timeZone': 'America/Chicago'
+    #             },
+    #         }
+    #         return event
+    #     else:
+    #         print("No available times")
+    #
+    # else:
+    #     createMultiEvent()
 
 @app.route('/add', methods=['GET', 'POST'])
 def addEvent():

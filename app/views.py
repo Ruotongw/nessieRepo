@@ -364,7 +364,8 @@ def createEvent():
             return event
         else:
             print("No available times")
-    elif:
+
+    else:
         createMultiEvent()
 
 @app.route('/add', methods=['GET', 'POST'])

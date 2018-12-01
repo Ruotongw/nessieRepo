@@ -233,24 +233,6 @@ def getEventTime(availableTimes):
     '''Returns a randomly selected time slot from all of the available times slots.
     If there are no time slots, it returns an exception instead of breaking.'''
 
-    # global current
-    # current = Now()
-    # global availableTimes
-    # availableTimes = []
-    #
-    # now = current.currentTime()
-    # nowDay, nowHour, nowMinute = current.getNowDHM(now)
-    # workStart = 6
-    # workEnd = 23
-    # events = getCalendarEvents(now, deadLine)
-    #
-    # workStart = workStart + 1
-    #
-    # if (len(availableTimes) != 0):
-    #     print ("i did something")
-    # else:
-    #     availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
-
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)
@@ -265,11 +247,11 @@ def getEventTime(availableTimes):
     else:
         return  '''<h1>Oops</h1>'''
 
-def reassignslot(start, end):
+def reassignSlot(start, end):
     global eventSlot
     eventSlot = [start,end]
     # print("reassign eventSlot:",eventSlot)
-    # print("global in reassignslot, ", globals())
+    # print("global in reassignSlot, ", globals())
     return eventSlot
 
 @app.route('/reschedule', methods=['GET', 'POST'])
@@ -286,7 +268,7 @@ def rescheduleEvent():
 
         eventStart = eventTime[0]
         eventEnd = eventTime[1]
-        reassignslot(eventStart, eventEnd)
+        reassignSlot(eventStart, eventEnd)
         # print("post ", eventSlot)
         global event
         event = {
@@ -306,21 +288,6 @@ def rescheduleEvent():
 #no return statement!
 
 
-def createMultiEvent():
-    # print ('prepare to do the things')
-    global availableTimes
-    global chosenTimeSlots
-    chosenTimeSlots = []
-
-    length = len(availableTimes)
-    size = length // rep
-
-    for i in range(rep - 1):
-        times = availableTimes[i * size: ((i + 1) * size)]
-        chosenTimeSlots.append(times)
-    chosenTimeSlots.append(availableTimes[((rep - 1) * size): length])
-    return chosenTimeSlots
-
 def createEvent():
     global rep
     '''Creates a Google Calendar event based on the randomly chosen time slot
@@ -338,10 +305,6 @@ def createEvent():
     events = getCalendarEvents(now, deadLine)
 
     workStart = workStart + 1
-
-    # if (len(availableTimes) != 0):
-    #     print ("i did something")
-    # else:
     availableTimes = findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events)
 
     if rep == 1:
@@ -349,25 +312,65 @@ def createEvent():
         eventTime = getEventTime(availableTimes)
 
         if (eventTime != '''<h1>Oops</h1>'''):
-            eventStart = eventTime[0]
-            eventEnd = eventTime[1]
-            event = {
-                'summary': title,
-                'start': {
-                    'dateTime': eventStart,
-                    'timeZone': 'America/Chicago',
-                },
-                'end': {
-                    'dateTime': eventEnd,
-                    'timeZone': 'America/Chicago'
-                },
-            }
+            event =  eventFormat(eventTime)
             return event
+
         else:
             print("No available times")
 
     else:
-        return createMultiEvent()
+        global chosenTimeSlots
+        formattedChosenOnes = []
+        divisionOfTimeSlots()
+        selectionOfTimeSlots()
+
+        for i in range(len(chosenTimeSlots)):
+            formattedChosenOnes.append(eventFormat(chosenTimeSlots[i]))
+        print (formattedChosenOnes)
+        for i in range(len(formattedChosenOnes)):
+            add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
+            print (formattedChosenOnes[i])
+        return formattedChosenOnes
+
+def eventFormat(eventTime):
+
+    eventStart = eventTime[0]
+    eventEnd = eventTime[1]
+    formattedEvent = {
+        'summary': title,
+        'start': {
+            'dateTime': eventStart,
+            'timeZone': 'America/Chicago',
+        },
+        'end': {
+            'dateTime': eventEnd,
+            'timeZone': 'America/Chicago'
+        },
+    }
+    return formattedEvent
+
+
+def divisionOfTimeSlots():
+    global availableTimes
+    global dividedTimeSlots
+    dividedTimeSlots = []
+
+    length = len(availableTimes)
+    size = length // rep
+
+    for i in range(rep - 1):
+        times = availableTimes[i * size: ((i + 1) * size)]
+        dividedTimeSlots.append(times)
+    dividedTimeSlots.append(availableTimes[((rep - 1) * size): length])
+    return dividedTimeSlots
+
+def selectionOfTimeSlots():
+    global chosenTimeSlots
+    chosenTimeSlots = []
+    for i in range(rep):
+        chosenTimeSlots.append(getEventTime(dividedTimeSlots[i]))
+    return chosenTimeSlots
+
 
 @app.route('/add', methods=['GET', 'POST'])
 def addEvent():

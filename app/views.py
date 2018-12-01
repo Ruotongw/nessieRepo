@@ -102,8 +102,8 @@ def getEvents():
     from datetime import date
     # '2018-11-30T11:25:00-05:00'
     firstDay = str(date.today().year)+"-"+str(date.today().month)+"-01"
-    numDay = calendar.monthrange(date.today().year, date.today().month + 1)[0]
-    lastDay= str(date.today().year)+"-"+str(date.today().month + 1)+"-"+str(numDay)
+    numDay = calendar.monthrange(date.today().year, date.today().month)[1]
+    lastDay= str(date.today().year)+"-"+str(date.today().month)+"-"+str(numDay)
     events = getCalendarEvents(firstDay + 'T00:00:00-06:00', lastDay) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200

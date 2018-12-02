@@ -48,6 +48,24 @@ class Format:
 
         return e1, e2
 
+    def eventFormatDictionary(self, eventTime, title):
+        "Formats event as a dictionary to show start and end times"
+
+        eventStart = eventTime[0]
+        eventEnd = eventTime[1]
+        formattedEvent = {
+            'summary': title,
+            'start': {
+                'dateTime': eventStart,
+                'timeZone': 'America/Chicago',
+            },
+            'end': {
+                'dateTime': eventEnd,
+                'timeZone': 'America/Chicago'
+            },
+        }
+        return formattedEvent
+
     def formatDT1(self, dt):
         '''Returns a datetime string of the given datetime object formatted
         correctly for the Google API.'''
@@ -127,14 +145,5 @@ class Format:
         else:
             e1 = e1 + datetime.timedelta(hours = 1)
             e2 = e2 + datetime.timedelta(hours = 1)
-
-        # DSTMonths = [4, 5, 6, 7, 8, 9, 10]
-        #
-        # if (e1.month == 11 and e1.day < 4) or e1.month in DSTMonths:
-        #     e1 = e1 + datetime.timedelta(hours = 0)
-        #     e2 = e2 + datetime.timedelta(hours = 0)
-        # else:
-        #     e1 = e1 + datetime.timedelta(hours = 1)
-        #     e2 = e2 + datetime.timedelta(hours = 1)
 
         return e1, e2

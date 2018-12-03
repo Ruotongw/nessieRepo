@@ -146,6 +146,7 @@ def getEventTime(availableTime):
         return eventSlot
     else:
         return  '''<h1>Oops</h1>'''
+        return redirect('/error')
 
 def reassignSlot(start, end):
     global eventSlot

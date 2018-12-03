@@ -52,7 +52,8 @@ body {
 
 #addEvent {
     /*border: 5px solid red;*/
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    background-color: #2064b6 !important;
 }
 
 .border-info {
@@ -61,7 +62,8 @@ body {
 }
 
 #cancelEvent{
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  background-color: #2064b6 !important;
 }
 
 .border-info {
@@ -70,20 +72,22 @@ body {
 }
 
 #signinButton{
-	color: #2064b6;
+	color: #2064b6 !important;
 	height: 50px;
-	text-align: left;
+	text-align: right;
 }
 
-
+#i{
+  display: inline-block;
+}
 #arrowRight{
-  width: 500px;
-  padding: 50px;
-  margin: 30px;
+  text-align: center;
+  margin: 30px; */ */
 }
 #arrowLeft{
-  padding-left: 50px;
-  margin: 30px;
+  text-align: center;
+  /* padding-left: 50px; */
+  margin: 30px; */
 }
 
 .currentday {
@@ -101,8 +105,8 @@ body {
   /*Hides pop-up when there is no "active" class*/
   visibility:active;
   position:fixed;
-  background:#9f9a9a;
-  border:3px solid #fc9e02;
+  background:#ffffff ;
+  border:3px solid #2064b6;
   width:50%;
   height:50%;
   left:25%;

@@ -291,4 +291,4 @@ def getScheduledEvent():
 # others
 @app.route('/error', methods=['GET', 'POST'])
 def errorManager():
-    return render_template(/error)
+    return render_template('error.html')

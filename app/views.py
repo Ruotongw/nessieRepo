@@ -290,5 +290,5 @@ def getScheduledEvent():
 # ran out of time slots
 # others
 @app.route('/error', methods=['GET', 'POST'])
-def errorManager:
+def errorManager():
     return render_template(/error)

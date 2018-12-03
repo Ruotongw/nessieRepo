@@ -182,7 +182,7 @@ def rescheduleEvent():
         return redirect('/popup')
     else:
         print("No available times")
-#no return statement!
+        return redirect('/error')
 
 
 def createEvent():
@@ -219,7 +219,7 @@ def createEvent():
             return redirect('/popup')
 
         else:
-            print("No available times")
+            return render_template('/error')
 
     else:
         global chosenTimeSlots
@@ -284,3 +284,11 @@ def addEvent():
 
 def getScheduledEvent():
     return event
+
+# we need to account for:
+# no time slots
+# ran out of time slots
+# others
+@app.route('/error', methods=['GET', 'POST'])
+def errorManager:
+    return render_template(/error)

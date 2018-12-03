@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% block title %}
+
+			<!--Creates the popup body-->
+			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+			<div class="popup-overlay">
+			  <!--Creates the popup content-->
+			   <div class="popup-content">
+			      <h2>Attention!</h2>
+			      <p>You can add many things<span id="eventName-popup">You Done Goofed Son!</span>. Is this time convenient for you?</p>
+			     <!--popup's close button-->
+
+				    <a href="/form"><button>Sorry</button></a>
+
+			  </div>
+			</div>
+			<!--Content shown when popup is not displayed-->
+			<!-- <h2>jQuery Pop-Up Example</h2> -->
+			<!-- <button class="open">Open</button> -->
+
+{% endblock %}

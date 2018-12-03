@@ -69,8 +69,21 @@ body {
   background-color: #2064b6 !important;
 }
 
-#arrow {
-    font-size: 1.5rem;
+#signinButton{
+	color: #2064b6;
+	height: 50px;
+	text-align: left;
+}
+
+
+#arrowRight{
+  width: 500px;
+  padding: 50px;
+  margin: 30px;
+}
+#arrowLeft{
+  padding-left: 50px;
+  margin: 30px;
 }
 
 .currentday {

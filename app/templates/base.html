@@ -52,7 +52,7 @@
         if (authResult['code']) {
           console.log("got to line 39");
           // Hide the sign-in button now that the user is authorized, for example:
-          $('#signinButton').attr('style', 'display: none');
+          $('#signinButton').attr('style', 'display: none', 'color: #2064b6');
           // Send the code to the server
           $.ajax({
             type: 'POST',

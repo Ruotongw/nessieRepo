@@ -20,10 +20,9 @@ body {
 }
 
 #signinButton{
-	color: #424D76;
+	color: #2064b6;
 	height: 50px;
 	text-align: left;
-
 }
 #menu-bar {
 	color: #424D76;
@@ -47,10 +46,10 @@ body {
 }
 
 /* Dropdown Button */
-.fa-gear { 
+.fa-gear {
     background-color: #98B9DB;
     color: #424D76;
-    padding: 16px; 
+    padding: 16px;
     /* font-size: 25px;
     border: none;
     cursor: pointer;
@@ -59,13 +58,13 @@ body {
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {
     background-color: #2980B9;
-} 
+}
 
 /* The container <div> - needed to position the dropdown content */
  .dropdown {
     position: relative;
     display: inline-block;
-} 
+}
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
@@ -75,14 +74,14 @@ body {
     min-width: 130px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1; /**/
- } 
+ }
  .dropdown:hover .dropdown-content {display: block;}
 .container {
 	height: calc(100vh - 38px);
 	width: calc(100% - 20px);
 	padding-left: 10px;
 	padding-right: 10px;
-} 
+}
 
 #pReferences{
 	background-color: #424D76;
@@ -238,7 +237,7 @@ textarea {
    color: #c1c1c1;
 }
 
-:-moz-placeholder { /* Firefox 18- 
+:-moz-placeholder { /* Firefox 18-
    color: #c1c1c1;
 }
 
@@ -349,7 +348,7 @@ textarea {
 }
 
 #signinButton {
-	background-color: #424D76;
+	background-color: #2064b6;
 	color: white;
 	border: none;
 	padding: 10px 15px 10px 15px;

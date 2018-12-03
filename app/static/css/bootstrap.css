@@ -60,6 +60,15 @@ body {
     background-color: #2064b6 !important;
 }
 
+#cancelEvent{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.border-info {
+  border-width:5px !important;
+  background-color: #2064b6 !important;
+}
+
 #arrow {
     font-size: 1.5rem;
 }
@@ -83,7 +92,7 @@ body {
   border:3px solid #fc9e02;
   width:50%;
   height:50%;
-  left:25%; 
+  left:25%;
   top: 40%;
   text-align:center;
 }
@@ -108,6 +117,5 @@ button{
   display:inline-block;
   vertical-align:middle;
   margin:.20rem;
-  font-size: 1rem; 
+  font-size: 1rem;
 }
-

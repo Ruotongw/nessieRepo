@@ -1,4 +1,4 @@
-// display events on the calendar and add interactivity to bottoms 
+// display events on the calendar and add interactivity to bottoms
 
 // Initializing variables
 var month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -8,9 +8,9 @@ var year = parseInt($(".year").attr('id'));
 
 // console.log("load event");
 
-// 
+//
 //If the add event button is clicked, create new event box
-// 
+//
 function add_event() {
 	// Initializing new event box's input field as blank
 	$("#eventName").val("");
@@ -20,26 +20,29 @@ function add_event() {
 	// Displaying new event box at apt location
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
-	
+
 	$("#addEvent").show().css({
-		"position": "fixed", 
+		"position": "fixed",
 		"width":"50%",
 		"top":"40%",
 		"left":"25%"
 	});
-	
+
+function cancel_event(){
+	$("#addEvent").hide();
+}
 	// console.log(windowHeight);
 }
 
-// 
+//
 // popup display
-// 
+//
 //appends an "active" class to .popup and .popup-content when the "Open" button is clicked
 $(".add-event").on("click", function(){
   $(".popup-overlay, .popup-content").addClass("active");
 });
 
-//removes the "active" class to .popup and .popup-content when the "Close" button is clicked 
+//removes the "active" class to .popup and .popup-content when the "Close" button is clicked
 $(".confirm, .popup-overlay").on("click", function(){
   $(".popup-overlay, .popup-content").removeClass("active");
 });
@@ -221,7 +224,7 @@ function editEve(event) {
 }
 
 //
-// Get events from the server and add each event to the calendar 
+// Get events from the server and add each event to the calendar
 //
 function refreshAllEvents() {
 

@@ -78,8 +78,8 @@ def form():
 
                 global rep
                 rep = int(request.form.get('rep'))
-                createEvent()
-                return redirect('/popup')
+                return createEvent()
+                # return redirect('/popup')
                 # print("event added")
                 # redirect('/popup')
                 # maybe move the add event to a new route
@@ -216,13 +216,14 @@ def createEvent():
 
         if (eventTime != '''<h1>Oops</h1>'''):
             event =  format.eventFormatDictionary(eventTime, title)
-            return event
+            return redirect('/popup')
 
         else:
             print("No available times")
 
     else:
         global chosenTimeSlots
+        global formattedChosenOnes
         formattedChosenOnes = []
         divisionOfTimeSlots()
         selectionOfTimeSlots()
@@ -230,11 +231,23 @@ def createEvent():
         for i in range(len(chosenTimeSlots)):
             formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
         print (formattedChosenOnes)
-        for i in range(len(formattedChosenOnes)):
-            add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
-            print (formattedChosenOnes[i])
-        return formattedChosenOnes
+        # for i in range(len(formattedChosenOnes)):
+        #     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
+        #     print (formattedChosenOnes[i])
+        return redirect('/multi')
 
+
+@app.route('/multi', methods=['GET', 'POST'])
+def multiPopup():
+    return render_template('multi.html')
+
+@app.route('/multi_add', methods=['GET', 'POST'])
+def multiAdd():
+    global formattedChosenOnes
+    for i in range(len(formattedChosenOnes)):
+        add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
+        print (formattedChosenOnes[i])
+    return redirect('/form')
 
 def divisionOfTimeSlots():
     global dividedTimeSlots

@@ -1,4 +1,4 @@
-// construct a calendar display on the page. 
+// construct a calendar display on the page.
 
 var current = new Date();
 var currentMonth = current.getMonth();
@@ -6,7 +6,7 @@ var currentDate = current.getDate();
 var currentYear = current.getFullYear();
 
 function calender(month, year) {
-    // Creat spaces for days before the day of start and day after the month is ended 
+    // Creat spaces for days before the day of start and day after the month is ended
     var padding = "";
     var postPadding = "";
 
@@ -28,7 +28,7 @@ function calender(month, year) {
         padding += "<div class='preMonth day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted'></div>";
     }
 
-    // Adding days in the month to the calendar display 
+    // Adding days in the month to the calendar display
     var generateDay = firstDay;
     var generateCal = "";
 
@@ -49,7 +49,7 @@ function calender(month, year) {
         generateDay++;
     }
 
-    //padding the cells before the first day of next month 
+    //padding the cells before the first day of next month
     var totalDaysMonth = parseInt(firstDay) + parseInt(totalDays)
     var lastDay = totalDaysMonth%7;
     if (lastDay != 0) {
@@ -61,11 +61,11 @@ function calender(month, year) {
 
     // Output the calender onto the site.  Also, putting in the month name and days of the week.
     var calenderTable = "<div class='container-fluid'>";
-    var monthYear = "<h5 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><div class='mx-auto'><h6 id='arrow' class='d-inline'><i class='fa fa-arrow-left' onclick='prevMonth();'></i><i class='fa fa-arrow-right' onclick='nextMonth();'></i></h6></div><h5>"
+    var monthYear = "<h5 class='display-4 mb-4 text-center'><span class='month'> </span> <span class='year'> </span><div class='mx-auto'><h6 id='arrowLeft' class='d-inline'><i class='fa fa-arrow-left' onclick='prevMonth();'></i></h6><h6 id ='arrowRight' class='d-inline'> <i class='fa fa-arrow-right' onclick='nextMonth();'></i></h6></div><h5>"
     if ($(window).width() < 768) {
         calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sun</h5> <h5 class='col-sm p-1 text-center'>Mon</h5> <h5 class='col-sm p-1 text-center'>Tues</h5> <h5 class='col-sm p-1 text-center'>Wed</h5> <h5 class='col-sm p-1 text-center'>Thur</h5> <h5 class='col-sm p-1 text-center'>Fri</h5> <h5 class='col-sm p-1 text-center'>Sat</h5> </div></header>";
     } else {
-        calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sunday</h5> <h5 class='col-sm p-1 text-center'>Monday</h5> <h5 class='col-sm p-1 text-center'>Tuesday</h5> <h5 class='col-sm p-1 text-center'>Wednesday</h5> <h5 class='col-sm p-1 text-center'>Thurday</h5> <h5 class='col-sm p-1 text-center'>Friday</h5> <h5 class='col-sm p-1 text-center'>Saturday</h5> </div></header>";
+        calenderTable += "<header>"+monthYear+"<div class='row d-none d-sm-flex p-1 bg-dark text-white'> <h5 class='col-sm p-1 text-center'>Sunday</h5> <h5 class='col-sm p-1 text-center'>Monday</h5> <h5 class='col-sm p-1 text-center'>Tuesday</h5> <h5 class='col-sm p-1 text-center'>Wednesday</h5> <h5 class='col-sm p-1 text-center'>Thursday</h5> <h5 class='col-sm p-1 text-center'>Friday</h5> <h5 class='col-sm p-1 text-center'>Saturday</h5> </div></header>";
     }
     calenderTable += "<div class='row border border-right-0 border-bottom-0'>";
     calenderTable += padding;

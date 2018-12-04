@@ -31,6 +31,21 @@ function add_event() {
 function cancel_event(){
 	$("#addEvent").hide();
 }
+
+function myPreferences(){
+	$("#earliestWorkTime").val("");
+	$("#latestWorkTime").val("");
+
+	var windowWidth = $(window).width();
+	var windowHeight = $(window).height();
+
+	$("#preferences").show().css({
+		"position": "fixed",
+		"width":"50%",
+		"top":"40%",
+		"left":"25%"
+	});
+}
 	// console.log(windowHeight);
 }
 
@@ -39,6 +54,10 @@ function cancel_event(){
 //
 //appends an "active" class to .popup and .popup-content when the "Open" button is clicked
 $(".add-event").on("click", function(){
+  $(".popup-overlay, .popup-content").addClass("active");
+});
+
+$(".pReferences").on("click", function(){
   $(".popup-overlay, .popup-content").addClass("active");
 });
 

@@ -45,6 +45,22 @@ body {
     /*border-color: #9f9a9a !important;*/
 }
 
+#addpreferencesForm{
+  width: 90%;
+  padding: 20px;
+  height: 100%;
+  border-color: #2064b6 !important;
+  border:3px;
+}
+
+.pReferences{
+  background-color: #f8f9fa !important;
+  width: 90%;
+  padding: 20px;
+  height: 100%;
+  border-color: #2064b6 !important;
+  border:3px;
+}
 
 #addEventForm{
     width: 90%;
@@ -116,7 +132,7 @@ body {
   visibility:active;
   position:fixed;
   background: #f8f9fa;
-  border:2px solid #2064b6;
+  border:1px solid #2064b6;
   width:50%;
   height:50%;
   left:25%;

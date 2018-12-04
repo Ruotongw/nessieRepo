@@ -39,35 +39,45 @@ body {
     border-color: #2064b6 !important;
 }
 
+
 .bg-light {
 
     /*border-color: #9f9a9a !important;*/
 }
 
-#form-content{
+
+#addEventForm{
     width: 90%;
-    margin-left: auto;
+    padding: 20px;
     height: 100%;
+    border-color: #2064b6 !important;
+    border:3px;
+
 }
 
 #addEvent {
     /*border: 5px solid red;*/
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-    background-color: #2064b6 !important;
+    background-color: #f8f9fa !important;
+    text-align: left;
+    margin: 0 auto;
 }
 
 .border-info {
-    border-width:5px !important;
+    border:3px !important;
     background-color: #2064b6 !important;
 }
 
 #cancelEvent{
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-  background-color: #2064b6 !important;
+  /* background-color: #2064b6 !important; */
+  text-align: left;
+  margin: 0 auto;
+
 }
 
 .border-info {
-  border-width:5px !important;
+  border:3px !important;
   background-color: #2064b6 !important;
 }
 
@@ -105,8 +115,8 @@ body {
   /*Hides pop-up when there is no "active" class*/
   visibility:active;
   position:fixed;
-  background:#ffffff ;
-  border:3px solid #2064b6;
+  background: #f8f9fa;
+  border:2px solid #2064b6;
   width:50%;
   height:50%;
   left:25%;
@@ -133,6 +143,18 @@ body {
 button{
   display:inline-block;
   vertical-align:middle;
+  height: 50px;
   margin:.20rem;
   font-size: 1rem;
+  color: white;
+  background-color: #2064b6 !important;
+
+}
+
+/* a{
+  background-color: #2064b6 !important;
+} */
+
+h2{
+  padding: 50px;
 }

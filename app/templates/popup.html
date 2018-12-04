@@ -3,18 +3,18 @@
 
 			<!--Creates the popup body-->
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-			<div class="popup-overlay">
+				<div class="popup-overlay">
 			  <!--Creates the popup content-->
-			   <div class="popup-content">
+			   	<div class="popup-content">
 			      <h2>Attention!</h2>
 			      <p>You can add <span id="eventName-popup">{{ event["summary"] }}</span> at <span id="eventTime-popup">{{ event["start"].get("dateTime") }}</span>. Is this time convenient for you?</p>
 			     <!--popup's close button-->
 
-					 <a href="/reschedule"><button>No, find another time!</button></a>
+					 <a href="/reschedule" ><button>No, find another time!</button></a>
 					<a href="/add"><button>Yes, add it to my calendar!</button></a>
 
 			  </div>
+				</div>
 			</div>
 			<!--Content shown when popup is not displayed-->
 			<!-- <h2>jQuery Pop-Up Example</h2> -->

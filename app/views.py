@@ -103,9 +103,18 @@ def popup():
 def getEvents():
     from datetime import date
     # '2018-11-30T11:25:00-05:00'
-    firstDay = str(date.today().year)+"-"+str(date.today().month)+"-01"
-    numDay = calendar.monthrange(date.today().year, date.today().month)[1]
-    lastDay= str(date.today().year)+"-"+str(date.today().month)+"-"+str(numDay)
+    # print(request.args)
+    year = request.args.get('year')
+    month = request.args.get('month')
+    # firstDay = str(date.today().year)+"-"+str(date.today().month)+"-01"
+    firstDay = str(year)+"-"+str(month)+"-01"
+    numDay = calendar.monthrange(int(year), int(month))[1]
+    # lastDay= str(date.today().year)+"-"+str(date.today().month)+"-"+str(numDay)
+    lastDay= str(year)+"-"+str(month)+"-"+str(numDay)
+    # events_result = service.events().list(calendarId='primary', singleEvents=True,
+                                    # orderBy = 'startTime', maxResults = 2500).execute()
+
+    # events = events_result.get('items', [])
     events = getCalendarEvents(firstDay + 'T00:00:00-06:00', lastDay) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200

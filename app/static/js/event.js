@@ -32,8 +32,31 @@ function add_event() {
 function cancel_event(){
 	$("#addEvent").hide();
 }
-	// console.log(windowHeight);
 }
+
+function my_preferences(){
+  // document.getElementById("preferences").style.display = "block";
+	$("#earliestWorkTime").val("");
+	$("#latestWorkTime").val("");
+
+	// Displaying new event box at apt location
+	var windowWidth = $(window).width();
+	var windowHeight = $(window).height();
+
+	$("#preferences").show().css({
+		"position": "fixed",
+		"width":"50%",
+		"top":"40%",
+		"left":"25%"
+	});
+
+	function cancel_event(){
+		$("#preferences").hide();
+	}
+}
+
+	// console.log(windowHeight);
+
 
 //
 // popup display

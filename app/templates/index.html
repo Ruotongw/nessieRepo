@@ -21,7 +21,7 @@
 			<nav class="navbar top-right justify-content-end">
 				<div>
 					<button id="add-event" class="btn btn-info" type="button" onclick="add_event()">Add Event</button>
-					<button id="pReferences" class="btn btn-info" type="button" onclick="myPreferences()">Preferences</button>
+					<button id="my-preferences" class="btn btn-info" type="button" onclick="my_preferences()">Preferences</button>
 				</div>
 			</nav>
 
@@ -34,11 +34,10 @@
 
 
 			<!-- Box for adding and updating events -->
-			<div id="addEvent" style="display: none" class="border border-info">
+			<div id="addEvent" style="display: none" class="border border-primary">
 				<form class="bg-light text-dark" id="addEventForm" action="/form" method="POST">
 					<div class="formContent container">
 						<span class="New Event"></span>
-						<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
 						<div class="form-group row">
 						   <label for="eventName" class="col-sm-2 col-form-label">Assignment Title</label>
 						   <div class="col-sm-10">
@@ -52,7 +51,7 @@
 						   </div>
 						</div>
 						<div class="form-group row">
-						   <label for="eventRepetition" class="col-sm-2 col-form-label">number of times</label>
+						   <label for="eventRepetition" class="col-sm-2 col-form-label">Number of Times</label>
 						   <div class="col-sm-10">
 						    <input class="form-control" id="eventRepetition" type="number" min="0" max="5" name="rep">
 						   </div>
@@ -65,8 +64,8 @@
 						</div>
 						  <div class="form-group row">
 						    <div class="col-sm-10">
-						      <button type="submit" class="btn btn-primary add-event">Add</button>
-									<button type="cancel" class="btn btn-primary cancel-event">Cancel</button>
+						      <button type="submit" style= "background-color:#2064b6" class="btn btn-primary add-event">Add</button>
+									<button type="cancel" style= "background-color:#2064b6" class="btn btn-primary cancel-event">Cancel</button>
 						    </div>
 						  </div>
 					</div>
@@ -77,25 +76,18 @@
 			<!-- Feedback popoup -->
 			{% block title %}{% endblock %}
 
-			<!-- Box for adding and updating events -->
-			<div id="preferences" style="display: none">
-				<span class="Preferences"></span>
-				<span class="eveBoxClose" onclick="closeEveBox(preferences);">x</span>
+			<!-- Box for inputting work hours -->
+			<div id="preferences" style="display: none" class="border border-primary">
+				<form class="bg-light text-dark" id="addpreferencesForm" action="/form" method="POST">
+				<!-- <span class="eveBoxClose" onclick="closeEveBox(preferences);">x</span> -->
 				<div class="form-container container">
-					<strong>Preferences</strong>
-					<form id="addpreferencesForm" onsubmit="updatePreferences();">
-						<input type="text" id="eventId" value="" hidden>
-						<br>
+					<span class="Preferences"></span>
 						<label for="earliestWorkTime">Earliest time to start work:</label>
-						<input type="time" id="earliestWorkTime" name="earliestWorkTime" required>
+						<input type="time" id="earliestWorkTime" name="earliestWorkTime" required><br>
 						<label for="latestWorkTime">Latest time to work until:</label>
-						<input type="time"  id="latestWorkTime" name ="latestWorkTime" required />
-						<br>
-						<div id="error"></div>
-						<br>
-						<button id="eventCancelButton" onclick="closeEveBox(preferences);">Cancel</button>
-						<input type="submit" id="eventUpdateButton" value= "Update">
-						<br><br>
+						<input type="time"  id="latestWorkTime" name ="latestWorkTime" required /><br>
+						<button type="submit" style= "background-color:#2064b6" class="btn btn-primary add-event">Update</button>
+						<button type="cancel" style= "background-color:#2064b6" class="btn btn-primary cancel-event">Cancel</button>
 					</form>
 				</div>
 			</div>

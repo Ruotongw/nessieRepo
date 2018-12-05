@@ -34,6 +34,8 @@ class FindTime:
         format = Format()
         global timeSlot
         timeSlot = TimeSlot(timeEst)
+        global availableTimes
+        availableTimes = []
 
         for i in range(len(events) - 1):
 
@@ -44,6 +46,7 @@ class FindTime:
 
         lastEvent = events[len(events) - 1]
         secondToLast = events[len(events) - 2]
+        print('right before compareLastEvent')
         self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
         # print(availableTimes)
@@ -90,8 +93,8 @@ class FindTime:
         entered deadline. If there is enough time between the events, the time slot
         between them is added to the list of available times.'''
 
-        global availableTimes
-        availableTimes = []
+        # global availableTimes
+        # availableTimes = []
 
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60

@@ -31,11 +31,14 @@ function add_event() {
 function cancel_event(){
 	$("#addEvent").hide();
 }
+}
 
-function myPreferences(){
+function my_preferences(){
+  // document.getElementById("preferences").style.display = "block";
 	$("#earliestWorkTime").val("");
 	$("#latestWorkTime").val("");
 
+	// Displaying new event box at apt location
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
 
@@ -44,20 +47,22 @@ function myPreferences(){
 		"width":"50%",
 		"top":"40%",
 		"left":"25%"
+		"padding": "20px"
 	});
+
+	function cancel_event(){
+		$("#preferencest").hide();
+	}
 }
+
 	// console.log(windowHeight);
-}
+
 
 //
 // popup display
 //
 //appends an "active" class to .popup and .popup-content when the "Open" button is clicked
 $(".add-event").on("click", function(){
-  $(".popup-overlay, .popup-content").addClass("active");
-});
-
-$(".pReferences").on("click", function(){
   $(".popup-overlay, .popup-content").addClass("active");
 });
 

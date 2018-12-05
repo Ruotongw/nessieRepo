@@ -53,7 +53,7 @@ body {
   border:3px;
 }
 
-.pReferences{
+#preferences{
   background-color: #f8f9fa !important;
   width: 90%;
   padding: 20px;

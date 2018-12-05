@@ -47,11 +47,10 @@ function my_preferences(){
 		"width":"50%",
 		"top":"40%",
 		"left":"25%"
-		"padding": "20px"
 	});
 
 	function cancel_event(){
-		$("#preferencest").hide();
+		$("#preferences").hide();
 	}
 }
 

@@ -41,9 +41,11 @@ function calender(month, year) {
 
         // Checking to see if i is equal to the current day, if so then we are making the color of that cell a different color using CSS.
         if (i == currentDate && month == currentMonth) {
-            generateCal += "<div class='currentday day col-sm p-2 border border-left-0 border-top-0 text-truncate ' id='" + i + monthNames[month] + "'><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5></div>";
+            generateCal += "<div class='currentday day col-sm p-2 border border-left-0 border-top-0 text-truncate ' id='" + i + monthNames[month] + year+"'><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5></div>";
+            // console.log(i + monthNames[month] + year)
         } else {
-            generateCal += "<div class='day col-sm p-2 border border-left-0 border-top-0 text-truncate ' id='" + i + monthNames[month] + "'><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5></div>";
+            generateCal += "<div class='day col-sm p-2 border border-left-0 border-top-0 text-truncate ' id='" + i + monthNames[month] + year+ "'><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5></div>";
+            // console.log(i + monthNames[month] + year)
         }
 
         generateDay++;
@@ -95,7 +97,7 @@ function nextMonth() {
     }
     // console.log(nextmon);
     calender(nextMon, year);
-    refreshAllEvents();
+    refreshAllEvents(nextMon+1, year);
 }
 
 //
@@ -111,7 +113,7 @@ function prevMonth() {
     }
     // console.log(prevmon);
     calender(prevMon, year);
-    refreshAllEvents();
+    refreshAllEvents(prevMon+1, year);
 }
 
 //
@@ -119,10 +121,10 @@ function prevMonth() {
 //
 if (window.addEventListener) {
     calender(currentMonth, currentYear);
-    refreshAllEvents();
+    refreshAllEvents(currentMonth+1, currentYear);
 } else if (window.attachEvent) {
     calender(currentMonth, currentYear);
-    refreshAllEvents();
+    refreshAllEvents(currentMonth+1, currentYear);
 }
 
 // console.log("load calendar");

@@ -44,7 +44,7 @@ function my_preferences(){
 
 	$("#preferences").show().css({
 		"position": "fixed",
-		"width":"50%",
+		"width":"40%",
 		"top":"40%",
 		"left":"25%"
 	});

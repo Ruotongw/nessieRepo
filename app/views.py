@@ -78,6 +78,7 @@ def form():
 
                 global rep
                 rep = int(request.form.get('rep'))
+
                 return createEvent()
                 # return redirect('/popup')
                 # print("event added")
@@ -89,6 +90,27 @@ def form():
         return render_template('index.html')
     except:
         return redirect('/')
+
+# @app.route('/form2', methods=['GET', 'POST'])
+# def form2():
+#     try:
+#         print (service)
+#         if request.method == 'POST': #this block is only entered when the form is submitted
+#
+#             if not request.headers.get('X-Requested-With'):
+#
+#                 global earliestWorkTime
+#                 earliestWorkTime = request.form.get('earliest')
+#
+#                 global latestWorkTime
+#                 latestWorkTime = request.form.get('latest')
+#
+#             else:
+#                 print("else statement")
+#
+#         return render_template('index.html')
+#     except:
+#         return redirect('/')
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
@@ -329,8 +351,19 @@ def createEvent():
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
-    workStart = 6
-    workEnd = 23
+
+    workStart = 480
+    workEnd = 1380
+
+    # if earliestWorkTime in globals() and latestWorkTime in globals():
+    #     workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
+    #     print("workStart", workStart)
+    #     workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
+    #     print("workEnd", workEnd)
+    #
+    # print("workStart", workStart)
+    # print("workEnd", workEnd)
+
     events = getCalendarEvents(now, deadLine)
 
     workStart = workStart + 1

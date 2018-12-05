@@ -60,14 +60,14 @@ class FindTime:
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60
         estHours = (estTimeMin - estMins) / 60
-        openHours, openMinutes = self.openTimeWindow(workStart, workEnd)
+        openTime = self.openTimeWindow(workStart, workEnd)
 
         lastEnd, lastStart = format.formatEvent(lastEvent, lastEvent)
         secondEnd, secondStart = format.formatEvent(secondToLast, secondToLast)
 
         timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
 
-        beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart*60)
+        beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart)
         enoughBeforeTime = (beforeTime >= estTimeMin + 30)
 
         timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
@@ -83,7 +83,7 @@ class FindTime:
             time = timeSlot.beforeTimeSlot(lastStart)
             availableTimes.append(time)
 
-        if((lastEnd.hour in openHours) and (timeWindow in openMinutes)):
+        if(((lastEnd.hour*60) in openTime) and (timeWindow in openTime)):
             time = timeSlot.afterTimeSlot(lastEnd)
             availableTimes.append(time)
 
@@ -99,12 +99,12 @@ class FindTime:
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60
         estHours = (estTimeMin - estMins) / 60
-        openHours, openMinutes = self.openTimeWindow(workStart, workEnd)
+        openTime = self.openTimeWindow(workStart, workEnd)
 
         sameDay = (e1.day == e2.day)
 
         #for time in morning before eventTime
-        morningTime = (e2.hour * 60 + e2.minute) - (workStart*60)
+        morningTime = (e2.hour * 60 + e2.minute) - (workStart)
         enoughMorningTime = morningTime >= estTimeMin + 30
 
         # For events on the same day
@@ -121,11 +121,11 @@ class FindTime:
         # Ensures that the entire scheduled event would be within the open working hours
         timeWindow = (e1.hour * 60) + e1.minute + (estTimeMin + 30)
 
-        if(now and (sameDay and enoughTime and (e1.hour in openHours) and (timeWindow in openMinutes))):
+        if(now and (sameDay and enoughTime and ((e1.hour*60) in openTime) and (timeWindow in openTime))):
             time = timeSlot.afterTimeSlot(e1)
             availableTimes.append(time)
 
-        if(now and (not sameDay and enoughTime2 and (e1.hour in openHours) and (timeWindow in openMinutes))):
+        if(now and (not sameDay and enoughTime2 and ((e1.hour*60) in openTime) and (timeWindow in openTime))):
             time = timeSlot.afterTimeSlot(e1)
             availableTimes.append(time)
 
@@ -138,6 +138,5 @@ class FindTime:
         in terms of hours and in terms of the minutes out of the entire minutes
         in a day.'''
 
-        openHours = range(openStartTime, openEndTime)
-        openMinutes = range(openStartTime * 60, openEndTime * 60)
-        return openHours, openMinutes
+        openTime = range(openStartTime, openEndTime)
+        return openTime

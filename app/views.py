@@ -127,7 +127,8 @@ def popup():
         print (event)
         return render_template('popup.html', event=event)
     except:
-        return redirect("/form")
+        # return redirect("/form")
+        return redirect("/error")
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
@@ -385,7 +386,7 @@ def createEvent():
             return redirect('/popup')
 
         else:
-            return render_template('/error')
+            return redirect('/error')
 
     else:
         global chosenTimeSlots

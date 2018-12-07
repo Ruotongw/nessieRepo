@@ -29,6 +29,7 @@ def main():
 
     global workStart
     global workEnd
+    checkForm2.has_been_called = False
     # global eventSlot
 
     global service
@@ -91,26 +92,33 @@ def form():
     except:
         return redirect('/')
 
-# @app.route('/form2', methods=['GET', 'POST'])
-# def form2():
-#     try:
-#         print (service)
-#         if request.method == 'POST': #this block is only entered when the form is submitted
-#
-#             if not request.headers.get('X-Requested-With'):
-#
-#                 global earliestWorkTime
-#                 earliestWorkTime = request.form.get('earliest')
-#
-#                 global latestWorkTime
-#                 latestWorkTime = request.form.get('latest')
-#
-#             else:
-#                 print("else statement")
-#
-#         return render_template('index.html')
-#     except:
-#         return redirect('/')
+@app.route('/form2', methods=['GET', 'POST'])
+def form2():
+    try:
+        print (service)
+        if request.method == 'POST': #this block is only entered when the form is submitted
+
+            if not request.headers.get('X-Requested-With'):
+
+                global earliestWorkTime
+                earliestWorkTime = request.form.get('earliest')
+
+                global latestWorkTime
+                latestWorkTime = request.form.get('latest')
+                checkForm2()
+
+            else:
+                print("else statement")
+
+        return render_template('index.html')
+    except:
+        return redirect('/')
+
+def checkForm2():
+    checkForm2.has_been_called = True
+    pass
+
+
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
@@ -352,17 +360,16 @@ def createEvent():
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
 
-    workStart = 480
-    workEnd = 1380
+    global workStart
+    global workEnd
 
-    # if earliestWorkTime in globals() and latestWorkTime in globals():
-    #     workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
-    #     print("workStart", workStart)
-    #     workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
-    #     print("workEnd", workEnd)
-    #
-    # print("workStart", workStart)
-    # print("workEnd", workEnd)
+    if checkForm2.has_been_called:
+        workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
+        workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
+        
+    else:
+        workStart = 480
+        workEnd = 1380
 
     events = getCalendarEvents(now, deadLine)
 

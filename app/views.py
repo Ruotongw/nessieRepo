@@ -72,7 +72,7 @@ def form():
                 title = request.form.get('Title')
 
                 global timeEst
-                timeEst = int(request.form.get('est'))
+                timeEst = float(request.form.get('est'))
 
                 global deadLine
                 deadLine = request.form.get('dead')

@@ -367,7 +367,7 @@ def createEvent():
     if checkForm2.has_been_called:
         workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
         workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
-        
+
     else:
         workStart = 480
         workEnd = 1380
@@ -406,7 +406,12 @@ def createEvent():
 
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
-    return render_template('multi.html', formattedChosenOnes=formattedChosenOnes)
+    localChosenTimes = ""
+    for i in range(len(formattedChosenOnes)):
+        localChosenTimes = localChosenTimes + formattedChosenOnes[i]["start"].get("dateTime")
+        print (localChosenTimes)
+
+    return render_template('multi.html', formattedChosenOnes=formattedChosenOnes, localChosenTimes=localChosenTimes)
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():

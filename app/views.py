@@ -398,7 +398,7 @@ def createEvent():
 
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
-    return render_template('multi.html')
+    return render_template('multi.html', formattedChosenOnes=formattedChosenOnes)
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():

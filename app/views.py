@@ -210,8 +210,13 @@ def rescheduleEvent():
 
     # rescheduleVal = null
     test = 0
+    # print ("beginning all the shit")
+    # print ("hold on to your butts....")
     for i in range(rep):
-        if request.args.get('i') == "true":
+        # print (request.args.get(str(i)))
+        # print (request.args.get("1"))
+        # print (str(i))
+        if request.args.get(i) == "true":
             rescheduleVal = requestVal.append(i)
             test = test + 1
     # rescheduleVal = request.args.get('val')
@@ -241,9 +246,9 @@ def rescheduleEvent():
         return redirect('/popup')
     # elif rep > 1:
     #     return redirect('/multi_add')
-    # else:
-    #     print("No available times")
-    #     return redirect('/error')
+    else:
+        print("No available times")
+        return redirect('/multi')
 
 def getEventToReschedule(num):
     e = chosenTimeSlots[num]
@@ -257,6 +262,7 @@ def createEvent():
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
+    nowYear, nowMonth = current.getNowYM(now)
 
     global workStart
     global workEnd
@@ -268,13 +274,13 @@ def createEvent():
     else:
         workStart = 480
         workEnd = 1380
+        
+    if not current.isDST(datetime.datetime(nowYear, nowMonth, nowDay)):
+        workStart += 60
+        workEnd += 60
 
     events = getCalendarEvents(now, deadLine)
 
-
-    # if not current.isDST(now):
-    #     workStart += 1
-    #     workEnd += 1
     availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
 
     global chosenTimeSlots

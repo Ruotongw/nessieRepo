@@ -46,10 +46,8 @@ class FindTime:
 
         lastEvent = events[len(events) - 1]
         secondToLast = events[len(events) - 2]
-        # print('right before compareLastEvent')
         self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
-        print(availableTimes)
         return availableTimes
 
 

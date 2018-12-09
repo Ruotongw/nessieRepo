@@ -23,6 +23,15 @@ class Time:
         return nowDay, nowHour, nowMinute
 
 
+    def getNowYM(self, now):
+        now = now[:22] + now[23:]
+        now = datetime.datetime.strptime(now, '%Y-%m-%dT%H:%M:%S%z')
+
+        nowYear = now.year
+        nowMonth = now.month
+        return nowYear, nowMonth
+
+
     def currentTime(self):
         '''Returns the current Chicago time, accounting for daylight savings and
         in the correct string format to use with Google's API.'''

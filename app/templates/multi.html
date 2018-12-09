@@ -8,13 +8,26 @@
 			  <!--Creates the popup content-->
 			   <div class="popup-content">
 			      <h2>Attention!</h2>
-			      <p>You can add the events <span id="eventName-popup">{{ formattedChosenOnes[0]["summary"] }}</span> at
+			      <p>You can add the events 
+
+			      <p>rep = <span id="eventName-popup">{{ rep }}</span> </p>
+
+	            <form action="/reschedule" method="GET">
+	            	{% for i in range(rep) %}
+	            		<input type="checkbox" name="{{i}}"" value="true"> Event "{{ formattedChosenOnes[i]["summary"] }}" at {{ formattedChosenOnes[i]["start"].get("dateTime") }}<br>
+					{% endfor %}
+					<button type="submit">Submit the checked event and reschedule the rest</button>
+					<!-- <input type="submit" value="Submit">  -->
+
+	            </form>
+
+			      <!-- 	<span id="eventName-popup">{{ formattedChosenOnes[0]["summary"] }}</span> at
 							<span id="eventTime-popup">{{ localChosenTimes }}</p>
-							<p id="test"></p>
+							<p id="test"></p> -->
 			     <!--popup's close button-->
 
-					  <a href="/multi_res"><button>No, find another time!</button></a>
-				    <a href="/multi_add"><button>Yes, add them to my calendar!</button></a>
+					  <!-- <a href="/multi_res"><button>No, find another time!</button></a> -->
+				    <!-- <a href="/multi_add"><button>Yes, add them to my calendar!</button></a> -->
 
 
 

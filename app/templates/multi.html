@@ -8,12 +8,12 @@
 			  <!--Creates the popup content-->
 			   <div class="popup-content">
 			      <h2>Attention!</h2>
-			      <p>The events have been scheduled at the following time. Check the ones that you wish to reschedule. 
+			      <p>The events have been scheduled at the following time. Check the ones that you wish to reschedule.
 			      <!-- <p>rep = <span id="eventName-popup">{{ rep }}</span> </p> -->
 
 	            <form action="/reschedule" method="GET">
 	            	{% for i in range(rep) %}
-	            		<input type="checkbox" name="{{i}}"" value="true"> Event "{{ formattedChosenOnes[i]["summary"] }}" at {{ formattedChosenOnes[i]["start"].get("dateTime") }}<br>
+	            		<input type="checkbox" name="{{i}}"" value="true"> Event "{{ formattedChosenOnes[i]["summary"] }}" at {{ displayList[i] }}<br>
 					{% endfor %}
 					<button type="submit">Next</button>
 					<!-- <input type="submit" value="Submit">  -->

@@ -133,11 +133,11 @@ def checkForm2():
 def popup():
     print("in popup")
     try:
-        event = formattedChosenOnes[0]
-        print (event["start"].get("dateTime"))
+        title = formattedChosenOnes[0]
+        print (title["start"].get("dateTime"))
         # event["start"]["timeFormat"] =  datetime.datetime.strptime(event["start"].get("dateTime"),"%a/%b")
         # print (event["start"].get("timeFormat"))
-        return render_template('popup.html', event=event)
+        return render_template('popup.html', event=displayList[0], title = title)
     except:
         # return redirect("/form")
         return redirect("/error")
@@ -269,7 +269,7 @@ def createEvent():
     else:
         workStart = 480
         workEnd = 1380
-        
+
     if not current.isDST(datetime.datetime(nowYear, nowMonth, nowDay)):
         workStart += 60
         workEnd += 60
@@ -285,6 +285,8 @@ def createEvent():
     selectionOfTimeSlots(availableTimes)
     for i in range(len(chosenTimeSlots)):
         formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
+
+    displayFormat()
     if rep == 1:
         return redirect('/popup')
     else:
@@ -294,11 +296,11 @@ def createEvent():
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
     localChosenTimes = ""
-    for i in range(len(formattedChosenOnes)):
-        localChosenTimes = localChosenTimes + " AND " + formattedChosenOnes[i]["start"].get("dateTime")
+    for i in range(len(displayList)):
+        localChosenTimes = localChosenTimes + " AND " + displayList[i]
         print (localChosenTimes)
 
-    return render_template('multi.html', formattedChosenOnes=formattedChosenOnes, localChosenTimes=localChosenTimes, rep=rep)
+    return render_template('multi.html', formattedChosenOnes=displayList, localChosenTimes=localChosenTimes, rep=rep)
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():
@@ -355,6 +357,17 @@ def addEvent():
     # return redirect('https://calendar.google.com/calendar/', code=302)
 
 
+def displayFormat():
+    global displayList
+    displayList = []
+    fmt = '%A, %B %d, at %I:%M%p'
+    for i in range(len(formattedChosenOnes)):
+        chosenDate = formattedChosenOnes[i]["start"].get("dateTime")
+        chosenDate = chosenDate[:22] + chosenDate[23:]
+        dateObj = datetime.datetime.strptime(chosenDate, "%Y-%m-%dT%H:%M:%S%z")
+        stringDate = dateObj.strftime(fmt)
+        displayList.append(stringDate)
+    return displayList
 def getScheduledEvent():
     return event
 

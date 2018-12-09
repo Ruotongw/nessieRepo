@@ -207,8 +207,15 @@ def reassignSlot(start, end):
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
-    rescheduleVal = request.args.get('val')
-    if rescheduleVal != "None":
+
+    # rescheduleVal = null
+    test = 0
+    for i in range(5):
+        if request.args.get('i') == "true":
+            rescheduleVal = requestVal.append(i)
+            test = test + 1
+    # rescheduleVal = request.args.get('val')
+    if test == 0:
         rescheduleVal = 0
     # print('in')
     # rescheduleNum has to start at 0, not 1!
@@ -291,7 +298,7 @@ def multiPopup():
         localChosenTimes = localChosenTimes + " AND " + formattedChosenOnes[i]["start"].get("dateTime")
         print (localChosenTimes)
 
-    return render_template('multi.html', formattedChosenOnes=formattedChosenOnes, localChosenTimes=localChosenTimes)
+    return render_template('multi.html', formattedChosenOnes=formattedChosenOnes, localChosenTimes=localChosenTimes, rep=rep)
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():

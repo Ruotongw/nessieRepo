@@ -32,6 +32,15 @@ def main():
     checkForm2.has_been_called = False
     # global eventSlot
 
+    global current
+    current = Time()
+
+    global format
+    format = Format()
+
+    global findTime
+    findTime = FindTime()
+
     global service
     try:
         print (service)
@@ -181,8 +190,6 @@ def getEventTime(availableTimes):
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)
-
-        global eventSlot
         eventSlot = availableTimes[x]
 
         return eventSlot
@@ -199,50 +206,43 @@ def reassignSlot(start, end):
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
-    availableTimes.remove(eventSlot)
+    # print('in')
+    # rescheduleNum has to start at 0, not 1!
+    global rescheduleNum
+    # rescheduleNum = 2
 
-    length = len(availableTimes)
-    if (length != 0):
+    timeSlots = dividedTimeSlots[rescheduleNum]
+    e = getEventToReschedule(rescheduleNum)
+    timeSlots.remove(e)
+
+    length = len(timeSlots)
+    if length != 0:
         x = random.randrange(0, length)
-        eventTime = availableTimes[x]
-
-        eventStart = eventTime[0]
-        eventEnd = eventTime[1]
-        reassignSlot(eventStart, eventEnd)
-
-        global event
-        event = {
-            'summary': title,
-            'start': {
-                'dateTime': eventStart,
-                'timeZone': 'America/Chicago',
-            },
-            'end': {
-                'dateTime': eventEnd,
-                'timeZone': 'America/Chicago'
-            },
-        }
-        return redirect('/popup')
+        eTime = timeSlots[x]
+        newTime = [eTime[0], eTime[1]]
+        formattedChosenOnes[rescheduleNum] = format.eventFormatDictionary(newTime, title)
+        chosenTimeSlots[rescheduleNum] = newTime
     else:
         print("No available times")
         return redirect('/error')
 
+    if rep == 1:
+        return redirect('/popup')
+    # elif rep > 1:
+    #     return redirect('/multi_add')
+    # else:
+    #     print("No available times")
+    #     return redirect('/error')
 
+def getEventToReschedule(num):
+    e = chosenTimeSlots[num]
+    return e
+    
 def createEvent():
     global rep
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and prepares it to be added to the user's calendar.'''
 
-    global current
-    current = Time()
-
-    global format
-    format = Format()
-
-    global findTime
-    findTime = FindTime()
-    global availableTimes
-    availableTimes = []
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
@@ -260,35 +260,22 @@ def createEvent():
 
     events = getCalendarEvents(now, deadLine)
 
+
     # if not current.isDST(now):
     #     workStart += 1
     #     workEnd += 1
     availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
 
+    global chosenTimeSlots
+    global formattedChosenOnes
+    formattedChosenOnes = []
+    selectionOfTimeSlots(availableTimes)
+
+    for i in range(len(chosenTimeSlots)):
+        formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
     if rep == 1:
-        global event
-        eventTime = getEventTime(availableTimes)
-
-        if (eventTime != '''<h1>Oops</h1>'''):
-            event =  format.eventFormatDictionary(eventTime, title)
-            return redirect('/popup')
-
-        else:
-            return redirect('/error')
-
+        return redirect('/popup')
     else:
-        global chosenTimeSlots
-        global formattedChosenOnes
-        formattedChosenOnes = []
-        divisionOfTimeSlots()
-        selectionOfTimeSlots()
-
-        for i in range(len(chosenTimeSlots)):
-            formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
-        # print (formattedChosenOnes)
-        # for i in range(len(formattedChosenOnes)):
-        #     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
-        #     print (formattedChosenOnes[i])
         return redirect('/multi')
 
 
@@ -316,17 +303,26 @@ def divisionOfTimeSlots():
     length = len(availableTimes)
     size = length // rep
 
-    for i in range(rep - 1):
-        times = availableTimes[i * size: ((i + 1) * size)]
-        dividedTimeSlots.append(times)
-    dividedTimeSlots.append(availableTimes[((rep - 1) * size): length])
+    if rep == 1:
+        dividedTimeSlots.append(availableTimes)
+    else:
+        for i in range(rep - 1):
+            times = availableTimes[i * size: ((i + 1) * size)]
+            dividedTimeSlots.append(times)
+        dividedTimeSlots.append(availableTimes[((rep - 1) * size): length])
     return dividedTimeSlots
 
 def selectionOfTimeSlots():
     global chosenTimeSlots
     chosenTimeSlots = []
+    dividedTimeSlots = divisionOfTimeSlots(availableTimes)
+
     for i in range(rep):
-        chosenTimeSlots.append(getEventTime(dividedTimeSlots[i]))
+        time = getEventTime(dividedTimeSlots[i])
+        if time != '''<h1>Oops</h1>''':
+            chosenTimeSlots.append(time)
+        else:
+            return render_template('/error')
     return chosenTimeSlots
 
 
@@ -335,8 +331,8 @@ def addEvent():
     '''Adds chosen event to the user's calendar.'''
 
     # event = createEvent()
-    add = service.events().insert(calendarId = 'primary', body = event).execute()
-    print ('Event created: %s' % (event.get('summary')))
+    add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
+    print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
     # print ('time: %s' % (eventTime[0]))
     return redirect('/form')
     # return redirect('https://calendar.google.com/calendar/', code=302)

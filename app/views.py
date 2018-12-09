@@ -297,6 +297,11 @@ def multiAdd():
         # print (formattedChosenOnes[i])
     return redirect('/form')
 
+@app.route('/multi_res', methods=['GET', 'POST'])
+def multiRes():
+    return render_template('multiRes.html', rep=rep)
+
+
 def divisionOfTimeSlots(availableTimes):
     global dividedTimeSlots
     dividedTimeSlots = []

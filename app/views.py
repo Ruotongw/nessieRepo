@@ -210,8 +210,13 @@ def rescheduleEvent():
 
     # rescheduleVal = null
     test = 0
-    for i in range(5):
-        if request.args.get('i') == "true":
+    print ("beginning all the shit")
+    print ("hold on to your butts....")
+    for i in range(rep):
+        print (request.args.get(str(i)))
+        print (request.args.get("1"))
+        print (str(i))
+        if request.args.get(i) == "true":
             rescheduleVal = requestVal.append(i)
             test = test + 1
     # rescheduleVal = request.args.get('val')
@@ -241,9 +246,9 @@ def rescheduleEvent():
         return redirect('/popup')
     # elif rep > 1:
     #     return redirect('/multi_add')
-    # else:
-    #     print("No available times")
-    #     return redirect('/error')
+    else:
+        print("No available times")
+        return redirect('/multi')
 
 def getEventToReschedule(num):
     e = chosenTimeSlots[num]

@@ -7,7 +7,7 @@ import time
 from tzlocal import get_localzone
 
 # Handles finding and manipulating the current time.
-class Now:
+class Time:
     def __init__(self):
         pass
 
@@ -21,6 +21,7 @@ class Now:
         nowHour = now.hour
         nowMinute = now.minute
         return nowDay, nowHour, nowMinute
+
 
     def currentTime(self):
         '''Returns the current Chicago time, accounting for daylight savings and
@@ -44,3 +45,18 @@ class Now:
         now = now[:22] + ':' + now[22:]
 
         return now
+
+
+    def isDST(self, dt):
+        '''CODE ATTRIBUTION:
+        https://stackoverflow.com/questions/5590429/calculating-daylight-saving-time-from-only-date'''
+
+        lastSunday = dt.day - dt.weekday()
+        if (dt.month < 3 or dt.month > 11):
+            return False
+        elif (dt.month > 3 or dt.month < 11):
+            return True
+        elif (dt.month == 3):
+            return lastSunday >= 8
+        else:
+            return lastSunday <= 0

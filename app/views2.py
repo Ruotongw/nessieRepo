@@ -29,8 +29,15 @@ def main():
 
     global workStart
     global workEnd
-    checkForm2.has_been_called = False
     # global eventSlot
+    global current
+    current = Time()
+
+    global format
+    format = Format()
+
+    global findTime
+    findTime = FindTime()
 
     global service
     try:
@@ -72,7 +79,7 @@ def form():
                 title = request.form.get('Title')
 
                 global timeEst
-                timeEst = float(request.form.get('est'))
+                timeEst = int(request.form.get('est'))
 
                 global deadLine
                 deadLine = request.form.get('dead')
@@ -92,45 +99,35 @@ def form():
     except:
         return redirect('/')
 
-@app.route('/form2', methods=['GET', 'POST'])
-def form2():
-    try:
-        print (service)
-        if request.method == 'POST': #this block is only entered when the form is submitted
-
-            if not request.headers.get('X-Requested-With'):
-
-                global earliestWorkTime
-                earliestWorkTime = request.form.get('earliest')
-
-                global latestWorkTime
-                latestWorkTime = request.form.get('latest')
-                checkForm2()
-
-            else:
-                print("else statement")
-
-        return render_template('index.html')
-    except:
-        return redirect('/')
-
-def checkForm2():
-    checkForm2.has_been_called = True
-    pass
-
-
+# @app.route('/form2', methods=['GET', 'POST'])
+# def form2():
+#     try:
+#         print (service)
+#         if request.method == 'POST': #this block is only entered when the form is submitted
+#
+#             if not request.headers.get('X-Requested-With'):
+#
+#                 global earliestWorkTime
+#                 earliestWorkTime = request.form.get('earliest')
+#
+#                 global latestWorkTime
+#                 latestWorkTime = request.form.get('latest')
+#
+#             else:
+#                 print("else statement")
+#
+#         return render_template('index.html')
+#     except:
+#         return redirect('/')
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
     print("in popup")
     try:
-        print (event["start"].get("dateTime"))
-        # event["start"]["timeFormat"] =  datetime.datetime.strptime(event["start"].get("dateTime"),"%a/%b")
-        # print (event["start"].get("timeFormat"))
-        return render_template('popup.html', event=event)
+        print (formattedChosenOnes)
+        return render_template('popup.html', event=formattedChosenOnes[0])
     except:
-        # return redirect("/form")
-        return redirect("/error")
+        return redirect("/form")
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
@@ -177,11 +174,9 @@ def getEventTime(availableTimes):
     '''Returns a randomly selected time slot from all of the available times slots.
     If there are no time slots, it returns an exception instead of breaking.'''
 
-
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)
-
         global eventSlot
         eventSlot = availableTimes[x]
 
@@ -190,143 +185,126 @@ def getEventTime(availableTimes):
         # return  '''<h1>Oops</h1>'''
         return redirect('/error')
 
-def reassignSlot(start, end):
-    global eventSlot
-    eventSlot = [start,end]
-    # print("reassign eventSlot:",eventSlot)
-    # print("global in reassignSlot, ", globals())
-    return eventSlot
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
-    availableTimes.remove(eventSlot)
+    # print('in')
+    # rescheduleNum has to start at 0, not 1!
+    global rescheduleNum
+    # rescheduleNum = 2
 
-    length = len(availableTimes)
-    if (length != 0):
+    timeSlots = dividedTimeSlots[rescheduleNum]
+    e = getEventToReschedule(rescheduleNum)
+    timeSlots.remove(e)
+
+    length = len(timeSlots)
+    if length != 0:
         x = random.randrange(0, length)
-        eventTime = availableTimes[x]
-
-        eventStart = eventTime[0]
-        eventEnd = eventTime[1]
-        reassignSlot(eventStart, eventEnd)
-
-        global event
-        event = {
-            'summary': title,
-            'start': {
-                'dateTime': eventStart,
-                'timeZone': 'America/Chicago',
-            },
-            'end': {
-                'dateTime': eventEnd,
-                'timeZone': 'America/Chicago'
-            },
-        }
-        return redirect('/popup')
+        eTime = timeSlots[x]
+        newTime = [eTime[0], eTime[1]]
+        formattedChosenOnes[rescheduleNum] = format.eventFormatDictionary(newTime, title)
+        chosenTimeSlots[rescheduleNum] = newTime
     else:
         print("No available times")
         return redirect('/error')
 
+    if rep == 1:
+        return redirect('/popup')
+    # elif rep > 1:
+    #     return redirect('/multi_add')
+    # else:
+    #     print("No available times")
+    #     return redirect('/error')
+
+
+def getEventToReschedule(num):
+    e = chosenTimeSlots[num]
+    return e
+
 
 def createEvent():
-    global rep
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and prepares it to be added to the user's calendar.'''
-
-    global current
-    current = Time()
-
-    global format
-    format = Format()
-
-    global findTime
-    findTime = FindTime()
-    global availableTimes
-    availableTimes = []
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
 
-    global workStart
-    global workEnd
-
-    if checkForm2.has_been_called:
-        workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
-        workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
-
-    else:
-        workStart = 480
-        workEnd = 1380
+    workStart = 480
+    workEnd = 1380
 
     events = getCalendarEvents(now, deadLine)
 
-    # if not current.isDST(now):
-    #     workStart += 1
-    #     workEnd += 1
+    workStart = workStart + 1
     availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
 
+
+    global chosenTimeSlots
+    global formattedChosenOnes
+    formattedChosenOnes = []
+    selectionOfTimeSlots(availableTimes)
+
+    for i in range(len(chosenTimeSlots)):
+        formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
     if rep == 1:
-        global event
-        eventTime = getEventTime(availableTimes)
-
-        if (eventTime != '''<h1>Oops</h1>'''):
-            event =  format.eventFormatDictionary(eventTime, title)
-            return redirect('/popup')
-
-        else:
-            return redirect('/error')
-
+        return redirect('/popup')
     else:
-        global chosenTimeSlots
-        global formattedChosenOnes
-        formattedChosenOnes = []
-        divisionOfTimeSlots()
-        selectionOfTimeSlots()
-
-        for i in range(len(chosenTimeSlots)):
-            formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
-        # print (formattedChosenOnes)
-        # for i in range(len(formattedChosenOnes)):
-        #     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
-        #     print (formattedChosenOnes[i])
-        return redirect('/multi')
+        return redirect('/multi_add')
 
 
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
-    localChosenTimes = ""
-    for i in range(len(formattedChosenOnes)):
-        localChosenTimes = localChosenTimes + formattedChosenOnes[i]["start"].get("dateTime")
-        print (localChosenTimes)
+    return render_template('multi.html')
 
-    return render_template('multi.html', formattedChosenOnes=formattedChosenOnes, localChosenTimes=localChosenTimes)
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():
     global formattedChosenOnes
+    global chosenTimeSlots
+
+    reschedule = [0, 2, 3]
+
+    for i in range(len(reschedule)):
+        global rescheduleNum
+        rescheduleNum = reschedule[i]
+        print('before reschedule: ', chosenTimeSlots)
+        print(' ')
+        rescheduleEvent()
+        print('after reschedule: ', chosenTimeSlots)
+        print(' ')
+
     for i in range(len(formattedChosenOnes)):
         add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
-        # print (formattedChosenOnes[i])
     return redirect('/form')
 
-def divisionOfTimeSlots():
+
+def divisionOfTimeSlots(availableTimes):
     global dividedTimeSlots
     dividedTimeSlots = []
-
     length = len(availableTimes)
     size = length // rep
 
-    for i in range(rep - 1):
-        times = availableTimes[i * size: ((i + 1) * size)]
-        dividedTimeSlots.append(times)
-    dividedTimeSlots.append(availableTimes[((rep - 1) * size): length])
+    if rep == 1:
+        dividedTimeSlots.append(availableTimes)
+    else:
+        for i in range(rep - 1):
+            times = availableTimes[i * size: ((i + 1) * size)]
+            dividedTimeSlots.append(times)
+        dividedTimeSlots.append(availableTimes[((rep - 1) * size): length])
+
     return dividedTimeSlots
 
-def selectionOfTimeSlots():
+
+def selectionOfTimeSlots(availableTimes):
     global chosenTimeSlots
     chosenTimeSlots = []
+    dividedTimeSlots = divisionOfTimeSlots(availableTimes)
+
     for i in range(rep):
-        chosenTimeSlots.append(getEventTime(dividedTimeSlots[i]))
+        time = getEventTime(dividedTimeSlots[i])
+        if time != '''<h1>Oops</h1>''':
+            chosenTimeSlots.append(time)
+        else:
+            return render_template('/error')
     return chosenTimeSlots
 
 
@@ -334,16 +312,14 @@ def selectionOfTimeSlots():
 def addEvent():
     '''Adds chosen event to the user's calendar.'''
 
-    # event = createEvent()
-    add = service.events().insert(calendarId = 'primary', body = event).execute()
-    print ('Event created: %s' % (event.get('summary')))
-    # print ('time: %s' % (eventTime[0]))
+    add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
+    print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
     return redirect('/form')
-    # return redirect('https://calendar.google.com/calendar/', code=302)
 
 
-def getScheduledEvent():
-    return event
+def getScheduledEvents():
+    return formattedChosenOnes
+
 
 # we need to account for:
 # no time slots

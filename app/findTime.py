@@ -19,7 +19,7 @@ from tzlocal import get_localzone
 import calendar
 from .format import *
 from .timeSlot import *
-from .now import *
+from .time import *
 
 # Finds open time slots for events.
 class FindTime:

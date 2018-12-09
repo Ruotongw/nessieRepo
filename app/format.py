@@ -5,7 +5,7 @@ import pytz
 from pytz import timezone
 import time
 from tzlocal import get_localzone
-from .now import *
+from .time import *
 
 # Handles the formatting of dateTime objects.
 class Format:
@@ -119,31 +119,12 @@ class Format:
         hour accordingly.'''
 
         global current
-        current = Now()
-
-        now = current.currentTime()
-        nowDay, nowHour, nowMinute = current.getNowDHM(now)
-
-        lastSunday = e1.day - nowDay
-
-        if (e1.month < 3 or e1.month > 11):
+        current = Time()
+        if not current.isDST(e1):
             e1 = e1 + datetime.timedelta(hours = 1)
             e2 = e2 + datetime.timedelta(hours = 1)
-
-        elif (e1.month > 3 and e1.month <11):
-            e1 = e1 + datetime.timedelta(hours = 0)
-            e2 = e2 + datetime.timedelta(hours = 0)
-
-        elif (e1.month ==3 and lastSunday >=8):
-            e1 = e1 + datetime.timedelta(hours = 0)
-            e2 = e2 + datetime.timedelta(hours = 0)
-
-        elif (e1.month == 11 and lastSunday <= 0):
-            e1 = e1 + datetime.timedelta(hours = 0)
-            e2 = e2 + datetime.timedelta(hours = 0)
-
         else:
-            e1 = e1 + datetime.timedelta(hours = 1)
-            e2 = e2 + datetime.timedelta(hours = 1)
+            e1 = e1 + datetime.timedelta(hours = 0)
+            e2 = e2 + datetime.timedelta(hours = 0)
 
         return e1, e2

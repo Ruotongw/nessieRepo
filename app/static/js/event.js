@@ -8,15 +8,22 @@ var year = parseInt($(".year").attr('id'));
 var month = parseInt($(".month").attr('id'));
 
 // console.log("load event");
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    local.setDate(local.getDate()+1)
+    console.log(local.getDate())
+    return local.toJSON().slice(0,10);
+});
 
 //
 //If the add event button is clicked, create new event box
 //
 function add_event() {
 	// Initializing new event box's input field as blank
-	$("#eventName").val("");
-	$("#eventDuration").val("");
-	$("#eventDescription").val("");
+	// var today = Date().toISOString().substr(0, 10);
+	$("#dueDate").attr("min", new Date().toDateInputValue());
+	console.log("open event form")
 
 	// Displaying new event box at apt location
 	var windowWidth = $(window).width();

@@ -258,7 +258,9 @@ def createEvent():
 
     events = getCalendarEvents(now, deadLine)
 
-    workStart = workStart + 1
+    if not current.isDST(now):
+        workStart += 1
+        workEnd += 1
     availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
 
     if rep == 1:

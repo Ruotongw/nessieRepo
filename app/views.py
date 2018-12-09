@@ -133,6 +133,7 @@ def checkForm2():
 def popup():
     print("in popup")
     try:
+        event = formattedChosenOnes[0]
         print (event["start"].get("dateTime"))
         # event["start"]["timeFormat"] =  datetime.datetime.strptime(event["start"].get("dateTime"),"%a/%b")
         # print (event["start"].get("timeFormat"))
@@ -237,12 +238,12 @@ def rescheduleEvent():
 def getEventToReschedule(num):
     e = chosenTimeSlots[num]
     return e
-    
+
 def createEvent():
     global rep
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and prepares it to be added to the user's calendar.'''
-
+    print('in create event')
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
@@ -269,8 +270,8 @@ def createEvent():
     global chosenTimeSlots
     global formattedChosenOnes
     formattedChosenOnes = []
-    selectionOfTimeSlots(availableTimes)
 
+    selectionOfTimeSlots(availableTimes)
     for i in range(len(chosenTimeSlots)):
         formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
     if rep == 1:
@@ -296,7 +297,7 @@ def multiAdd():
         # print (formattedChosenOnes[i])
     return redirect('/form')
 
-def divisionOfTimeSlots():
+def divisionOfTimeSlots(availableTimes):
     global dividedTimeSlots
     dividedTimeSlots = []
 
@@ -312,7 +313,7 @@ def divisionOfTimeSlots():
         dividedTimeSlots.append(availableTimes[((rep - 1) * size): length])
     return dividedTimeSlots
 
-def selectionOfTimeSlots():
+def selectionOfTimeSlots(availableTimes):
     global chosenTimeSlots
     chosenTimeSlots = []
     dividedTimeSlots = divisionOfTimeSlots(availableTimes)

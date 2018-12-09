@@ -11,6 +11,8 @@ var month = parseInt($(".month").attr('id'));
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    local.setDate(local.getDate()+1)
+    console.log(local.getDate())
     return local.toJSON().slice(0,10);
 });
 

@@ -296,7 +296,7 @@ def createEvent():
 def multiPopup():
     localChosenTimes = ""
     for i in range(len(formattedChosenOnes)):
-        localChosenTimes = localChosenTimes + formattedChosenOnes[i]["start"].get("dateTime")
+        localChosenTimes = localChosenTimes + " AND " + formattedChosenOnes[i]["start"].get("dateTime")
         print (localChosenTimes)
 
     return render_template('multi.html', formattedChosenOnes=formattedChosenOnes, localChosenTimes=localChosenTimes)

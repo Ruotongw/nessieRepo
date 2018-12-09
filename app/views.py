@@ -262,6 +262,7 @@ def createEvent():
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
+    nowYear, nowMonth = current.getNowYM(now)
 
     global workStart
     global workEnd
@@ -273,13 +274,13 @@ def createEvent():
     else:
         workStart = 480
         workEnd = 1380
+        
+    if not current.isDST(datetime.datetime(nowYear, nowMonth, nowDay)):
+        workStart += 60
+        workEnd += 60
 
     events = getCalendarEvents(now, deadLine)
 
-
-    # if not current.isDST(now):
-    #     workStart += 1
-    #     workEnd += 1
     availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
 
     global chosenTimeSlots

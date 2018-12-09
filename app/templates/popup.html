@@ -8,6 +8,7 @@
 			   	<div class="popup-content">
 			      <h2>Attention!</h2>
 			      <p>You can add <span id="eventName-popup">{{ event["summary"] }}</span> at <span id="eventTime-popup">{{ event["start"].get("dateTime") }}</span>. Is this time convenient for you?</p>
+			      <!-- time.strftime("%b %d %Y %H:%M:%S", time.gmtime(t)) -->
 			     <!--popup's close button-->
 
 					 <a href="/reschedule" ><button>No, find another time!</button></a>

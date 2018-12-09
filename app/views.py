@@ -124,7 +124,9 @@ def checkForm2():
 def popup():
     print("in popup")
     try:
-        print (event)
+        print (event["start"].get("dateTime"))
+        # event["start"]["timeFormat"] =  datetime.datetime.strptime(event["start"].get("dateTime"),"%a/%b")
+        # print (event["start"].get("timeFormat"))
         return render_template('popup.html', event=event)
     except:
         # return redirect("/form")

@@ -207,25 +207,14 @@ def reassignSlot(start, end):
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
-
-    # rescheduleVal = null
     test = 0
-    # print ("beginning all the shit")
-    # print ("hold on to your butts....")
     for i in range(rep):
-        # print (request.args.get(str(i)))
-        # print (request.args.get("1"))
-        # print (str(i))
         if request.args.get(i) == "true":
             rescheduleVal = requestVal.append(i)
             test = test + 1
-    # rescheduleVal = request.args.get('val')
     if test == 0:
         rescheduleVal = 0
-    # print('in')
-    # rescheduleNum has to start at 0, not 1!
     global rescheduleNum
-    # rescheduleNum = 2
     rescheduleNum = rescheduleVal
     timeSlots = dividedTimeSlots[rescheduleNum]
     e = getEventToReschedule(rescheduleNum)
@@ -274,7 +263,7 @@ def createEvent():
     else:
         workStart = 480
         workEnd = 1380
-        
+
     if not current.isDST(datetime.datetime(nowYear, nowMonth, nowDay)):
         workStart += 60
         workEnd += 60

@@ -207,11 +207,14 @@ def reassignSlot(start, end):
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
+    rescheduleVal = request.args.get('val')
+    if rescheduleVal != "None":
+        rescheduleVal = 0
     # print('in')
     # rescheduleNum has to start at 0, not 1!
     global rescheduleNum
     # rescheduleNum = 2
-
+    rescheduleNum = rescheduleVal
     timeSlots = dividedTimeSlots[rescheduleNum]
     e = getEventToReschedule(rescheduleNum)
     timeSlots.remove(e)

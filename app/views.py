@@ -210,7 +210,7 @@ def rescheduleEvent():
 
     # rescheduleVal = null
     test = 0
-    for i in range(5):
+    for i in range(rep):
         if request.args.get('i') == "true":
             rescheduleVal = requestVal.append(i)
             test = test + 1

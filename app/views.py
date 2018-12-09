@@ -201,49 +201,50 @@ def getEventTime(availableTimes):
 def reassignSlot(start, end):
     global eventSlot
     eventSlot = [start,end]
-    # print("reassign eventSlot:",eventSlot)
-    # print("global in reassignSlot, ", globals())
     return eventSlot
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
-
-    # rescheduleVal = null
+    global formattedChosenOnes
+    global chosenTimeSlots
     test = 0
+    rescheduleVal = []
     for i in range(5):
-        if request.args.get('i') == "true":
-            rescheduleVal = requestVal.append(i)
-            test = test + 1
-    # rescheduleVal = request.args.get('val')
+        if request.args.get(str(i)) == "true":
+            rescheduleVal.append(int(i))
+            print (rescheduleVal)
+            test = 253
+            print ("test should be higher now")
     if test == 0:
-        rescheduleVal = 0
-    # print('in')
-    # rescheduleNum has to start at 0, not 1!
+        print (test)
+        rescheduleVal = []
+        rescheduleVal[0] = 0
     global rescheduleNum
-    # rescheduleNum = 2
-    rescheduleNum = rescheduleVal
-    timeSlots = dividedTimeSlots[rescheduleNum]
-    e = getEventToReschedule(rescheduleNum)
-    timeSlots.remove(e)
+    print (rescheduleVal)
+    for i in range(len(rescheduleVal)):
+        rescheduleNum = rescheduleVal[i]
+        timeSlots = dividedTimeSlots[rescheduleNum]
+        e = getEventToReschedule(rescheduleNum)
+        timeSlots.remove(e)
 
-    length = len(timeSlots)
-    if length != 0:
-        x = random.randrange(0, length)
-        eTime = timeSlots[x]
-        newTime = [eTime[0], eTime[1]]
-        formattedChosenOnes[rescheduleNum] = format.eventFormatDictionary(newTime, title)
-        chosenTimeSlots[rescheduleNum] = newTime
-    else:
-        print("No available times")
-        return redirect('/error')
+        length = len(timeSlots)
+        if length != 0:
+            x = random.randrange(0, length)
+            eTime = timeSlots[x]
+            newTime = [eTime[0], eTime[1]]
+            formattedChosenOnes[rescheduleNum] = format.eventFormatDictionary(newTime, title)
+            chosenTimeSlots[rescheduleNum] = newTime
+        else:
+            print("No available times")
+            return redirect('/error')
 
     if rep == 1:
         return redirect('/popup')
     # elif rep > 1:
     #     return redirect('/multi_add')
-    # else:
-    #     print("No available times")
-    #     return redirect('/error')
+    else:
+        print("No available times")
+        return redirect('/multi')
 
 def getEventToReschedule(num):
     e = chosenTimeSlots[num]

@@ -133,6 +133,7 @@ def checkForm2():
 def popup():
     print("in popup")
     try:
+        displayFormat()
         title = formattedChosenOnes[0]
         print (title["start"].get("dateTime"))
         # event["start"]["timeFormat"] =  datetime.datetime.strptime(event["start"].get("dateTime"),"%a/%b")
@@ -217,8 +218,8 @@ def rescheduleEvent():
             print ("test should be higher now")
     if test == 0:
         print (test)
-        rescheduleVal = []
-        rescheduleVal[0] = 0
+        rescheduleVal.append(0)
+        # rescheduleVal[0] = 0
     global rescheduleNum
     print (rescheduleVal)
     for i in range(len(rescheduleVal)):
@@ -287,7 +288,6 @@ def createEvent():
     for i in range(len(chosenTimeSlots)):
         formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
 
-    displayFormat()
     if rep == 1:
         return redirect('/popup')
     else:
@@ -296,12 +296,13 @@ def createEvent():
 
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
+    displayFormat()
     localChosenTimes = ""
     for i in range(len(displayList)):
         localChosenTimes = localChosenTimes + " AND " + displayList[i]
         print (localChosenTimes)
 
-    return render_template('multi.html', formattedChosenOnes=displayList, localChosenTimes=localChosenTimes, rep=rep)
+    return render_template('multi.html', displayList=displayList, localChosenTimes=localChosenTimes, formattedChosenOnes = formattedChosenOnes, rep=rep)
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():

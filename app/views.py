@@ -212,15 +212,11 @@ def rescheduleEvent():
     for i in range(5):
         if request.args.get(str(i)) == "true":
             rescheduleVal.append(int(i))
-            print (rescheduleVal)
             test = 253
-            print ("test should be higher now")
     if test == 0:
-        print (test)
         rescheduleVal = []
         rescheduleVal[0] = 0
     global rescheduleNum
-    print (rescheduleVal)
     for i in range(len(rescheduleVal)):
         rescheduleNum = rescheduleVal[i]
         timeSlots = dividedTimeSlots[rescheduleNum]

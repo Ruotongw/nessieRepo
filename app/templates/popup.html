@@ -6,13 +6,16 @@
 				<div class="popup-overlay">
 			  <!--Creates the popup content-->
 			   	<div class="popup-content">
-			      <h2>Attention!</h2>
-			      <p>You can add <span id="eventName-popup">{{ title["summary"] }}</span> on <span id="eventTime-popup">{{ event }}</span>. Is this time convenient for you?</p>
+			      <h2>Hi there!</h2>
+			      <p style="line-height:2">
+							I have found time for you to work on <b><span id="eventName-popup">{{ title["summary"] }}</span></b> on <br />
+							<b><span id="eventTime-popup">{{ event }}</span></b>. <br />
+							Does this work for you?</p>
 			      <!-- time.strftime("%b %d %Y %H:%M:%S", time.gmtime(t)) -->
 			     <!--popup's close button-->
 
-					 <a href="/reschedule"><button>No, find another time!</button></a>
-					<a href="/add"><button>Yes, add it to my calendar!</button></a>
+					 <a href="/reschedule"><button>No, find another time</button></a>
+					<a href="/add"><button>Yes, add it to my calendar</button></a>
 
 				</div>
 			</div>

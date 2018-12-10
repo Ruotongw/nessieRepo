@@ -30,7 +30,6 @@ def main():
     global workStart
     global workEnd
     checkForm2.has_been_called = False
-    # global eventSlot
 
     global current
     current = Time()
@@ -90,16 +89,13 @@ def form():
                 rep = int(request.form.get('rep'))
 
                 return createEvent()
-                # return redirect('/popup')
-                # print("event added")
-                # redirect('/popup')
-                # maybe move the add event to a new route
             else:
                 print ("else case")
 
         return render_template('index.html')
     except:
         return redirect('/')
+
 
 @app.route('/form2', methods=['GET', 'POST'])
 def form2():
@@ -123,10 +119,10 @@ def form2():
     except:
         return redirect('/')
 
+
 def checkForm2():
     checkForm2.has_been_called = True
     pass
-
 
 
 @app.route('/popup', methods=['GET', 'POST'])
@@ -136,34 +132,22 @@ def popup():
         displayFormat()
         title = formattedChosenOnes[0]
         print (title["start"].get("dateTime"))
-        # event["start"]["timeFormat"] =  datetime.datetime.strptime(event["start"].get("dateTime"),"%a/%b")
-        # print (event["start"].get("timeFormat"))
         return render_template('popup.html', event=displayList[0], title = title)
     except:
-        # return redirect("/form")
         return redirect("/error")
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
     from datetime import date
-    # '2018-11-30T11:25:00-05:00'
-    # print(request.args)
     year = request.args.get('year')
     month = request.args.get('month')
-    # firstDay = str(date.today().year)+"-"+str(date.today().month)+"-01"
     firstDay = str(year)+"-"+str(month)+"-01"
     numDay = calendar.monthrange(int(year), int(month))[1]
-    # lastDay= str(date.today().year)+"-"+str(date.today().month)+"-"+str(numDay)
     lastDay= str(year)+"-"+str(month)+"-"+str(numDay)
-    # events_result = service.events().list(calendarId='primary', singleEvents=True,
-                                    # orderBy = 'startTime', maxResults = 2500).execute()
 
-    # events = events_result.get('items', [])
     events = getCalendarEvents(firstDay + 'T00:00:00-06:00', lastDay) #replace deadline with something else
     eventsJSON = jsonify(events)
     eventsJSON.status_code = 200
-    # print(eventsJSON)
-    # redirect("/")
     return eventsJSON
 
 
@@ -183,42 +167,42 @@ def getCalendarEvents(min, max):
     return events
 
 
-
 def getEventTime(availableTimes):
     '''Returns a randomly selected time slot from all of the available times slots.
     If there are no time slots, it returns an exception instead of breaking.'''
-
 
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)
         eventSlot = availableTimes[x]
-
         return eventSlot
     else:
-        # return  '''<h1>Oops</h1>'''
         return redirect('/error')
+
 
 def reassignSlot(start, end):
     global eventSlot
     eventSlot = [start,end]
     return eventSlot
 
+
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
     global formattedChosenOnes
     global chosenTimeSlots
+    global rescheduleNum
     test = 0
     rescheduleVal = []
+
     for i in range(5):
         if request.args.get(str(i)) == "true":
             rescheduleVal.append(int(i))
             test = 253
+
     if test == 0:
         print (test)
         rescheduleVal.append(0)
-        # rescheduleVal[0] = 0
-    global rescheduleNum
+
     for i in range(len(rescheduleVal)):
         rescheduleNum = rescheduleVal[i]
         timeSlots = dividedTimeSlots[rescheduleNum]
@@ -244,9 +228,11 @@ def rescheduleEvent():
         print("No available times")
         return redirect('/multi')
 
+
 def getEventToReschedule(num):
     e = chosenTimeSlots[num]
     return e
+
 
 def createEvent():
     global rep
@@ -301,13 +287,14 @@ def multiPopup():
 
     return render_template('multi.html', displayList=displayList, localChosenTimes=localChosenTimes, formattedChosenOnes = formattedChosenOnes, rep=rep)
 
+
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():
     global formattedChosenOnes
     for i in range(len(formattedChosenOnes)):
         add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
-        # print (formattedChosenOnes[i])
     return redirect('/form')
+
 
 @app.route('/multi_res', methods=['GET', 'POST'])
 def multiRes():
@@ -330,6 +317,7 @@ def divisionOfTimeSlots(availableTimes):
         dividedTimeSlots.append(availableTimes[((rep - 1) * size): length])
     return dividedTimeSlots
 
+
 def selectionOfTimeSlots(availableTimes):
     global chosenTimeSlots
     chosenTimeSlots = []
@@ -348,31 +336,38 @@ def selectionOfTimeSlots(availableTimes):
 def addEvent():
     '''Adds chosen event to the user's calendar.'''
 
-    # event = createEvent()
     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
     print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
-    # print ('time: %s' % (eventTime[0]))
     return redirect('/form')
-    # return redirect('https://calendar.google.com/calendar/', code=302)
 
 
 def displayFormat():
     global displayList
     displayList = []
-    fmt = '%A, %B %d, at %I:%M%p'
+    fmt = '%A, %B %d, from %I:%M%p'
+    fmt2 = '%I:%M%p'
+
     for i in range(len(formattedChosenOnes)):
-        chosenDate = formattedChosenOnes[i]["start"].get("dateTime")
-        chosenDate = chosenDate[:22] + chosenDate[23:]
-        dateObj = datetime.datetime.strptime(chosenDate, "%Y-%m-%dT%H:%M:%S%z")
-        if not current.isDST(dateObj):
-            dateObj -= datetime.timedelta(hours = 1)
-        stringDate = dateObj.strftime(fmt)
+        chosenStart = formattedChosenOnes[i]["start"].get("dateTime")
+        chosenEnd = formattedChosenOnes[i]["end"].get("dateTime")
+
+        chosenStart = chosenStart[:22] + chosenStart[23:]
+        chosenEnd = chosenEnd[:22] + chosenEnd[23:]
+        startObj = datetime.datetime.strptime(chosenStart, "%Y-%m-%dT%H:%M:%S%z")
+        endObj = datetime.datetime.strptime(chosenEnd, "%Y-%m-%dT%H:%M:%S%z")
+
+        if not current.isDST(startObj):
+            startObj -= datetime.timedelta(hours = 1)
+            endObj -= datetime.timedelta(hours = 1)
+
+        stringDate = startObj.strftime(fmt) + ' to ' + endObj.strftime(fmt2)
         displayList.append(stringDate)
     return displayList
 
 
 def getScheduledEvent():
     return event
+
 
 # we need to account for:
 # no time slots

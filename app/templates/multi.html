@@ -8,19 +8,23 @@
 			<div class="popup-overlay">
 			  <!--Creates the popup content-->
 			   <div class="popup-content">
-			      <h2>Attention!</h2>
-			      <p>The events have been scheduled at the following time. Check the ones that you wish to reschedule.
+			      <h2>Hi there!</h2>
+			      <p style="line-height:2">
+						I have found the following times for you to work on <b>{{ formattedChosenOnes[0]["summary"] }}</b>. <br />
+						Please check any that you wish to reschedule.
 			      <!-- <p>rep = <span id="eventName-popup">{{ rep }}</span> </p> -->
 
 	            <form action="/reschedule" method="GET">
 	            	{% for i in range(rep) %}
-	            		<input type="checkbox" name="{{i}}"" value="true"> Event "{{ formattedChosenOnes[i]["summary"] }}" at {{ displayList[i] }}<br>
+	            		<input type="checkbox" name="{{i}}"" value="true"> {{ displayList[i] }} <br>
 					{% endfor %}
 					<button type="submit" id="reschedule">Reschedule the selected event(s)</button>
 					<!-- <input type="submit" value="Submit">  -->
 
 	        </form>
-					<a href="/multi_add"><button>Yes, add them to my calendar!</button></a>
+
+					<a href="/multi_add"><button>All of these times work!</button></a>
+
 			      <!-- 	<span id="eventName-popup">{{ formattedChosenOnes[0]["summary"] }}</span> at
 							<span id="eventTime-popup">{{ localChosenTimes }}</p>
 							<p id="test"></p> -->

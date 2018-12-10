@@ -364,9 +364,13 @@ def displayFormat():
         chosenDate = formattedChosenOnes[i]["start"].get("dateTime")
         chosenDate = chosenDate[:22] + chosenDate[23:]
         dateObj = datetime.datetime.strptime(chosenDate, "%Y-%m-%dT%H:%M:%S%z")
+        if not current.isDST(dateObj):
+            dateObj -= datetime.timedelta(hours = 1)
         stringDate = dateObj.strftime(fmt)
         displayList.append(stringDate)
     return displayList
+
+
 def getScheduledEvent():
     return event
 

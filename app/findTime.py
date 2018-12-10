@@ -26,7 +26,7 @@ class FindTime:
     def __init__(self):
         pass
 
-    def findAvailableTimes(self, now, workStart, workEnd, events, timeEst, deadline):
+    def findAvailableTimes(self, nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst, deadline):
         '''Calculates every available time slot in relation to the events on the user's
         calender from now until the assignment due date. Returns a list of these time slots.'''
 
@@ -39,17 +39,17 @@ class FindTime:
         global time
         time = Time()
 
-        nowDay, nowHour, nowMinute = time.getNowDHM(now)
+        # nowDay, nowHour, nowMinute = time.getNowDHM(now)
         for i in range(len(events) - 1):
 
             event1 = events[i]
             event2 = events[i + 1]
             e1, e2 = format.formatEvent(event1, event2)
-            self.compareEvents(e1, e2, workStart, now, nowMinute, timeEst)
+            self.compareEvents(e1, e2, workStart, nowDay, nowHour, nowMinute, nowMinute, timeEst)
 
         lastEvent = events[len(events) - 1]
         secondToLast = events[len(events) - 2]
-        self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, now, timeEst)
+        self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
         return availableTimes
 
@@ -74,11 +74,11 @@ class FindTime:
 
 
 
-    def compareLastEvent(self, lastEvent, secondToLast, workStart, workEnd, now, timeEst):
+    def compareLastEvent(self, lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
         '''Accounts for finding the time slots around the the last event before the
         deadline. Also accounts for if there is only one event before the deadline.'''
 
-        nowDay, nowHour, nowMinute = time.getNowDHM(now)
+        # nowDay, nowHour, nowMinute = time.getNowDHM(now)
 
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60
@@ -111,12 +111,12 @@ class FindTime:
             availableTimes.append(time)
 
 
-    def compareEvents(self, e1, e2, workStart, workEnd, now, timeEst):
+    def compareEvents(self, e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
         '''Compares each pair of events on the user's calendar from now until the
         entered deadline. If there is enough time between the events, the time slot
         between them is added to the list of available times.'''
 
-        nowDay, nowHour, nowMinute = time.getNowDHM(now)
+        # nowDay, nowHour, nowMinute = time.getNowDHM(now)
 
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60

@@ -5,11 +5,12 @@ console.log("checkbox disabled")
 
 // document.getElementById("reschedule").disabled = true;
 
-document.getElementsById("reschedule").onclick = function (e) {
-	e.preventDefault();
-    if (CheckBoxCount()) {
+document.getElementById("reschedule").onclick = function (e) {
+	// 
+    if (!CheckBoxCount()) {
+        e.preventDefault();
     	// document.getElementById("reschedule").disabled = false;
-        document.forms[0].submit();
+        // document.forms[0].submit();
     };
 };
 
@@ -23,9 +24,9 @@ function CheckBoxCount() {
         }
     }
     if (numChecked < 1) {
-        alert("Minimum 1 !"); return false;
+        alert("Choose at least one event to reschedule !"); return false;
     } 
-    alert("selected count: " + numChecked);
+    // alert("selected count: " + numChecked);
 
     return true;
 

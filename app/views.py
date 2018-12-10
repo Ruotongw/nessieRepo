@@ -25,16 +25,12 @@ from .findTime import *
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 def loginCheck():
-    print ("check")
     try:
         if service == None:
-            print ("red")
             return redirect('/')
         else:
-            print ("blue")
             return 0
     except:
-        print ('returning to safety')
         return 1
 
 @app.route('/', methods=['GET','POST'])
@@ -148,6 +144,11 @@ def checkForm2():
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
     print("in popup")
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     try:
         displayFormat()
         title = formattedChosenOnes[0]
@@ -158,6 +159,11 @@ def popup():
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     from datetime import date
     year = request.args.get('year')
     month = request.args.get('month')
@@ -208,6 +214,11 @@ def reassignSlot(start, end):
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     global formattedChosenOnes
     global chosenTimeSlots
     global rescheduleNum
@@ -281,16 +292,17 @@ def createEvent():
 
     events = getCalendarEvents(now, deadLine)
 
-    availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
+    availableTimes = findTime.findAvailableTimes(now, workStart, workEnd, events, timeEst, deadLine)
 
     global chosenTimeSlots
     global formattedChosenOnes
     formattedChosenOnes = []
-
-    selectionOfTimeSlots(availableTimes)
-    for i in range(len(chosenTimeSlots)):
-        formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
-
+    try:
+        selectionOfTimeSlots(availableTimes)
+        for i in range(len(chosenTimeSlots)):
+            formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
+    except:
+        return redirect('/error')
     if rep == 1:
         return redirect('/popup')
     else:
@@ -299,6 +311,11 @@ def createEvent():
 
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     displayFormat()
     localChosenTimes = ""
     for i in range(len(displayList)):
@@ -310,6 +327,11 @@ def multiPopup():
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     global formattedChosenOnes
     for i in range(len(formattedChosenOnes)):
         add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
@@ -318,6 +340,11 @@ def multiAdd():
 
 @app.route('/multi_res', methods=['GET', 'POST'])
 def multiRes():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     return render_template('multiRes.html', rep=rep)
 
 
@@ -355,6 +382,10 @@ def selectionOfTimeSlots(availableTimes):
 @app.route('/add', methods=['GET', 'POST'])
 def addEvent():
     '''Adds chosen event to the user's calendar.'''
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
 
     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
     print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
@@ -395,6 +426,10 @@ def getScheduledEvent():
 # others
 @app.route('/error', methods=['GET', 'POST'])
 def errorManager():
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     return render_template('error.html')
 
 @app.route('/end', methods=['GET', 'POST'])

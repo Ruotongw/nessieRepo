@@ -292,7 +292,7 @@ def createEvent():
 
     events = getCalendarEvents(now, deadLine)
 
-    availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
+    availableTimes = findTime.findAvailableTimes(now, workStart, workEnd, events, timeEst, deadLine)
 
     global chosenTimeSlots
     global formattedChosenOnes

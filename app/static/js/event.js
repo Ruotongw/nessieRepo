@@ -19,6 +19,16 @@ Date.prototype.toDateInputValue = (function() {
 //
 //If the add event button is clicked, create new event box
 //
+function myFunction(){
+  console.log("starting");
+  chBackcolor();
+  add_event();
+}
+function chBackcolor() {
+   // document.body.style.background = color;
+   document.body.setAttribute("body", "democlass");
+   console.log("changing color");
+}
 function add_event() {
 	// Initializing new event box's input field as blank
 	// var today = Date().toISOString().substr(0, 10);

@@ -11,7 +11,7 @@ class Time:
     def __init__(self):
         pass
 
-    def getNowDHM(self, now):
+    def getNowDHMY(self, now):
         '''Returns the day, hour, and minute value for the current time.'''
 
         now = now[:22] + now[23:]

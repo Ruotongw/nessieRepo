@@ -18,11 +18,13 @@
 	            	{% for i in range(rep) %}
 	            		<input type="checkbox" name="{{i}}"" value="true"> {{ displayList[i] }} <br>
 					{% endfor %}
-					<button type="submit">Reschedule the selected event(s)</button>
+					<button type="submit" id="reschedule">Reschedule the selected event(s)</button>
 					<!-- <input type="submit" value="Submit">  -->
 
-	        </form>
+	        	</form>
+
 					<a href="/multi_add"><button>All of these times work!</button></a>
+
 			      <!-- 	<span id="eventName-popup">{{ formattedChosenOnes[0]["summary"] }}</span> at
 							<span id="eventTime-popup">{{ localChosenTimes }}</p>
 							<p id="test"></p> -->

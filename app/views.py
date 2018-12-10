@@ -24,6 +24,15 @@ from .findTime import *
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
+def loginCheck():
+    try:
+        if service == None:
+            return redirect('/')
+        else:
+            return 0
+    except:
+        return 1
+
 @app.route('/', methods=['GET','POST'])
 def main():
 
@@ -41,10 +50,11 @@ def main():
     findTime = FindTime()
 
     global service
-    try:
-        print (service)
+    service = None
+
+    if service != None:
         return redirect('/form')
-    except:
+    else:
         if request.method == "POST":
             if request.headers.get('X-Requested-With'):
 
@@ -71,53 +81,59 @@ def main():
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
-    try:
-        print (service)
-        if request.method == 'POST': #this block is only entered when the form is submitted
-            if not request.headers.get('X-Requested-With'):
-
-                global title
-                title = request.form.get('Title')
-
-                global timeEst
-                timeEst = float(request.form.get('est'))
-
-                global deadLine
-                deadLine = request.form.get('dead')
-
-                global rep
-                rep = int(request.form.get('rep'))
-
-                return createEvent()
-            else:
-                print ("else case")
-
-        return render_template('index.html')
-    except:
+    # try:
+    #     print (service)
+    x = loginCheck()
+    if x == 1:
         return redirect('/')
+    if request.method == 'POST': #this block is only entered when the form is submitted
+        if not request.headers.get('X-Requested-With'):
+
+            global title
+            title = request.form.get('Title')
+
+            global timeEst
+            timeEst = float(request.form.get('est'))
+
+            global deadLine
+            deadLine = request.form.get('dead')
+
+            global rep
+            rep = int(request.form.get('rep'))
+
+            return createEvent()
+        else:
+            print ("else case")
+
+    return render_template('index.html')
+    # except:
+    #     return redirect('/')
 
 
 @app.route('/form2', methods=['GET', 'POST'])
 def form2():
-    try:
-        print (service)
-        if request.method == 'POST': #this block is only entered when the form is submitted
-
-            if not request.headers.get('X-Requested-With'):
-
-                global earliestWorkTime
-                earliestWorkTime = request.form.get('earliest')
-
-                global latestWorkTime
-                latestWorkTime = request.form.get('latest')
-                checkForm2()
-
-            else:
-                print("else statement")
-
-        return render_template('index.html')
-    except:
+    # try:
+    #     print (service)
+    x = loginCheck()
+    if x == 1:
         return redirect('/')
+    if request.method == 'POST': #this block is only entered when the form is submitted
+
+        if not request.headers.get('X-Requested-With'):
+
+            global earliestWorkTime
+            earliestWorkTime = request.form.get('earliest')
+
+            global latestWorkTime
+            latestWorkTime = request.form.get('latest')
+            checkForm2()
+
+        else:
+            print("else statement")
+
+    return render_template('index.html')
+    # except:
+    #     return redirect('/')
 
 
 def checkForm2():
@@ -128,6 +144,11 @@ def checkForm2():
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
     print("in popup")
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     try:
         displayFormat()
         title = formattedChosenOnes[0]
@@ -138,6 +159,11 @@ def popup():
 
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     from datetime import date
     year = request.args.get('year')
     month = request.args.get('month')
@@ -188,6 +214,11 @@ def reassignSlot(start, end):
 
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     global formattedChosenOnes
     global chosenTimeSlots
     global rescheduleNum
@@ -261,16 +292,17 @@ def createEvent():
 
     events = getCalendarEvents(now, deadLine)
 
-    availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
+    availableTimes = findTime.findAvailableTimes(now, workStart, workEnd, events, timeEst, deadLine)
 
     global chosenTimeSlots
     global formattedChosenOnes
     formattedChosenOnes = []
-
-    selectionOfTimeSlots(availableTimes)
-    for i in range(len(chosenTimeSlots)):
-        formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
-
+    try:
+        selectionOfTimeSlots(availableTimes)
+        for i in range(len(chosenTimeSlots)):
+            formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
+    except:
+        return redirect('/error')
     if rep == 1:
         return redirect('/popup')
     else:
@@ -279,6 +311,11 @@ def createEvent():
 
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     displayFormat()
     localChosenTimes = ""
     for i in range(len(displayList)):
@@ -290,6 +327,11 @@ def multiPopup():
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     global formattedChosenOnes
     for i in range(len(formattedChosenOnes)):
         add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
@@ -298,6 +340,11 @@ def multiAdd():
 
 @app.route('/multi_res', methods=['GET', 'POST'])
 def multiRes():
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     return render_template('multiRes.html', rep=rep)
 
 
@@ -335,6 +382,10 @@ def selectionOfTimeSlots(availableTimes):
 @app.route('/add', methods=['GET', 'POST'])
 def addEvent():
     '''Adds chosen event to the user's calendar.'''
+
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
 
     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
     print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
@@ -375,4 +426,14 @@ def getScheduledEvent():
 # others
 @app.route('/error', methods=['GET', 'POST'])
 def errorManager():
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
     return render_template('error.html')
+
+@app.route('/end', methods=['GET', 'POST'])
+def signOut():
+    global service
+    service = None
+    return redirect('/')

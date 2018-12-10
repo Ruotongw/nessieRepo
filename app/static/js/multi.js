@@ -3,11 +3,16 @@ var checkboxes = $("input[type='checkbox']"),
 
 console.log("checkbox disabled")
 
-    document.getElementById("test").onclick = function () {
-        if (CheckBoxCount()) {
-            document.forms[0].submit();
-        };
+// document.getElementById("reschedule").disabled = true;
+
+document.getElementById("reschedule").onclick = function (e) {
+	// 
+    if (!CheckBoxCount()) {
+        e.preventDefault();
+    	// document.getElementById("reschedule").disabled = false;
+        // document.forms[0].submit();
     };
+};
 
 function CheckBoxCount() {
     var inputList = document.getElementsByTagName("input");
@@ -18,12 +23,10 @@ function CheckBoxCount() {
             numChecked = numChecked + 1;
         }
     }
-    if (numChecked < 2) {
-        alert("Minimum 2 !"); return false;
-    } else if (numChecked > 3) {
-        alert("Maximum 3 !"); return false;
-    }
-    alert("selected count: " + numChecked);
+    if (numChecked < 1) {
+        alert("Choose at least one event to reschedule !"); return false;
+    } 
+    // alert("selected count: " + numChecked);
 
     return true;
 

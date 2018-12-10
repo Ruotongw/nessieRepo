@@ -45,10 +45,12 @@ function add_event() {
 		"top":"40%",
 		"left":"25%"
 	});
+}
 
 function cancel_event(){
+	$("#addEventForm")[0].reset();
 	$("#addEvent").hide();
-}
+
 }
 
 function my_preferences(){

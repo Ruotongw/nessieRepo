@@ -28,13 +28,10 @@ def loginCheck():
     print ("check")
     try:
         if service == None:
-            print ("red")
             return redirect('/')
         else:
-            print ("blue")
             return 0
     except:
-        print ('returning to safety')
         return 1
 
 @app.route('/', methods=['GET','POST'])

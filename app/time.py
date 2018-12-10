@@ -57,7 +57,9 @@ class Time:
 
 
     def isDST(self, dt):
-        '''CODE ATTRIBUTION:
+        '''Checks whether the inputted datetime is in daylight savings. Returns true
+        if it is, false if it is not.
+        CODE ATTRIBUTION:
         https://stackoverflow.com/questions/5590429/calculating-daylight-saving-time-from-only-date'''
 
         lastSunday = dt.day - dt.weekday()

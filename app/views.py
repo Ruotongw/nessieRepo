@@ -25,16 +25,12 @@ from .findTime import *
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 def loginCheck():
-    print ("check")
     try:
         if service == None:
-            print ("red")
             return redirect('/')
         else:
-            print ("blue")
             return 0
     except:
-        print ('returning to safety')
         return 1
 
 @app.route('/', methods=['GET','POST'])
@@ -301,11 +297,12 @@ def createEvent():
     global chosenTimeSlots
     global formattedChosenOnes
     formattedChosenOnes = []
-
-    selectionOfTimeSlots(availableTimes)
-    for i in range(len(chosenTimeSlots)):
-        formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
-
+    try:
+        selectionOfTimeSlots(availableTimes)
+        for i in range(len(chosenTimeSlots)):
+            formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
+    except:
+        return redirect('/error')
     if rep == 1:
         return redirect('/popup')
     else:

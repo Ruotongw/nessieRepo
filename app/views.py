@@ -24,6 +24,19 @@ from .findTime import *
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
+def loginCheck():
+    print ("check")
+    try:
+        if service == None:
+            print ("red")
+            return redirect('/')
+        else:
+            print ("blue")
+            return 0
+    except:
+        print ('returning to safety')
+        return 1
+
 @app.route('/', methods=['GET','POST'])
 def main():
 
@@ -41,10 +54,11 @@ def main():
     findTime = FindTime()
 
     global service
-    try:
-        print (service)
+    service = None
+
+    if service != None:
         return redirect('/form')
-    except:
+    else:
         if request.method == "POST":
             if request.headers.get('X-Requested-With'):
 
@@ -71,53 +85,59 @@ def main():
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
-    try:
-        print (service)
-        if request.method == 'POST': #this block is only entered when the form is submitted
-            if not request.headers.get('X-Requested-With'):
-
-                global title
-                title = request.form.get('Title')
-
-                global timeEst
-                timeEst = float(request.form.get('est'))
-
-                global deadLine
-                deadLine = request.form.get('dead')
-
-                global rep
-                rep = int(request.form.get('rep'))
-
-                return createEvent()
-            else:
-                print ("else case")
-
-        return render_template('index.html')
-    except:
+    # try:
+    #     print (service)
+    x = loginCheck()
+    if x == 1:
         return redirect('/')
+    if request.method == 'POST': #this block is only entered when the form is submitted
+        if not request.headers.get('X-Requested-With'):
+
+            global title
+            title = request.form.get('Title')
+
+            global timeEst
+            timeEst = float(request.form.get('est'))
+
+            global deadLine
+            deadLine = request.form.get('dead')
+
+            global rep
+            rep = int(request.form.get('rep'))
+
+            return createEvent()
+        else:
+            print ("else case")
+
+    return render_template('index.html')
+    # except:
+    #     return redirect('/')
 
 
 @app.route('/form2', methods=['GET', 'POST'])
 def form2():
-    try:
-        print (service)
-        if request.method == 'POST': #this block is only entered when the form is submitted
-
-            if not request.headers.get('X-Requested-With'):
-
-                global earliestWorkTime
-                earliestWorkTime = request.form.get('earliest')
-
-                global latestWorkTime
-                latestWorkTime = request.form.get('latest')
-                checkForm2()
-
-            else:
-                print("else statement")
-
-        return render_template('index.html')
-    except:
+    # try:
+    #     print (service)
+    x = loginCheck()
+    if x == 1:
         return redirect('/')
+    if request.method == 'POST': #this block is only entered when the form is submitted
+
+        if not request.headers.get('X-Requested-With'):
+
+            global earliestWorkTime
+            earliestWorkTime = request.form.get('earliest')
+
+            global latestWorkTime
+            latestWorkTime = request.form.get('latest')
+            checkForm2()
+
+        else:
+            print("else statement")
+
+    return render_template('index.html')
+    # except:
+    #     return redirect('/')
 
 
 def checkForm2():
@@ -376,3 +396,9 @@ def getScheduledEvent():
 @app.route('/error', methods=['GET', 'POST'])
 def errorManager():
     return render_template('error.html')
+
+@app.route('/end', methods=['GET', 'POST'])
+def signOut():
+    global service
+    service = None
+    return redirect('/')

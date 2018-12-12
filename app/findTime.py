@@ -45,7 +45,7 @@ class FindTime:
             event1 = events[i]
             event2 = events[i + 1]
             e1, e2 = format.formatEvent(event1, event2)
-            self.compareEvents(e1, e2, workStart, nowDay, nowHour, nowMinute, nowMinute, timeEst)
+            self.compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
         lastEvent = events[len(events) - 1]
         secondToLast = events[len(events) - 2]
@@ -104,10 +104,12 @@ class FindTime:
 
         if(enoughBeforeTime and (enoughTime or diffDays) and (diffEventDays or enoughTimeEvent)):
             time = timeSlot.beforeTimeSlot(lastStart)
+            print(time)
             availableTimes.append(time)
 
         if(((lastEnd.hour*60) in openTime) and (timeWindow in openTime)):
             time = timeSlot.afterTimeSlot(lastEnd)
+            print(time)
             availableTimes.append(time)
 
 
@@ -145,14 +147,17 @@ class FindTime:
 
         if(now and (sameDay and enoughTime and ((e1.hour*60) in openTime) and (timeWindow in openTime))):
             time = timeSlot.afterTimeSlot(e1)
+            print(time)
             availableTimes.append(time)
 
         if(now and (not sameDay and enoughTime2 and ((e1.hour*60) in openTime) and (timeWindow in openTime))):
             time = timeSlot.afterTimeSlot(e1)
+            print(time)
             availableTimes.append(time)
 
         if(not sameDay and enoughMorningTime):
             time = timeSlot.beforeTimeSlot(e2)
+            print(time)
             availableTimes.append(time)
 
 

@@ -41,6 +41,7 @@ function add_event() {
 	// var today = Date().toISOString().substr(0, 10);
   $("#my-preferences").attr('disabled','disabled');
   $("#Signout").attr('disabled','disabled');
+  $("#about").attr('disabled','disabled');
 	$("#dueDate").attr("min", new Date().toDateInputValue());
 	console.log("open event form")
 
@@ -66,6 +67,7 @@ function my_preferences(){
   // document.getElementById("preferences").style.display = "block";
   $("#add-event").attr('disabled','disabled');
   $("#Signout").attr('disabled','disabled');
+  $("#about").attr('disabled','disabled');
 	$("#earliestWorkTime").val("");
 	$("#latestWorkTime").val("");
 

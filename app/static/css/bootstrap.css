@@ -66,9 +66,11 @@ body {
   border:3px;
 }
 
-/* #add-event{
-  display: inline-block;
-} */
+#Signout{
+  margin-left: -690px;
+}
+
+
 
 #addEventForm{
     width: 90%;
@@ -168,6 +170,8 @@ button{
   display:inline-block;
   vertical-align:middle;
   height: 50px;
+  width: 110px;
+  text-align: center;
   margin:.10rem;
   font-size: 1rem;
   color: white;
@@ -176,9 +180,14 @@ button{
 
 }
 
-/* a{
-  background-color: #2064b6 !important;
-} */
+#add-event{
+  padding-right: 20px;
+  text-align: center;
+}
+
+#cancel-event{
+  text-align: center;
+}
 
 h2{
   padding: 50px;

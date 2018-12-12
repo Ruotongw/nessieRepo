@@ -50,33 +50,29 @@ def main():
     findTime = FindTime()
 
     global service
-    service = None
 
-    if service != None:
-        return redirect('/form')
-    else:
-        if request.method == "POST":
-            if request.headers.get('X-Requested-With'):
+    if request.method == "POST":
+        if request.headers.get('X-Requested-With'):
 
-                auth_code = request.data
-                # Set path to the Web application client_secret_*.json file you downloaded from the
-                # Google API Console: https://console.developers.google.com/apis/credentials
-                CLIENT_SECRET_FILE = 'app/static/client_secret.json'
+            auth_code = request.data
+            # Set path to the Web application client_secret_*.json file you downloaded from the
+            # Google API Console: https://console.developers.google.com/apis/credentials
+            CLIENT_SECRET_FILE = 'app/static/client_secret.json'
 
-                # Exchange auth code for access token, refresh token, and ID token
-                credentials = client.credentials_from_clientsecrets_and_code(
-                    CLIENT_SECRET_FILE,
-                    ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
-                    auth_code)
+            # Exchange auth code for access token, refresh token, and ID token
+            credentials = client.credentials_from_clientsecrets_and_code(
+                CLIENT_SECRET_FILE,
+                ['https://www.googleapis.com/auth/calendar', 'profile', 'email'],
+                auth_code)
 
-                # Call Google API
-                http_auth = credentials.authorize(httplib2.Http())
-                service = discovery.build('calendar', 'v3', http=http_auth)
+            # Call Google API
+            http_auth = credentials.authorize(httplib2.Http())
+            service = discovery.build('calendar', 'v3', http=http_auth)
 
-                now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+            now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
 
-                return form()
-        return render_template('base.html')
+            return form()
+    return render_template('base.html')
 
 
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
@@ -291,10 +287,10 @@ def createEvent():
         workEnd += 60
 
     events = getCalendarEvents(now, deadLine)
-    print(events)
+    # print(events)
 
     availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst, deadLine)
-    print(availableTimes)
+    # print(availableTimes)
 
     global chosenTimeSlots
     global formattedChosenOnes

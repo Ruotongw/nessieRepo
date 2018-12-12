@@ -19,19 +19,28 @@ Date.prototype.toDateInputValue = (function() {
 //
 //If the add event button is clicked, create new event box
 //
-function myFunction(){
-  console.log("starting");
-  chBackcolor();
-  add_event();
-}
-function chBackcolor() {
-   // document.body.style.background = color;
-   document.body.setAttribute("body", "democlass");
-   console.log("changing color");
-}
+// function myFunction(){
+//   console.log("starting");
+//   chBackcolor();
+//   add_event();
+// }
+// function chBackcolor() {
+//    // document.body.style.background = "red !important";
+//    // document.body.setAttribute("class", "democlass");
+//    console.log("changing color");
+//    $("#my-preferences").attr('disabled','disabled');
+//    $("#Signout").attr('disabled','disabled');
+//    // $("#add-event").hide();
+//    // $("#my-preferences").disabled = true;
+//    // $("#Signout").disabled = true;
+//    // $("div:not(#addEvent):not(#addEvent *)").hide();
+//    console.log("hide all children of addEvent");
+// }
 function add_event() {
 	// Initializing new event box's input field as blank
 	// var today = Date().toISOString().substr(0, 10);
+  $("#my-preferences").attr('disabled','disabled');
+  $("#Signout").attr('disabled','disabled');
 	$("#dueDate").attr("min", new Date().toDateInputValue());
 	console.log("open event form")
 
@@ -55,6 +64,8 @@ function cancel_event(){
 
 function my_preferences(){
   // document.getElementById("preferences").style.display = "block";
+  $("#add-event").attr('disabled','disabled');
+  $("#Signout").attr('disabled','disabled');
 	$("#earliestWorkTime").val("");
 	$("#latestWorkTime").val("");
 

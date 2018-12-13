@@ -133,6 +133,7 @@ body {
 
 .day-container {
     overflow-y: scroll;
+    height: 8vw;
 }
 
 /*for popup*/

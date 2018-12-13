@@ -72,6 +72,20 @@ class FindTime:
     #     for i in range(len(events)):
     #         start = event
 
+    def checkEmptyDays(self, workStart, workEnd, now, timeEst, deadline, service):
+        # deadline and now need to be datetime objects
+
+        if now.month == deadline.month:
+            for i in range((deadline.day - now.day) - 1):
+                minDay = i
+                maxDay = i + 1
+                timeMin = datetime.datetime(now.year, now.month, minDay)
+                timeMax = datetime.datetime(now.year, now.month, maxDay)
+                events = service.events().list(calendarId='primary', timeMin = timeMin,
+                                                timeMax = timeMax, singleEvents=True,
+                                                orderBy = 'startTime').execute()
+                
+
 
 
     def compareLastEvent(self, lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):

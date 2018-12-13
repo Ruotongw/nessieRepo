@@ -40,19 +40,23 @@ class FindTime:
         time = Time()
 
         # nowDay, nowHour, nowMinute = time.getNowDHM(now)
-        for i in range(len(events) - 1):
+        try:
+            for i in range(len(events) - 1):
 
-            event1 = events[i]
-            event2 = events[i + 1]
-            e1, e2 = format.formatEvent(event1, event2)
-            self.compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+                event1 = events[i]
+                event2 = events[i + 1]
+                e1, e2 = format.formatEvent(event1, event2)
+                self.compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
-        lastEvent = events[len(events) - 1]
-        secondToLast = events[len(events) - 2]
-        self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+            lastEvent = events[len(events) - 1]
+            secondToLast = events[len(events) - 2]
+            self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
-        return availableTimes
-
+            return availableTimes
+        except:
+            global msg
+            msg = "There isn't enough time. Try again"
+            return redirect('/error')
 
     # def checkEmptyDays(self, workStart, workEnd, now, timeEst, deadline):
     #     end = int(deadLine[8:9])
@@ -84,7 +88,7 @@ class FindTime:
                 events = service.events().list(calendarId='primary', timeMin = timeMin,
                                                 timeMax = timeMax, singleEvents=True,
                                                 orderBy = 'startTime').execute()
-                
+
 
 
 

@@ -199,6 +199,9 @@ def getEventTime(availableTimes):
         eventSlot = availableTimes[x]
         return eventSlot
     else:
+        global msg
+        msg = "No Time available"
+        print("No Time available")
         return redirect('/error')
 
 
@@ -215,6 +218,7 @@ def rescheduleEvent():
     if x == 1:
         return redirect('/')
 
+    global msg
     global formattedChosenOnes
     global chosenTimeSlots
     global rescheduleNum
@@ -244,7 +248,8 @@ def rescheduleEvent():
             formattedChosenOnes[rescheduleNum] = format.eventFormatDictionary(newTime, title)
             chosenTimeSlots[rescheduleNum] = newTime
         else:
-            print("No available times")
+            msg = "No available times anymore"
+            print("No available times anymore")
             return redirect('/error')
 
     if rep == 1:
@@ -252,6 +257,7 @@ def rescheduleEvent():
     # elif rep > 1:
     #     return redirect('/multi_add')
     else:
+        msg = "No available times"
         print("No available times")
         return redirect('/multi')
 
@@ -298,6 +304,9 @@ def createEvent():
         for i in range(len(chosenTimeSlots)):
             formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
     except:
+        global msg
+        msg = "This is not physically possible. Come back when you have more time, need less time, or have control over the universe. Then we'll talk."
+        print ("so, something went wrong")
         return redirect('/error')
     if rep == 1:
         return redirect('/popup')
@@ -371,6 +380,7 @@ def selectionOfTimeSlots(availableTimes):
         if time != '''<h1>Oops</h1>''':
             chosenTimeSlots.append(time)
         else:
+            print ("error = oops")
             return render_template('/error')
     return chosenTimeSlots
 
@@ -426,7 +436,7 @@ def errorManager():
     if x == 1:
         return redirect('/')
 
-    return render_template('error.html')
+    return render_template('error.html', msg=msg)
 
 @app.route('/end', methods=['GET', 'POST'])
 def signOut():

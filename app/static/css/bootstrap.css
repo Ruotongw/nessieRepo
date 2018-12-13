@@ -131,7 +131,7 @@ body {
     color: white;
 }
 
-.day {
+.day-container {
     overflow-y: scroll;
 }
 

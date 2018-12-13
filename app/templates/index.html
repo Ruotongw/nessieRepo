@@ -18,18 +18,36 @@
 	<body>
 		<div class="container">
 			<!-- nav bar on the top of the page, with two buttons -->
-			<nav class="navbar top-left justify-content-end">
-				<div>
-					<a href="/end"><button id="Signout" class="btn btn-info" type="button">Sign out</button></a>
-					<button id="about" class="btn btn-info" type="button" onclick="about()">About</button>
-				</div>
+			<!-- <nav class="navbar top-left justify-content-end"> -->
+				
 
-			<nav class="navbar top-right justify-content-end">
-				<div>
-					<button id="add-event" class="btn btn-info" type="button" onclick="add_event()">Add Event</button>
-					<button id="my-preferences" class="btn btn-info" type="button" onclick="my_preferences()">Preferences</button>
+			<nav class="navbar navbar-light navbar-expand-sm top-right justify-content-end">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+    				<span class="navbar-toggler-icon"></span>
+  				</button>
 
-				</div>
+  				  <div class="collapse navbar-collapse" id="navbarToggler">
+				    <ul class="navbar-nav mr-auto mt-2 mt-sm-0">
+				      <li class="nav-item">
+				      	<a class="nav-link" href="/end"><button id="Signout" class="btn btn-info" type="button">Sign out</button></a>
+				      </li>
+				      <li class="nav-item">
+				      	<a class="nav-link" href="#"> <button id="about" class="btn btn-info" type="button" onclick="about()">About</button></a>
+				      </li>
+				    </ul>
+				    <ul class="navbar-nav list-inline my-2 my-sm-0">
+				      <li class="nav-item">
+				      	<a class="nav-link" href="#"> <button id="add-event" class="btn btn-info" type="button" onclick="add_event()">Add Event</button></a>
+				      </li>
+				      <li class="nav-item">
+				      	<a class="nav-link" href="#"><button id="my-preferences" class="btn btn-info" type="button" onclick="my_preferences()">Preferences</button></a>
+				      </li>
+				    </ul>
+				    <!-- <form class="form-inline my-2 my-lg-0">
+				      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				    </form> -->
+				  </div>
 			</nav>
 
 			<!-- Calender View -->

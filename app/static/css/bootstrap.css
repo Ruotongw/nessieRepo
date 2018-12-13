@@ -66,9 +66,9 @@ body {
   border:3px;
 }
 
-#Signout{
+/*#Signout{
   margin-left: -690px;
-}
+}*/
 
 
 
@@ -133,7 +133,7 @@ body {
 
 .day-container {
     overflow-y: scroll;
-    height: 8vw;
+    height: 5vw;
 }
 
 /*for popup*/
@@ -167,7 +167,7 @@ body {
   visibility:visible;
 }
 
-button{
+button:not(.navbar-toggler){
   display:inline-block;
   vertical-align:middle;
   height: 50px;

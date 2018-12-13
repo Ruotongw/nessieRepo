@@ -141,6 +141,8 @@ def checkForm2():
 def popup():
     print("in popup")
 
+    # global formattedChosenOnes
+
     x = loginCheck()
     if x == 1:
         return redirect('/')
@@ -149,7 +151,13 @@ def popup():
         displayFormat()
         title = formattedChosenOnes[0]
         print (title["start"].get("dateTime"))
-        return render_template('popup.html', event=displayList[0], title = title)
+
+        if len(dividedTimeSlots[0]) != 1:
+            return render_template('popup.html', event=displayList[0], title = title)
+        else:
+            print (len(dividedTimeSlots[0]))
+            options = "There are no further time slots available"
+            return render_template('popup.html', event=displayList[0], title = title, options=options)
     except:
         return redirect("/error")
 

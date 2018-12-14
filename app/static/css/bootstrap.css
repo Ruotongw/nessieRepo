@@ -49,10 +49,11 @@ body {
   width: 100%;
   vertical-align:middle;
   /* padding: 20px; */
-  height: 50%;
+  height: 100%;
   border-color: #2064b6 !important;
   border:3px;
   text-align: center;
+  padding: 10px;
 }
 
 #preferences{
@@ -60,9 +61,9 @@ body {
   background-color: #f8f9fa !important;
   width: 50%;
   margin-left: 100px;
-  padding: 20px;
+  padding-top: 20px;
   height: 50%;
-  border-color: #2064b6 !important;
+  /* border-color: #2064b6 !important; */
   border:3px;
 }
 
@@ -74,19 +75,38 @@ body {
 
 #addEventForm{
     width: 90%;
-    padding: 20px;
+    padding: 10px;
     height: 100%;
     border-color: #2064b6 !important;
     border:3px;
+    text-align: center;
+    margin: 0 auto;
+    vertical-align:middle !important;
+    justify-content: center !important;
 
 }
 
 #addEvent {
     /*border: 5px solid red;*/
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    padding-top: 30px;
     background-color: #f8f9fa !important;
-    text-align: left;
+    text-align: center;
     margin: 0 auto;
+    vertical-align:middle !important;
+    justify-content: center !important;
+}
+
+#yesForm{
+  text-align: center;
+  vertical-align:middle !important;
+  justify-content: center !important;
+  margin-left: 100px;
+}
+
+#noForm{
+  text-align: center;
+  margin-left: 10px;
 }
 
 .border-info {
@@ -97,7 +117,7 @@ body {
 #cancelEvent{
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* background-color: #2064b6 !important; */
-  text-align: left;
+  text-align: center;
   margin: 0 auto;
 
 }
@@ -138,6 +158,8 @@ body {
 
 .aboutPage{
   display: none;
+  border-color: #2064b6 !important;
+  border: solid;
 }
 
 .aboutPopup-overlay{
@@ -145,7 +167,8 @@ body {
   visibility:active;
   position:fixed;
   background: #f8f9fa;
-  border:1px solid #2064b6;
+  /* border-color: #2064b6 !important; */
+  border: 1px solid;
   width:50%;
   height:50%;
   left:25%;
@@ -279,10 +302,10 @@ h4{
   text-align: center;
   padding-top: 20px;
 }
+
 .popup-title {
   padding: 20px;
 }
-
 .multi-add {
   position: absolute;
   right: 10%;

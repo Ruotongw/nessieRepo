@@ -279,3 +279,21 @@ h4{
   text-align: center;
   padding-top: 20px;
 }
+.popup-title {
+  padding: 20px;
+}
+
+.multi-add {
+  position: absolute;
+  right: 10%;
+}
+
+.multi-cancel {
+  position: absolute;
+  left: 10%;
+}
+
+.center {
+  position: absolute;
+  left: 35%;
+}

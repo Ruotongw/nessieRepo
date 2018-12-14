@@ -70,9 +70,9 @@ class Format:
         '''Returns a datetime string of the given datetime object formatted
         correctly for the Google API.'''
 
-        fmt = '%Y-%m-%dT%H:%M:%S%z'
+        fmt = '%Y-%m-%dT%H:%M:%S'
         dt = dt.strftime(fmt)
-        dt = dt[:22] + ':' + e2[22:]
+        dt = dt[:22] + ':' + dt[22:]
 
         return dt
 

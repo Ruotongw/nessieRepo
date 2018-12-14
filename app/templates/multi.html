@@ -16,7 +16,7 @@
 
 	            <form action="/reschedule" method="GET">
 	            	{% for i in range(rep) %}
-	            		<input type="checkbox" name="{{i}}"" value="true"> {{ displayList[i] }} <br>
+	            		<input type="checkbox" name="{{i}}"" value="true"> {{ displayList[i] }} <b>{{ warning[i] }}</b><br>
 					{% endfor %}
 					<button type="submit" id="reschedule">Reschedule the selected event(s)</button>
 					<!-- <input type="submit" value="Submit">  -->

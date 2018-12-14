@@ -58,14 +58,43 @@ function add_event() {
 	});
 }
 
+// $(window).load(function () {
+//     $(".trigger_popup_fricc").click(function(){
+//        $('.hover_bkgr_fricc').show();
+//     });
+//     $('.hover_bkgr_fricc').click(function(){
+//         $('.hover_bkgr_fricc').hide();
+//     });
+//     $('.close-event').click(function(){
+//         $('.hover_bkgr_fricc').hide();
+//     });
+// });
+function about(){
+  $("#my-preferences").attr('disabled','disabled');
+  $("#Signout").attr('disabled','disabled');
+  $("#about").attr('disabled','disabled');
+  $("#add-event").attr('disabled','disabled');
+  var divelement = document.getElementById("aboutPage")
+  if(divelement.style.display == "none")
+    divelement.style.display == "block"
+  
+
+  $("#aboutPage").show();
+
+
+
+
+}
+
 function cancel_event(){
 	$("#addEventForm")[0].reset();
 	$("#addEvent").hide();
+  $("#aboutPage").hide();
+  $("#aboutPopup-content").hide();
 	$("#my-preferences").attr('disabled',false);
-    $("#Signout").attr('disabled',false);
-    $("#about").attr('disabled',false);
-    $("#add-event").attr('disabled',false);
-
+  $("#Signout").attr('disabled',false);
+  $("#about").attr('disabled',false);
+  $("#add-event").attr('disabled',false);
 }
 
 function my_preferences(){
@@ -73,6 +102,7 @@ function my_preferences(){
   $("#add-event").attr('disabled','disabled');
   $("#Signout").attr('disabled','disabled');
   $("#about").attr('disabled','disabled');
+  $("#my-preferences").attr('disabled','disabled');
 	$("#earliestWorkTime").val("");
 	$("#latestWorkTime").val("");
 
@@ -94,11 +124,11 @@ function my_preferences(){
 
 	// console.log(windowHeight);
 
-
 //
 // popup display
 //
 //appends an "active" class to .popup and .popup-content when the "Open" button is clicked
+
 $(".add-event").on("click", function(){
   $(".popup-overlay, .popup-content").addClass("active");
 });

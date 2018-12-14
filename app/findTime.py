@@ -26,7 +26,7 @@ class FindTime:
     def __init__(self):
         pass
 
-    def findAvailableTimes(self, nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst, deadline):
+    def findAvailableTimes(self, nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst, deadline, now, service):
         '''Calculates every available time slot in relation to the events on the user's
         calender from now until the assignment due date. Returns a list of these time slots.'''
 
@@ -36,8 +36,8 @@ class FindTime:
         timeSlot = TimeSlot(timeEst)
         global availableTimes
         availableTimes = []
-        global time
-        time = Time()
+        # global time
+        # time = Time()
 
         # nowDay, nowHour, nowMinute = time.getNowDHM(now)
         for i in range(len(events) - 1):
@@ -51,6 +51,9 @@ class FindTime:
         secondToLast = events[len(events) - 2]
         self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
+        self.checkEmptyDays(workStart, workEnd, now, timeEst, deadline, service)
+
+        print(availableTimes)
         return availableTimes
 
 
@@ -74,17 +77,36 @@ class FindTime:
 
     def checkEmptyDays(self, workStart, workEnd, now, timeEst, deadline, service):
         # deadline and now need to be datetime objects
+        deadline = datetime.datetime(int(deadline[0:4]), int(deadline[5:7]), int(deadline[8:10]))
+        now = datetime.datetime(int(now[0:4]), int(now[5:7]), int(now[8:10]))
+
+        startMinutes = workStart % 60
+        startHours = (workStart - startMinutes) / 60
+
+        endMinutes = workEnd % 60
+        endHours = (workEnd - endMinutes) / 60
+
+        enoughTime = (workEnd - workStart) >= (timeEst * 60) + 30
 
         if now.month == deadline.month:
-            for i in range((deadline.day - now.day) - 1):
-                minDay = i
-                maxDay = i + 1
-                timeMin = datetime.datetime(now.year, now.month, minDay)
-                timeMax = datetime.datetime(now.year, now.month, maxDay)
+            for i in range(deadline.day - now.day):
+                minDay = now.day + i
+                maxDay = now.day + i + 1
+
+                timeMinDT = datetime.datetime(now.year, now.month, minDay)
+                timeMin = format.formatDT2(now.year, now.month, minDay, 0, 0, 0)
+                timeMaxDT = datetime.datetime(now.year, now.month, maxDay)
+                timeMax = format.formatDT2(now.year, now.month, maxDay, 0, 0, 0)
+
                 events = service.events().list(calendarId='primary', timeMin = timeMin,
                                                 timeMax = timeMax, singleEvents=True,
                                                 orderBy = 'startTime').execute()
-                
+                events = events.get('items', [])
+                print(len(events))
+                if len(events) == 0 and enoughTime:
+                    morning = datetime.datetime(timeMinDT.year, timeMinDT.month, timeMinDT.day, int(startHours), int(startMinutes))
+                    time = timeSlot.afterTimeSlot(morning)
+                    availableTimes.append(time)
 
 
 
@@ -118,12 +140,10 @@ class FindTime:
 
         if(enoughBeforeTime and (enoughTime or diffDays) and (diffEventDays or enoughTimeEvent)):
             time = timeSlot.beforeTimeSlot(lastStart)
-            print(time)
             availableTimes.append(time)
 
         if(((lastEnd.hour*60) in openTime) and (timeWindow in openTime)):
             time = timeSlot.afterTimeSlot(lastEnd)
-            print(time)
             availableTimes.append(time)
 
 
@@ -161,17 +181,14 @@ class FindTime:
 
         if(now and (sameDay and enoughTime and ((e1.hour*60) in openTime) and (timeWindow in openTime))):
             time = timeSlot.afterTimeSlot(e1)
-            print(time)
             availableTimes.append(time)
 
         if(now and (not sameDay and enoughTime2 and ((e1.hour*60) in openTime) and (timeWindow in openTime))):
             time = timeSlot.afterTimeSlot(e1)
-            print(time)
             availableTimes.append(time)
 
         if(not sameDay and enoughMorningTime):
             time = timeSlot.beforeTimeSlot(e2)
-            print(time)
             availableTimes.append(time)
 
 

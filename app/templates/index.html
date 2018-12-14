@@ -18,9 +18,7 @@
 	<body>
 		<div class="container">
 			<!-- nav bar on the top of the page, with two buttons -->
-			<!-- <nav class="navbar top-left justify-content-end"> -->
-				
-
+			
 			<nav class="navbar navbar-light navbar-expand-sm top-right justify-content-end">
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
     				<span class="navbar-toggler-icon"></span>
@@ -48,8 +46,6 @@
 
 			<!-- Calender View -->
 			<div class="calender container">
-
-
 			</div>
 
 
@@ -113,29 +109,6 @@
 					</form>
 				</div>
 			</div>
-
-
-
-			<!-- Box for viewing events -->
-			<div id="viewEvent" style="display: none">
-				<span class="viewEveBoxName"></span>
-				<span id="viewEveBoxEveId"></span>
-				<span class="eveBoxClose" onclick="closeEveBox(event);">x</span>
-				<br><br>
-				<div class="viewEveLabel">Title</div>
-				<div class="viewTitle"></div><br>
-				<div class="viewEveLabel">Where</div>
-				<div class="viewLocation"></div><br>
-				<div class="viewEveLabel">When</div>
-				<div class="viewDay"></div><br>
-				<div class="viewEveLabel">Description</div>
-				<div class="viewDescription">No Description</div>
-				<br><br><br><br>
-				<button id="eventDeleteButton" onclick="deleteEve(event);"><strong>Delete</strong></button>
-				<button id="eventEditButton" onclick="editEve(event);"><strong>Edit</strong></button>
-				<br><br>
-			</div>
-		</div>
 
 		<!-- jQuery, Bootstrap, events script, calender creation-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

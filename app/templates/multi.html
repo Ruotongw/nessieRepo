@@ -18,22 +18,15 @@
 	            	{% for i in range(rep) %}
 	            		<input type="checkbox" name="{{i}}"" value="true"> {{ displayList[i] }} <b>{{ warning[i] }}</b><br>
 					{% endfor %}
-					<button type="submit" id="reschedule">Reschedule the selected event(s)</button>
+					<a href="/form" class="multi-cancel"> <button type="button">Cancel</button>
+					<button type="submit" class="center" id="reschedule">Reschedule the selected event(s)</button>
 					<!-- <input type="submit" value="Submit">  -->
+					<a href="/multi_add" class="multi-add"> <button type="button">All of these times work!</button></a>
+					</a>
 
 	        	</form>
 
-					<a href="/multi_add"> <button type="button">All of these times work!</button></a>
-					<a href="/form"> <button type="button">Cancel</button></a>
-
-			      <!-- 	<span id="eventName-popup">{{ formattedChosenOnes[0]["summary"] }}</span> at
-							<span id="eventTime-popup">{{ localChosenTimes }}</p>
-							<p id="test"></p> -->
-			     <!--popup's close button-->
-
-					  <!-- <a href="/multi_res"><button>No, find another time!</button></a> -->
-				    <!-- <a href="/multi_add"><button>Yes, add them to my calendar!</button></a> -->
-
+					
 
 
 			  </div>

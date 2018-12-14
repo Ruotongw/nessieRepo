@@ -23,10 +23,13 @@ from .time import *
 
 # Finds open time slots for events.
 class FindTime:
-    def __init__(self):
+    def __init__(self, service, dueDate, current):
+        self.service = service
+        self.dueDate = dueDate
+        self.current = current
         pass
 
-    def findAvailableTimes(self, nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst, deadline, now, service):
+    def findAvailableTimes(self, nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst):
         '''Calculates every available time slot in relation to the events on the user's
         calender from now until the assignment due date. Returns a list of these time slots.'''
 
@@ -36,10 +39,7 @@ class FindTime:
         timeSlot = TimeSlot(timeEst)
         global availableTimes
         availableTimes = []
-        # global time
-        # time = Time()
 
-        # nowDay, nowHour, nowMinute = time.getNowDHM(now)
         try:
             for i in range(len(events) - 1):
 
@@ -52,72 +52,100 @@ class FindTime:
             secondToLast = events[len(events) - 2]
             self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
-            self.checkEmptyDays(workStart, workEnd, now, timeEst, deadline, service)
+            self.checkEmptyDays(workStart, workEnd, timeEst)
 
+            availableTimes.sort()
             return availableTimes
         except:
             global msg
             msg = "There isn't enough time. Try again"
             return redirect('/error')
 
-    # def checkEmptyDays(self, workStart, workEnd, now, timeEst, deadline):
-    #     end = int(deadLine[8:9])
-    #     nowDay, nowHour, nowMinute = time.getNowDHM(now)
-    #     nowYear, nowMonth = time.getNowYM(now)
-    #
-    #     years = []
-    #     years.append(nowYear)
-    #     if nowYear != end.year:
-    #         years.append(end.year)
-    #
-    #     months = []
-    #     months.append(nowMonth)
-    #     if nowMonth != end.month:
-    #         months.append(end.month)
-    #
-    #     for i in range(len(events)):
-    #         start = event
 
-    def checkEmptyDays(self, workStart, workEnd, now, timeEst, deadline, service):
-        # deadline and now need to be datetime objects
-        deadline = datetime.datetime(int(deadline[0:4]), int(deadline[5:7]), int(deadline[8:10]))
-        now = datetime.datetime(int(now[0:4]), int(now[5:7]), int(now[8:10]))
+    def checkEmptyDays(self, workStart, workEnd, timeEst):
+        global deadline
+        deadline = datetime.datetime(int(self.dueDate[0:4]), int(self.dueDate[5:7]), int(self.dueDate[8:10]))
+        global now
+        now = datetime.datetime(int(self.current[0:4]), int(self.current[5:7]), int(self.current[8:10]))
 
+        global startMinutes
+        global startHours
         startMinutes = workStart % 60
         startHours = (workStart - startMinutes) / 60
 
         endMinutes = workEnd % 60
         endHours = (workEnd - endMinutes) / 60
 
-        enoughTime = (workEnd - workStart) >= (timeEst * 60) + 30
+        global enoughTimeEmpty
+        enoughTimeEmpty = (workEnd - workStart) >= (timeEst * 60) + 30
 
-        if now.month == deadline.month:
-            for i in range(deadline.day - now.day):
-                minDay = now.day + i
-                maxDay = now.day + i + 1
+        if now.month == deadline.month and now.year == deadline.year:
+            num = deadline.day - now.day
+            print(num)
+            self.setUpEmpty(now, num)
 
-                timeMinDT = datetime.datetime(now.year, now.month, minDay)
-                timeMin = format.formatDT2(now.year, now.month, minDay, 0, 0, 0)
-                timeMaxDT = datetime.datetime(now.year, now.month, maxDay)
-                timeMax = format.formatDT2(now.year, now.month, maxDay, 0, 0, 0)
+        elif (deadline.month - now.month == 1) or (now.month == 12 and deadline.month == 1):
+            self.monthRangeBeginEnd(now)
 
-                events = service.events().list(calendarId='primary', timeMin = timeMin,
-                                                timeMax = timeMax, singleEvents=True,
-                                                orderBy = 'startTime').execute()
-                events = events.get('items', [])
-                # print(len(events))
-                if len(events) == 0 and enoughTime:
-                    morning = datetime.datetime(timeMinDT.year, timeMinDT.month, timeMinDT.day, int(startHours), int(startMinutes))
-                    time = timeSlot.afterTimeSlot(morning)
-                    availableTimes.append(time)
+        elif (deadline.month - now.month > 1) and (now.year == deadline.year):
+            self.monthRangeBeginEnd(now)
+            for i in range(deadline.month - now.month - 1):
+                month = now.month + i + 1
+                weekday, monthDays = calendar.monthrange(month, now.year)
 
+                start = datetime.datetime(now.year, month, 1)
+                self.setUpEmpty(start, num)
+
+                monthDT = datetime.datetime(now.year, month, monthDays)
+                nextMonthDT = datetime.datetime(now.year, month + 1, monthDays)
+                self.lastDayOfMonth(monthDT, nextMonthDT, monthDays)
+
+
+    def monthRangeBeginEnd(self, now):
+        weekday, monthDays = calendar.monthrange(now.year, now.month)
+        num = monthDays - now.day
+        self.setUpEmpty(now, num)
+        self.lastDayOfMonth(now, monthDays)
+        dt = datetime.datetime(deadline.year, deadline.month, 1)
+        self.setUpEmpty(dt, deadline.day - 1)
+
+
+    def lastDayOfMonth(self, now, monthDays):
+        lastMin = format.formatDT2(now.year, now.month, monthDays, 0, 0, 0)
+        lastMinDT = datetime.datetime(now.year, now.month, monthDays)
+        lastMax = format.formatDT2(deadline.year, deadline.month, 1, 0, 0, 0)
+        lastDayOfMonth = self.service.events().list(calendarId='primary', timeMin = lastMin,
+                                        timeMax = lastMax, singleEvents=True,
+                                        orderBy = 'startTime').execute().get('items', [])
+        self.compareEmpty(lastMinDT, lastDayOfMonth)
+
+
+
+    def setUpEmpty(self, dt, num):
+        for i in range(num):
+            minDay = dt.day + i
+            maxDay = dt.day + i + 1
+            timeMinDT = datetime.datetime(dt.year, dt.month, minDay)
+            timeMin = format.formatDT2(dt.year, dt.month, minDay, 0, 0, 0)
+            timeMax = format.formatDT2(dt.year, dt.month, maxDay, 0, 0, 0)
+
+            events = self.service.events().list(calendarId='primary', timeMin = timeMin,
+                                            timeMax = timeMax, singleEvents=True,
+                                            orderBy = 'startTime').execute().get('items', [])
+            self.compareEmpty(timeMinDT, events)
+
+
+    def compareEmpty(self, dt, events):
+        if len(events) == 0 and enoughTimeEmpty:
+            morning = datetime.datetime(dt.year, dt.month, dt.day, int(startHours), int(startMinutes))
+            time = timeSlot.afterTimeSlot(morning)
+            print(time)
+            availableTimes.append(time)
 
 
     def compareLastEvent(self, lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
         '''Accounts for finding the time slots around the the last event before the
         deadline. Also accounts for if there is only one event before the deadline.'''
-
-        # nowDay, nowHour, nowMinute = time.getNowDHM(now)
 
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60
@@ -154,8 +182,6 @@ class FindTime:
         '''Compares each pair of events on the user's calendar from now until the
         entered deadline. If there is enough time between the events, the time slot
         between them is added to the list of available times.'''
-
-        # nowDay, nowHour, nowMinute = time.getNowDHM(now)
 
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60

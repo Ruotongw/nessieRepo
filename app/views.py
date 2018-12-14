@@ -46,9 +46,6 @@ def main():
     global format
     format = Format()
 
-    global findTime
-    findTime = FindTime()
-
     global service
 
     if request.method == "POST":
@@ -91,8 +88,8 @@ def form():
             global timeEst
             timeEst = float(request.form.get('est'))
 
-            global deadLine
-            deadLine = request.form.get('dead')
+            global deadline
+            deadline = request.form.get('dead')
 
             global rep
             rep = int(request.form.get('rep'))
@@ -287,6 +284,8 @@ def createEvent():
 
     global workStart
     global workEnd
+    global findTime
+    findTime = FindTime(service, deadline, now)
 
     if checkForm2.has_been_called:
         workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
@@ -300,9 +299,9 @@ def createEvent():
         workStart += 60
         workEnd += 60
 
-    events = getCalendarEvents(now, deadLine)
+    events = getCalendarEvents(now, deadline)
 
-    availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst, deadLine, now, service)
+    availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
 
     global chosenTimeSlots
     global formattedChosenOnes

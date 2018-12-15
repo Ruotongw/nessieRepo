@@ -8,10 +8,10 @@
 			  <!--Creates the popup content-->
 			   <div class="popup-content">
 			      <h2>Success!</h2>
-			      <p><span id="eventName-popup">You have successfully added </span><span>{{ title["summary"] }}</span><span> for </span>
-              {% for i in range(rep) %}
-                <span> {{ displayList[i] }} </span>
-        {% endfor %}
+			      <p><span id="eventName-popup">You have successfully added </span> <span><b>{{ title["summary"] }}</b></span><span> for: </span> <br />
+              	{% for i in range(rep) %}
+                <span> {{ displayList[i] }} </span> <br />
+        		{% endfor %}
               </p>
 			     <!--popup's close button-->
 

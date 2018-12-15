@@ -8,7 +8,11 @@
 			  <!--Creates the popup content-->
 			   <div class="popup-content">
 			      <h2>Success!</h2>
-			      <p><span id="eventName-popup">You have successfully added an event!</span></p>
+			      <p><span id="eventName-popup">You have successfully added </span><span>{{ title["summary"] }}</span><span> for </span>
+              {% for i in range(rep) %}
+                <span> {{ displayList[i] }} </span>
+        {% endfor %}
+              </p>
 			     <!--popup's close button-->
 
             <a href="/end"><button>Signout and leave</button></a>

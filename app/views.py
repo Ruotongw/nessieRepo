@@ -329,16 +329,16 @@ def multiPopup():
         return redirect('/')
     warning = []
     displayFormat()
-    localChosenTimes = ""
-    for i in range(len(displayList)):
-        localChosenTimes = localChosenTimes + " AND " + displayList[i]
-        print (localChosenTimes)
+    # localChosenTimes = ""
+    # for i in range(len(displayList)):
+    #     localChosenTimes = localChosenTimes + " AND " + displayList[i]
+    #     print (localChosenTimes)
     # warning = []
     for i in range(rep):
         if len(dividedTimeSlots[i]) == 1:
             print (len(dividedTimeSlots[i]))
             warning.insert(i, "(There are no further times available)")
-    return render_template('multi.html', displayList=displayList, localChosenTimes=localChosenTimes, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
+    return render_template('multi.html', displayList=displayList, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
 
 
 @app.route('/multi_add', methods=['GET', 'POST'])
@@ -457,4 +457,8 @@ def signOut():
 
 @app.route('/finish', methods=['GET', 'POST'])
 def finish():
-    return render_template('finish.html')
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
+    return render_template('finish.html', displayList=displayList, title = formattedChosenOnes[0], rep=rep)

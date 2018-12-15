@@ -351,7 +351,7 @@ def multiAdd():
     global formattedChosenOnes
     for i in range(len(formattedChosenOnes)):
         add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
-    return redirect('/form')
+    return redirect('/finish')
 
 
 @app.route('/multi_res', methods=['GET', 'POST'])
@@ -406,7 +406,7 @@ def addEvent():
 
     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
     print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
-    return redirect('/form')
+    return redirect('/finish')
 
 
 def displayFormat():
@@ -454,3 +454,7 @@ def signOut():
     global service
     service = None
     return redirect('/')
+
+@app.route('/finish', methods=['GET', 'POST'])
+def finish():
+    return render_template('finish.html')

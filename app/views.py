@@ -71,7 +71,12 @@ def main():
             return form()
     return render_template('base.html')
 
-
+@app.route('/start')
+def start():
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+    return render_template('start.html')
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
     # try:

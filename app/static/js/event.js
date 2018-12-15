@@ -39,6 +39,7 @@ Date.prototype.toDateInputValue = (function() {
 function add_event() {
 	// Initializing new event box's input field as blank
 	// var today = Date().toISOString().substr(0, 10);
+	$('#popup-start').hide();
     $("#my-preferences").attr('disabled','disabled');
     $("#Signout").attr('disabled','disabled');
     $("#about").attr('disabled','disabled');
@@ -57,6 +58,7 @@ function add_event() {
 		"left":"25%"
 	});
 }
+
 
 // $(window).load(function () {
 //     $(".trigger_popup_fricc").click(function(){
@@ -80,10 +82,6 @@ function about(){
   
 
   $("#aboutPage").show();
-
-
-
-
 }
 
 function cancel_event(){
@@ -95,6 +93,7 @@ function cancel_event(){
   $("#Signout").attr('disabled',false);
   $("#about").attr('disabled',false);
   $("#add-event").attr('disabled',false);
+  $('#popup-start').hide();
 }
 
 function my_preferences(){

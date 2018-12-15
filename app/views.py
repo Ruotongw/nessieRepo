@@ -334,16 +334,16 @@ def multiPopup():
         return redirect('/')
     warning = []
     displayFormat()
-    localChosenTimes = ""
-    for i in range(len(displayList)):
-        localChosenTimes = localChosenTimes + " AND " + displayList[i]
-        print (localChosenTimes)
+    # localChosenTimes = ""
+    # for i in range(len(displayList)):
+    #     localChosenTimes = localChosenTimes + " AND " + displayList[i]
+    #     print (localChosenTimes)
     # warning = []
     for i in range(rep):
         if len(dividedTimeSlots[i]) == 1:
             print (len(dividedTimeSlots[i]))
             warning.insert(i, "(There are no further times available)")
-    return render_template('multi.html', displayList=displayList, localChosenTimes=localChosenTimes, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
+    return render_template('multi.html', displayList=displayList, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
 
 
 @app.route('/multi_add', methods=['GET', 'POST'])
@@ -356,7 +356,7 @@ def multiAdd():
     global formattedChosenOnes
     for i in range(len(formattedChosenOnes)):
         add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[i]).execute()
-    return redirect('/form')
+    return redirect('/finish')
 
 
 @app.route('/multi_res', methods=['GET', 'POST'])
@@ -411,7 +411,7 @@ def addEvent():
 
     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
     print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
-    return redirect('/form')
+    return redirect('/finish')
 
 
 def displayFormat():
@@ -459,3 +459,11 @@ def signOut():
     global service
     service = None
     return redirect('/')
+
+@app.route('/finish', methods=['GET', 'POST'])
+def finish():
+    x = loginCheck()
+    if x == 1:
+        return redirect('/')
+
+    return render_template('finish.html', displayList=displayList, title = formattedChosenOnes[0], rep=rep)

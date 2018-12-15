@@ -48,19 +48,21 @@ body {
 #addpreferencesForm{
   width: 100%;
   vertical-align:middle;
-  /* padding: 20px; */
   height: 100%;
   border-color: #2064b6 !important;
   border:3px;
   text-align: center;
-  padding: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
+
 
 #preferences{
   vertical-align:middle;
   background-color: #f8f9fa !important;
   width: 50%;
-  margin-left: 100px;
+  margin-left: 72px;
   padding-top: 20px;
   height: 50%;
   /* border-color: #2064b6 !important; */
@@ -213,6 +215,7 @@ body {
   left:25%;
   top: 40%;
   text-align:center;
+  padding-top: 10px;
 }
 
 .popup-overlay.active{
@@ -248,22 +251,17 @@ button:not(.navbar-toggler){
 #reschedule{
   display:inline-block;
   vertical-align:middle;
-  height: 60px;
-  width: 130px;
+  height: 50px;
+  width: 180px;
   text-align: center;
-  margin:.10rem;
-  font-size: 1rem;
-  color: white;
-  background-color: #2064b6 !important;
-  border-radius: 8px;
-  margin-right: 10px;
+  margin-top: 22px;
 }
 
 #add{
   display:inline-block;
   vertical-align:middle;
   height: 60px;
-  width: 130px;
+  width: 150px;
   text-align: center;
   margin:.10rem;
   font-size: 1rem;
@@ -288,6 +286,11 @@ button:not(.navbar-toggler){
   display: flex;
 }
 
+#update{
+  margin-right: 10px;
+}
+
+
 h2{
   padding: 50px;
 }
@@ -303,20 +306,53 @@ h4{
   padding-top: 20px;
 }
 
+#reschedulePopup{
+  text-align: center;
+  width: 150px;
+  height: 40px;
+  padding: 5px;
+}
+
+#addPopup{
+  text-align: center;
+  width: 150px;
+  height: 40px;
+  padding: 5px;
+}
+
+#cancelPopup{
+  text-align: center;
+  width: 150px;
+  height: 40px;
+  padding: 5px;
+}
+
 .popup-title {
   padding: 20px;
 }
 .multi-add {
+  padding-top: 20px;
   position: absolute;
-  right: 10%;
+  display: inline-block;
+  width: 200px;
+  height: 60px;
+  left: 12%;
 }
 
 .multi-cancel {
+  padding-top: 20px;
   position: absolute;
-  left: 10%;
+  display: inline-block;
+  width: 200px;
+  height: 60px;
+  left: 60%;
 }
 
 .center {
-  position: absolute;
-  left: 35%;
+  padding-top: 20px;
+  /* position: absolute;
+  display: inline-block;
+  width: 250px;
+  height: 60px; */
+  left: 30%;
 }

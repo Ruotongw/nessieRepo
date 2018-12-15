@@ -153,7 +153,7 @@ def popup():
             return render_template('popup.html', event=displayList[0], title = title)
         else:
             print (len(dividedTimeSlots[0]))
-            options = "There are no further time slots available"
+            options = "(There are no further time slots available)"
             return render_template('popup.html', event=displayList[0], title = title, options=options)
     except:
         return redirect("/error")
@@ -337,7 +337,7 @@ def multiPopup():
     for i in range(rep):
         if len(dividedTimeSlots[i]) == 1:
             print (len(dividedTimeSlots[i]))
-            warning.insert(i, "There are no further times available")
+            warning.insert(i, "(There are no further times available)")
     return render_template('multi.html', displayList=displayList, localChosenTimes=localChosenTimes, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
 
 

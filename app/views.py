@@ -38,7 +38,7 @@ def main():
 
     global workStart
     global workEnd
-    checkForm2.has_been_called = False
+    checkPreferencesForm.has_been_called = False
 
     global current
     current = Time()
@@ -103,8 +103,8 @@ def form():
     #     return redirect('/')
 
 
-@app.route('/form2', methods=['GET', 'POST'])
-def form2():
+@app.route('/preferencesForm', methods=['GET', 'POST'])
+def preferencesForm():
     # try:
     #     print (service)
     x = loginCheck()
@@ -119,7 +119,7 @@ def form2():
 
             global latestWorkTime
             latestWorkTime = request.form.get('latest')
-            checkForm2()
+            checkPreferencesForm()
 
         else:
             print("else statement")
@@ -129,8 +129,8 @@ def form2():
     #     return redirect('/')
 
 
-def checkForm2():
-    checkForm2.has_been_called = True
+def checkPreferencesForm():
+    checkPreferencesForm.has_been_called = True
     pass
 
 
@@ -287,7 +287,7 @@ def createEvent():
     global findTime
     findTime = FindTime(service, deadline, now)
 
-    if checkForm2.has_been_called:
+    if checkPreferencesForm.has_been_called:
         workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
         workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
 

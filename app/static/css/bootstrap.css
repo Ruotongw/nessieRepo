@@ -216,6 +216,13 @@ body {
   top: 40%;
   text-align:center;
   padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
 }
 
 .popup-overlay.active{
@@ -248,15 +255,32 @@ button:not(.navbar-toggler){
 
 }
 
-#reschedule{
+#rescheduleMulti{
   display:inline-block;
   vertical-align:middle;
-  height: 50px;
+  height: 70px;
   width: 180px;
   text-align: center;
   margin-top: 22px;
 }
 
+#addMulti{
+  display:inline-block;
+  vertical-align:middle;
+  height: 70px;
+  width: 150px;
+  text-align: center;
+  margin-top: 22px;
+}
+
+#cancelMulti{
+  display:inline-block;
+  vertical-align:middle;
+  height: 70px;
+  width: 150px;
+  text-align: center;
+  margin-top: 22px;
+}
 #add{
   display:inline-block;
   vertical-align:middle;
@@ -331,28 +355,28 @@ h4{
   padding: 20px;
 }
 .multi-add {
-  padding-top: 20px;
+  padding-top: 10px;
   position: absolute;
   display: inline-block;
   width: 200px;
   height: 60px;
-  left: 12%;
+  left: 8%;
 }
 
 .multi-cancel {
-  padding-top: 20px;
+  padding-top: 10px;
   position: absolute;
   display: inline-block;
   width: 200px;
   height: 60px;
-  left: 60%;
+  left:60%;
 }
 
 .center {
-  padding-top: 20px;
-  /* position: absolute;
+  padding-top: 10px;
+  position: absolute;
   display: inline-block;
-  width: 250px;
+  /* width: 250px;
   height: 60px; */
-  left: 30%;
+  left: 35%;
 }

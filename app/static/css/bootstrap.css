@@ -64,7 +64,7 @@ body {
   width: 50%;
   margin-left: 72px;
   padding-top: 20px;
-  height: 50%;
+  height: 35%;
   /* border-color: #2064b6 !important; */
   border:3px;
 }
@@ -76,39 +76,42 @@ body {
 
 
 #addEventForm{
-    width: 90%;
-    padding: 10px;
-    height: 100%;
+    width: 100%;
+    padding: 5px;
+    height: 90%;
     border-color: #2064b6 !important;
     border:3px;
     text-align: center;
     margin: 0 auto;
-    vertical-align:middle !important;
-    justify-content: center !important;
 
+}
+
+.form-group row{
+  width: 20px;
 }
 
 #addEvent {
     /*border: 5px solid red;*/
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-    padding-top: 30px;
+    padding-top: 20px;
     background-color: #f8f9fa !important;
     text-align: center;
     margin: 0 auto;
     vertical-align:middle !important;
-    justify-content: center !important;
+    width: 50%;
+    height: 55%;
 }
 
 #yesForm{
   text-align: center;
-  vertical-align:middle !important;
-  justify-content: center !important;
   margin-left: 100px;
+  padding: 0px;
 }
 
 #noForm{
   text-align: center;
   margin-left: 10px;
+  padding: 0px;
 }
 
 .border-info {
@@ -210,9 +213,9 @@ body {
   position:fixed;
   background: #f8f9fa;
   border:1px solid #2064b6;
-  width:50%;
+  width:35%;
   height:50%;
-  left:25%;
+  left:32%;
   top: 40%;
   text-align:center;
   padding-top: 10px;
@@ -255,31 +258,35 @@ button:not(.navbar-toggler){
 
 }
 
+
 #rescheduleMulti{
   display:inline-block;
   vertical-align:middle;
-  height: 70px;
-  width: 180px;
+  height: 60px;
+  width: 145px;
   text-align: center;
   margin-top: 22px;
+  font-size: 14px;
 }
 
 #addMulti{
   display:inline-block;
   vertical-align:middle;
-  height: 70px;
-  width: 150px;
+  height: 60px;
+  width: 120px;
   text-align: center;
   margin-top: 22px;
+  font-size: 14px;
 }
 
 #cancelMulti{
   display:inline-block;
   vertical-align:middle;
-  height: 70px;
-  width: 150px;
+  height: 60px;
+  width: 120px;
   text-align: center;
   margin-top: 22px;
+  font-size: 14px;
 }
 #add{
   display:inline-block;
@@ -316,7 +323,7 @@ button:not(.navbar-toggler){
 
 
 h2{
-  padding: 50px;
+  padding: 10px;
 }
 
 h3{
@@ -335,6 +342,7 @@ h4{
   width: 150px;
   height: 40px;
   padding: 5px;
+  font-size: 14px;
 }
 
 #addPopup{
@@ -342,6 +350,7 @@ h4{
   width: 150px;
   height: 40px;
   padding: 5px;
+  font-size: 14px;
 }
 
 #cancelPopup{
@@ -349,6 +358,7 @@ h4{
   width: 150px;
   height: 40px;
   padding: 5px;
+  font-size: 14px;
 }
 
 .popup-title {
@@ -358,25 +368,28 @@ h4{
   padding-top: 10px;
   position: absolute;
   display: inline-block;
-  width: 200px;
+  width: 140px;
   height: 60px;
-  left: 8%;
+  left: 65%;
+  font-size: 14px;
 }
 
 .multi-cancel {
   padding-top: 10px;
   position: absolute;
   display: inline-block;
-  width: 200px;
+  width: 140px;
   height: 60px;
-  left:60%;
+  left:5%;
+  font-size: 14px;
 }
 
 .center {
   padding-top: 10px;
   position: absolute;
   display: inline-block;
+  font-size: 14px;
   /* width: 250px;
   height: 60px; */
-  left: 35%;
+  left: 32%;
 }

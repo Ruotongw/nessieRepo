@@ -45,29 +45,10 @@ body {
     /*border-color: #9f9a9a !important;*/
 }
 
-#addpreferencesForm{
-  width: 100%;
-  vertical-align:middle;
-  height: 100%;
-  border-color: #2064b6 !important;
-  border:3px;
-  text-align: center;
-  padding-top: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-
 #preferences{
-  vertical-align:middle;
-  background-color: #f8f9fa !important;
-  width: 50%;
-  margin-left: 72px;
-  padding-top: 20px;
-  height: 35%;
-  /* border-color: #2064b6 !important; */
-  border:3px;
+  display: none;
 }
+
 
 /*#Signout{
   margin-left: -690px;
@@ -76,17 +57,13 @@ body {
 
 #addEventForm{
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     height: 90%;
     border-color: #2064b6 !important;
     border:3px;
     text-align: center;
     margin: 0 auto;
 
-}
-
-.form-group row{
-  width: 20px;
 }
 
 #addEvent {
@@ -96,9 +73,9 @@ body {
     background-color: #f8f9fa !important;
     text-align: center;
     margin: 0 auto;
-    vertical-align:middle !important;
-    width: 50%;
-    height: 55%;
+    width: 100%;
+    height: 100%;
+    left:20%;
 }
 
 #yesForm{
@@ -126,10 +103,6 @@ body {
 
 }
 
-.border-info {
-  border:3px !important;
-  background-color: #2064b6 !important;
-}
 
 #signinButton{
 	color: #2064b6 !important;
@@ -150,6 +123,10 @@ body {
   margin: 30px; */
 }
 
+.democlass{
+  background-color: red !important;
+}
+
 .currentday {
     background-color: #fc9e02;
     color: white;
@@ -160,23 +137,23 @@ body {
     height: 5vw;
 }
 
+.form-container{
+  display: none;
+}
+
 .aboutPage{
   display: none;
   border-color: #2064b6 !important;
   border: solid;
-  width: 100%;
-  height:100%;
 }
 
-.aboutPopup-overlay{
+/* .aboutPopup-overlay{
   /*Hides pop-up when there is no "active" class*/
-  visibility:active;
+  /* visibility:active;
   position:fixed;
   background: #f8f9fa;
   /* border-color: #2064b6 !important; */
-  border: 1px solid;
-  width:50%;
-  height:50%;
+  /* border: 1px solid;
   left:25%;
   top: 40%;
   text-align:center;
@@ -185,13 +162,13 @@ body {
   padding-right: 20px;
   text-align: center;
   font-size: 14px;
-}
+} */
 
-.aboutPopup-overlay.active{
+/* .aboutPopup-overlay.active{
   /*displays pop-up when "active" class is present*/
-  visibility:visible;
+  /* visibility:visible;
   text-align:center;
-}
+} */
 
 .aboutPopup-content {
   /*Hides pop-up content when there is no "active" class */
@@ -199,16 +176,21 @@ body {
  font-size: 14px;
 }
 
-.aboutPopup-content.active {
+/* .aboutPopup-content.active {
   /*Shows pop-up content when "active" class is present */
-  visibility:visible;
-}
+  /* visibility:visible;
+}  */
 
 #about{
   display: inline-block;
 }
 
 /*for popup*/
+
+.popup{
+  display: none;
+}
+
 
 .popup-overlay{
   /*Hides pop-up when there is no "active" class*/
@@ -217,7 +199,7 @@ body {
   background: #f8f9fa;
   border:1px solid #2064b6;
   width:35%;
-  height:50%;
+  height:60%;
   left:32%;
   top: 40%;
   text-align:center;
@@ -332,6 +314,7 @@ h2{
 h3{
   font-size: 1.1rem;
   text-align: center;
+  padding: 10px;
 }
 
 h4{
@@ -394,7 +377,7 @@ h4{
   font-size: 14px;
   /* width: 250px;
   height: 60px; */
-  left: 32%;
+  left: 34%;
 }
 
 /*.checkbox { margin: 0; }*/

@@ -103,16 +103,20 @@ function my_preferences(){
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
 
-	$("#preferences").show().css({
-		"position": "fixed",
-		"width":"40%",
-		"top":"40%",
-		"left":"25%"
-	});
-
 	function cancel_event(){
 		$("#preferences").hide();
 	}
+}
+
+function addEventForm(){
+  $("#my-preferences").attr('disabled','disabled');
+  $("#Signout").attr('disabled','disabled');
+  $("#about").attr('disabled','disabled');
+  $("#add-event").attr('disabled','disabled');
+  var divelement = document.getElementById("popup")
+  if(divelement.style.display == "none")
+    divelement.style.display == "block"
+  $("#popup").show();
 }
 
 function disable(){
@@ -122,6 +126,12 @@ function disable(){
   $("#add-event").attr('disabled','disabled');
 }
 
+function chBackcolor() {
+   // document.body.style.opacity = 0.6;
+   document.body.setAttribute("body", "democlass");
+   console.log("changing color");
+ }
+
 	// console.log(windowHeight);
 
 //
@@ -129,18 +139,19 @@ function disable(){
 //
 //appends an "active" class to .popup and .popup-content when the "Open" button is clicked
 
-$(".add-event").on("click", function(){
-  $(".popup-overlay, .popup-content").addClass("active");
-});
-
-//removes the "active" class to .popup and .popup-content when the "Close" button is clicked
-$(".confirm, .popup-overlay").on("click", function(){
-  $(".popup-overlay, .popup-content").removeClass("active");
-});
-
-$(".reschedule, .popup-overlay").on("click", function(){
-  $(".popup-overlay, .popup-content").removeClass("active");
-});
+// $(".add-event").on("click", function(){
+//   $(".popup-overlay, .popup-content").addClass("active");
+// });
+//
+// //removes the "active" class to .popup and .popup-content when the "Close" button is clicked
+// $(".confirm, .popup-overlay").on("click", function(){
+//   $(".popup-overlay, .popup-content").removeClass("active");
+//
+// });
+//
+// $(".reschedule, .popup-overlay").on("click", function(){
+//   $(".popup-overlay, .popup-content").removeClass("active");
+// });
 //
 // Close new event box and edit event box and remove color from selected event
 //

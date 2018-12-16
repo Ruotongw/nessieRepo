@@ -66,10 +66,12 @@ function repChecked(){
 	    'height': '65%'
 		});
 	}  // checked
-	else
+	else {
+		console.log("setting value")
 	    $("#addEvent").css({
 	    'height': '55%'
 		});  // unchecked
+	    $("#eventRepetition").val("1");}
 }
 
 

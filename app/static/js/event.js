@@ -16,26 +16,7 @@ Date.prototype.toDateInputValue = (function() {
     return local.toJSON().slice(0,10);
 });
 
-//
-//If the add event button is clicked, create new event box
-//
-// function myFunction(){
-//   console.log("starting");
-//   chBackcolor();
-//   add_event();
-// }
-// function chBackcolor() {
-//    // document.body.style.background = "red !important";
-//    // document.body.setAttribute("class", "democlass");
-//    console.log("changing color");
-//    $("#my-preferences").attr('disabled','disabled');
-//    $("#Signout").attr('disabled','disabled');
-//    // $("#add-event").hide();
-//    // $("#my-preferences").disabled = true;
-//    // $("#Signout").disabled = true;
-//    // $("div:not(#addEvent):not(#addEvent *)").hide();
-//    console.log("hide all children of addEvent");
-// }
+
 function add_event() {
 	// Initializing new event box's input field as blank
 	// var today = Date().toISOString().substr(0, 10);
@@ -58,17 +39,7 @@ function add_event() {
 	});
 }
 
-// $(window).load(function () {
-//     $(".trigger_popup_fricc").click(function(){
-//        $('.hover_bkgr_fricc').show();
-//     });
-//     $('.hover_bkgr_fricc').click(function(){
-//         $('.hover_bkgr_fricc').hide();
-//     });
-//     $('.close-event').click(function(){
-//         $('.hover_bkgr_fricc').hide();
-//     });
-// });
+
 function about(){
   $("#my-preferences").attr('disabled','disabled');
   $("#Signout").attr('disabled','disabled');
@@ -77,13 +48,7 @@ function about(){
   var divelement = document.getElementById("aboutPage")
   if(divelement.style.display == "none")
     divelement.style.display == "block"
-  
-
   $("#aboutPage").show();
-
-
-
-
 }
 
 function cancel_event(){
@@ -122,6 +87,13 @@ function my_preferences(){
 	}
 }
 
+function disable(){
+  $("#my-preferences").attr('disabled','disabled');
+  $("#Signout").attr('disabled','disabled');
+  $("#about").attr('disabled','disabled');
+  $("#add-event").attr('disabled','disabled');
+}
+
 	// console.log(windowHeight);
 
 //
@@ -141,7 +113,6 @@ $(".confirm, .popup-overlay").on("click", function(){
 $(".reschedule, .popup-overlay").on("click", function(){
   $(".popup-overlay, .popup-content").removeClass("active");
 });
-
 //
 // Close new event box and edit event box and remove color from selected event
 //

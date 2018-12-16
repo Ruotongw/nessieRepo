@@ -54,9 +54,22 @@ function add_event() {
 	$("#addEvent").show().css({
 		"position": "fixed",
 		"width":"50%",
-		"top":"40%",
+		"top":"35%",
 		"left":"25%"
 	});
+}
+
+function repChecked(){
+	if($("#rep-checkbox").is(':checked')){
+		console.log("checked");
+	    $("#addEvent").css({
+	    'height': '65%'
+		});
+	}  // checked
+	else
+	    $("#addEvent").css({
+	    'height': '55%'
+		});  // unchecked
 }
 
 

@@ -68,10 +68,16 @@
 						   </div>
 						</div>
 						<div class="form-group row">
-						   <label for="eventRepetition" class="col-sm-2 col-form-label">Number of Times:</label>
-						   <div class="col-sm-10">
+						      <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="col-sm-2 col-form-label">
+						       <input type="checkbox" id="rep-checkbox" onclick="repChecked()" /> 
+						      </label>
+						       <div class="col-sm-10 text-left">I want to work on it for multiple times.</div>
+						</div>
+						<div id="collapseOne" aria-expanded="false" class="collapse form-group row">
+						    <label for="eventRepetition" class="col-sm-2 col-form-label">Number of Times:</label>
+						    <div class="col-sm-10">
 						    <input class="form-control" id="eventRepetition" type="number" min="0" max="5" name="rep" required>
-						   </div>
+						    </div>
 						</div>
 						<div class="form-group row">
 						   <label for="dueDate" class="col-sm-2 col-form-label">Complete Before:</label>

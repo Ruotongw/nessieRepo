@@ -41,18 +41,24 @@ class FindTime:
         availableTimes = []
 
         try:
-            for i in range(len(events) - 1):
+            if len(events) > 1:
+                for i in range(len(events) - 1):
 
-                event1 = events[i]
-                event2 = events[i + 1]
-                e1, e2 = format.formatEvent(event1, event2)
-                self.compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+                    event1 = events[i]
+                    event2 = events[i + 1]
+                    e1, e2 = format.formatEvent(event1, event2)
+                    self.compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
-            lastEvent = events[len(events) - 1]
-            secondToLast = events[len(events) - 2]
-            self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+                lastEvent = events[len(events) - 1]
+                secondToLast = events[len(events) - 2]
 
-            self.checkEmptyDays(workStart, workEnd, timeEst)
+                self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+
+            elif len(events) == 1:
+                self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+
+            elif len(events) == 0:
+                self.checkEmptyDays(workStart, workEnd, timeEst)
 
             availableTimes.sort()
             return availableTimes

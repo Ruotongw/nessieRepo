@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+{% block title %}
+
+			<!--Creates the popup body-->
+			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+			<div id="popup-start" class="popup-overlay">
+			  <!--Creates the popup content-->
+			   	<div class="popup-content">
+			      <h2 class="popup-title">Hi there!</h2>
+			      <p style="line-height:2"> I'm Nessie, your personal assignment scheduler. Do you want to start by adding an assignment coming up?</p>
+					 <br/><br/>
+					<a href="/form"><button id="cancelPopup" class="btn btn-info">No, add later.</button></a>
+					<button id="addPopup" class="btn btn-info" onclick="add_event()">Yes, add now!</button>
+				</div>
+			</div>
+			<!--Content shown when popup is not displayed-->
+			<!-- <h2>jQuery Pop-Up Example</h2> -->
+			<!-- <button class="open">Open</button> -->
+
+{% endblock %}

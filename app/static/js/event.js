@@ -80,46 +80,46 @@ function about(){
   $("#aboutPage").show();
 }
 
-function cancel_event(){
-	$("#addEventForm")[0].reset();
-	$("#addEvent").hide();
-  $("#aboutPage").hide();
-  $("#aboutPopup-content").hide();
-	$("#my-preferences").attr('disabled',false);
-  $("#Signout").attr('disabled',false);
-  $("#about").attr('disabled',false);
-  $("#add-event").attr('disabled',false);
-  $('#popup-start').hide();
-}
+// function cancel_event(){
+// 	$("#addEventForm")[0].reset();
+// 	$("#addEvent").hide();
+//   $("#aboutPage").hide();
+//   $("#aboutPopup-content").hide();
+// 	$("#my-preferences").attr('disabled',false);
+//   $("#Signout").attr('disabled',false);
+//   $("#about").attr('disabled',false);
+//   $("#add-event").attr('disabled',false);
+//   $('#popup-start').hide();
+// }
 
-function my_preferences(){
-  // document.getElementById("preferences").style.display = "block";
-  $("#add-event").attr('disabled','disabled');
-  $("#Signout").attr('disabled','disabled');
-  $("#about").attr('disabled','disabled');
-  $("#my-preferences").attr('disabled','disabled');
-	$("#earliestWorkTime").val("");
-	$("#latestWorkTime").val("");
+// function my_preferences(){
+//   // document.getElementById("preferences").style.display = "block";
+//   $("#add-event").attr('disabled','disabled');
+//   $("#Signout").attr('disabled','disabled');
+//   $("#about").attr('disabled','disabled');
+//   $("#my-preferences").attr('disabled','disabled');
+// 	$("#earliestWorkTime").val("");
+// 	$("#latestWorkTime").val("");
+//
+// 	// Displaying new event box at apt location
+// 	var windowWidth = $(window).width();
+// 	var windowHeight = $(window).height();
+//
+// 	function cancel_event(){
+// 		$("#preferences").hide();
+// 	}
+// }
 
-	// Displaying new event box at apt location
-	var windowWidth = $(window).width();
-	var windowHeight = $(window).height();
-
-	function cancel_event(){
-		$("#preferences").hide();
-	}
-}
-
-function addEventForm(){
-  $("#my-preferences").attr('disabled','disabled');
-  $("#Signout").attr('disabled','disabled');
-  $("#about").attr('disabled','disabled');
-  $("#add-event").attr('disabled','disabled');
-  var divelement = document.getElementById("popup")
-  if(divelement.style.display == "none")
-    divelement.style.display == "block"
-  $("#popup").show();
-}
+// function addEventForm(){
+//   $("#my-preferences").attr('disabled','disabled');
+//   $("#Signout").attr('disabled','disabled');
+//   $("#about").attr('disabled','disabled');
+//   $("#add-event").attr('disabled','disabled');
+//   var divelement = document.getElementById("popup")
+//   if(divelement.style.display == "none")
+//     divelement.style.display == "block"
+//   $("#popup").show();
+// }
 
 function disable(){
   $("#my-preferences").attr('disabled','disabled');

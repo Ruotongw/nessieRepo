@@ -81,8 +81,7 @@ def main():
 def start():
     """Display the initial page asking the user if they want to start by adding an assignment."""
 
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
     return render_template('start.html')
 
@@ -90,9 +89,9 @@ def start():
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
 
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
+
     if request.method == 'POST': #this block is only entered when the form is submitted
         if not request.headers.get('X-Requested-With'):
 
@@ -109,8 +108,6 @@ def form():
             rep = int(request.form.get('rep'))
 
             return createEvent()
-        else:
-            print ("else case")
 
     return render_template('index.html')
 
@@ -118,10 +115,8 @@ def form():
 
 @app.route('/preferencesForm', methods=['GET', 'POST'])
 def preferencesForm():
-    # try:
-    #     print (service)
-    x = loginCheck()
-    if x == 1:
+
+    if loginCheck() == 1:
         return redirect('/')
     if request.method == 'POST': #this block is only entered when the form is submitted
 
@@ -134,12 +129,7 @@ def preferencesForm():
             latestWorkTime = request.form.get('latest')
             checkPreferencesForm()
 
-        else:
-            print("else statement")
-
     return render_template('index.html')
-    # except:
-    #     return redirect('/')
 
 
 def checkPreferencesForm():
@@ -149,20 +139,16 @@ def checkPreferencesForm():
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
-    print("in popup")
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     try:
         displayFormat()
         title = formattedChosenOnes[0]
-        print (title["start"].get("dateTime"))
 
         if len(dividedTimeSlots[0]) != 1:
             return render_template('popup.html', event=displayList[0], title = title)
         else:
-            print (len(dividedTimeSlots[0]))
             options = "(There are no further time slots available)"
             return render_template('popup.html', event=displayList[0], title = title, options=options)
     except:
@@ -171,8 +157,7 @@ def popup():
 @app.route('/allEvents', methods=['GET', 'POST'])
 def getEvents():
 
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     from datetime import date
@@ -214,8 +199,7 @@ def getEventTime(availableTimes):
         return eventSlot
     else:
         global msg
-        msg = "No Time available"
-        print("No Time available")
+        msg = "No time slots available"
         return redirect('/error')
 
 
@@ -224,8 +208,7 @@ def rescheduleEvent():
     '''Reschedules the event time by removing the previously chosen time slot from
     the list of all of them and randomly chooses a new one.'''
 
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     global msg
@@ -241,7 +224,6 @@ def rescheduleEvent():
             test = 253
 
     if test == 0:
-        print (test)
         rescheduleVal.append(0)
 
     for i in range(len(rescheduleVal)):
@@ -258,15 +240,13 @@ def rescheduleEvent():
             formattedChosenOnes[rescheduleNum] = format.eventFormatDictionary(newTime, title)
             chosenTimeSlots[rescheduleNum] = newTime
         else:
-            msg = "No available times anymore"
-            print("No available times anymore")
+            msg = "No further available times"
             return redirect('/error')
 
     if rep == 1:
         return redirect('/popup')
     else:
         msg = "No available times"
-        print("No available times")
         return redirect('/multi')
 
 
@@ -299,7 +279,6 @@ def createEvent():
     except:
         global msg
         msg = "There is not enough time to schedule the event. Please either choose a smaller time commitment, change your working hours, or find a later deadline."
-        print ("so, something went wrong")
         return redirect('/error')
     if rep == 1:
         return redirect('/popup')
@@ -330,8 +309,7 @@ def setUpWorkStartEnd(nowYear, nowMonth, nowDay):
 def multiPopup():
     ''''''
 
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     warning = []
@@ -339,15 +317,13 @@ def multiPopup():
 
     for i in range(rep):
         if len(dividedTimeSlots[i]) == 1:
-            print (len(dividedTimeSlots[i]))
             warning.insert(i, "(There are no further times available)")
     return render_template('multi.html', displayList=displayList, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
 
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     global formattedChosenOnes
@@ -358,8 +334,7 @@ def multiAdd():
 
 @app.route('/multi_res', methods=['GET', 'POST'])
 def multiRes():
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     return render_template('multiRes.html', rep=rep)
@@ -394,11 +369,8 @@ def selectionOfTimeSlots(availableTimes):
 
     for i in range(rep):
         time = getEventTime(dividedTimeSlots[i])
-        if time != '''<h1>Oops</h1>''':
-            chosenTimeSlots.append(time)
-        else:
-            print ("error = oops")
-            return render_template('/error')
+        chosenTimeSlots.append(time)
+
     return chosenTimeSlots
 
 
@@ -406,12 +378,10 @@ def selectionOfTimeSlots(availableTimes):
 def addEvent():
     '''Adds chosen event to the user's calendar.'''
 
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     add = service.events().insert(calendarId = 'primary', body = formattedChosenOnes[0]).execute()
-    print ('Event created: %s' % (formattedChosenOnes[0].get('summary')))
     return redirect('/finish')
 
 
@@ -444,8 +414,7 @@ def getScheduledEvent():
 
 @app.route('/error', methods=['GET', 'POST'])
 def errorManager():
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     return render_template('error.html', msg=msg)
@@ -458,8 +427,7 @@ def signOut():
 
 @app.route('/finish', methods=['GET', 'POST'])
 def finish():
-    x = loginCheck()
-    if x == 1:
+    if loginCheck() == 1:
         return redirect('/')
 
     return render_template('finish.html', displayList=displayList, title = formattedChosenOnes[0], rep=rep)

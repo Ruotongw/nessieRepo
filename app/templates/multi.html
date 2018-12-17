@@ -6,6 +6,50 @@
 			<script type="text/javascript"></script>
 				<script src="{{ url_for('static', filename='./js/popup.js') }}"></script>
 
+				<div class="modal fade" id="multi">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+
+							<!-- Modal Header -->
+							<div class="modal-header modal-header-centered">
+								<h5 class="modal-title">Hi there!</h5>
+
+							</div>
+
+							<!-- Modal body -->
+							<div class="bg-light text-dark modal-body">
+								<p style="line-height:2">
+									I have found the following times for you to work on <b>{{ formattedChosenOnes[0]["summary"] }}</b>. <br />
+									Please <b>check</b> any that you wish to <b>reschedule</b>.
+								</p>
+						      <!-- <p>rep = <span id="eventName-popup">{{ rep }}</span> </p> -->
+									<div>
+						        <form action="/reschedule" method="GET">
+						            	{% for i in range(rep) %}
+						            		<input type="checkbox" name="{{i}}"" value="true"> {{ displayList[i] }} <b>{{ warning[i] }}</b><br>
+													{% endfor %}
+														<a href="/form" class="multi-cancel"> <button type="button" id="cancelMulti">Cancel</button></a>
+														<a href="/reschedule" class="center"><button type="submit" id="rescheduleMulti" class="center">Reschedule selected event(s)</button></a>
+														<!-- <input type="submit" value="Submit">  -->
+														<a href="/multi_add" class="multi-add"> <button type="button" id="addMulti">All times work!</button></a>
+							      </form>
+									</div>
+								</div>
+								</div>
+								</div>
+								</div>
+
+
+							<!-- Modal footer -->
+							<!-- <div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+							</div> -->
+
+						</div>
+					</div>
+
+
+
 			<div class="popup-overlay">
 			  <!--Creates the popup content-->
 			   <div class="popup-content">
@@ -21,7 +65,7 @@
 					{% endfor %}
 					<a href="/form" class="multi-cancel"> <button type="button" id="cancelMulti">Cancel</button></a>
 					<a href="/reschedule" class="center"><button type="submit" id="rescheduleMulti" class="center">Reschedule selected event(s)</button></a>
-					<!-- <input type="submit" value="Submit">  -->
+					<input type="submit" value="Submit">
 					<a href="/multi_add" class="multi-add"> <button type="button" id="addMulti">All times work!</button></a>
 
 	        	</form>

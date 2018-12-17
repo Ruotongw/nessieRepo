@@ -4,6 +4,7 @@
 			<!--Creates the popup body-->
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 			<script type="text/javascript"></script>
+				<script src="{{ url_for('static', filename='./js/popup.js') }}"></script>
 
 			<div class="popup-overlay">
 			  <!--Creates the popup content-->
@@ -11,7 +12,7 @@
 			      <h2 class="popup-title">Hi there!</h2>
 			      <p style="line-height:2">
 						I have found the following times for you to work on <b>{{ formattedChosenOnes[0]["summary"] }}</b>. <br />
-						Please check any that you wish to reschedule.
+						Please <b>check</b> any that you wish to <b>reschedule</b>.
 			      <!-- <p>rep = <span id="eventName-popup">{{ rep }}</span> </p> -->
 
 	            <form action="/reschedule" method="GET">
@@ -31,6 +32,7 @@
 			  </div>
 			</div>
 			<script src="{{ url_for('static', filename='./js/multi.js') }}" ></script>
+
 			<!--Content shown when popup is not displayed-->
 			<!-- <h2>jQuery Pop-Up Example</h2> -->
 			<!-- <button class="open">Open</button> -->

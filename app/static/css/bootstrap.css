@@ -45,70 +45,49 @@ body {
     /*border-color: #9f9a9a !important;*/
 }
 
-#addpreferencesForm{
-  width: 100%;
-  vertical-align:middle;
-  height: 100%;
-  border-color: #2064b6 !important;
-  border:3px;
-  text-align: center;
-  padding-top: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-
 #preferences{
-  vertical-align:middle;
-  background-color: #f8f9fa !important;
-  width: 50%;
-  margin-left: 72px;
-  padding-top: 20px;
-  height: 50%;
-  /* border-color: #2064b6 !important; */
-  border:3px;
+  display: none;
 }
+
 
 /*#Signout{
   margin-left: -690px;
 }*/
 
 
-
 #addEventForm{
-    width: 90%;
+    /*width: 100%;
     padding: 10px;
-    height: 100%;
+    height: 90%;
     border-color: #2064b6 !important;
     border:3px;
     text-align: center;
-    margin: 0 auto;
-    vertical-align:middle !important;
-    justify-content: center !important;
+    margin: 0 0;*/
 
 }
 
 #addEvent {
     /*border: 5px solid red;*/
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-    padding-top: 30px;
+   /* padding-top: 20px;
     background-color: #f8f9fa !important;
     text-align: center;
-    margin: 0 auto;
-    vertical-align:middle !important;
-    justify-content: center !important;
+    margin: 0 0;
+    width: 100%;
+    height: 100%;
+    left:20%;*/
 }
 
 #yesForm{
   text-align: center;
-  vertical-align:middle !important;
-  justify-content: center !important;
   margin-left: 100px;
+  padding: 0px;
 }
 
 #noForm{
   text-align: center;
   margin-left: 10px;
+  padding: 0px;
 }
 
 .border-info {
@@ -124,10 +103,6 @@ body {
 
 }
 
-.border-info {
-  border:3px !important;
-  background-color: #2064b6 !important;
-}
 
 #signinButton{
 	color: #2064b6 !important;
@@ -148,6 +123,10 @@ body {
   margin: 30px; */
 }
 
+.democlass{
+  background-color: red !important;
+}
+
 .currentday {
     background-color: #fc9e02;
     color: white;
@@ -158,21 +137,23 @@ body {
     height: 5vw;
 }
 
+.form-container{
+  display: none;
+}
+
 .aboutPage{
   display: none;
   border-color: #2064b6 !important;
   border: solid;
 }
 
-.aboutPopup-overlay{
+/* .aboutPopup-overlay{
   /*Hides pop-up when there is no "active" class*/
-  visibility:active;
+  /* visibility:active;
   position:fixed;
   background: #f8f9fa;
   /* border-color: #2064b6 !important; */
-  border: 1px solid;
-  width:50%;
-  height:50%;
+  /* border: 1px solid;
   left:25%;
   top: 40%;
   text-align:center;
@@ -180,23 +161,25 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   text-align: center;
-}
+  font-size: 14px;
+} */
 
-.aboutPopup-overlay.active{
+/* .aboutPopup-overlay.active{
   /*displays pop-up when "active" class is present*/
-  visibility:visible;
+  /* visibility:visible;
   text-align:center;
-}
+} */
 
 .aboutPopup-content {
   /*Hides pop-up content when there is no "active" class */
  visibility:active;
+ font-size: 14px;
 }
 
-.aboutPopup-content.active {
+/* .aboutPopup-content.active {
   /*Shows pop-up content when "active" class is present */
-  visibility:visible;
-}
+  /* visibility:visible;
+}  */
 
 #about{
   display: inline-block;
@@ -204,15 +187,20 @@ body {
 
 /*for popup*/
 
+.popup{
+  display: none;
+}
+
+
 .popup-overlay{
   /*Hides pop-up when there is no "active" class*/
   visibility:active;
   position:fixed;
   background: #f8f9fa;
   border:1px solid #2064b6;
-  width:50%;
-  height:50%;
-  left:25%;
+  width:35%;
+  height:60%;
+  left:32%;
   top: 40%;
   text-align:center;
   padding-top: 10px;
@@ -255,31 +243,35 @@ button:not(.navbar-toggler){
 
 }
 
+
 #rescheduleMulti{
   display:inline-block;
   vertical-align:middle;
-  height: 70px;
-  width: 180px;
+  height: 60px;
+  width: 145px;
   text-align: center;
   margin-top: 22px;
+  font-size: 14px;
 }
 
 #addMulti{
   display:inline-block;
   vertical-align:middle;
-  height: 70px;
-  width: 150px;
+  height: 60px;
+  width: 120px;
   text-align: center;
   margin-top: 22px;
+  font-size: 14px;
 }
 
 #cancelMulti{
   display:inline-block;
   vertical-align:middle;
-  height: 70px;
-  width: 150px;
+  height: 60px;
+  width: 120px;
   text-align: center;
   margin-top: 22px;
+  font-size: 14px;
 }
 #add{
   display:inline-block;
@@ -316,16 +308,17 @@ button:not(.navbar-toggler){
 
 
 h2{
-  padding: 50px;
+  padding: 10px;
 }
 
 h3{
   font-size: 1.1rem;
   text-align: center;
+  padding: 10px;
 }
 
 h4{
-  font-size: 1.5rem;
+  font-size: 20px;
   text-align: center;
   padding-top: 20px;
 }
@@ -335,6 +328,7 @@ h4{
   width: 150px;
   height: 40px;
   padding: 5px;
+  font-size: 14px;
 }
 
 #addPopup{
@@ -342,6 +336,7 @@ h4{
   width: 150px;
   height: 40px;
   padding: 5px;
+  font-size: 14px;
 }
 
 #cancelPopup{
@@ -349,6 +344,7 @@ h4{
   width: 150px;
   height: 40px;
   padding: 5px;
+  font-size: 14px;
 }
 
 .popup-title {
@@ -358,25 +354,34 @@ h4{
   padding-top: 10px;
   position: absolute;
   display: inline-block;
-  width: 200px;
+  width: 140px;
   height: 60px;
-  left: 8%;
+  left: 65%;
+  font-size: 14px;
 }
 
 .multi-cancel {
   padding-top: 10px;
   position: absolute;
   display: inline-block;
-  width: 200px;
+  width: 140px;
   height: 60px;
-  left:60%;
+  left:5%;
+  font-size: 14px;
 }
 
 .center {
   padding-top: 10px;
   position: absolute;
   display: inline-block;
+  font-size: 14px;
   /* width: 250px;
   height: 60px; */
-  left: 35%;
+  left: 34%;
 }
+
+#modal-dialog {
+  overflow: visible;
+}
+
+/*.checkbox { margin: 0; }*/

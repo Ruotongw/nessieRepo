@@ -35,7 +35,8 @@
 				    </ul>
 				    <ul class="navbar-nav list-inline my-2 my-sm-0">
 				      <li class="nav-item">
-				      	<a class="nav-link" href="#"> <button id="add-event" class="btn btn-info" type="button" onclick="add_event()">Add Event</button></a>
+				      	<a class="nav-link" href="#"> <button id="add-event" class="btn btn-info" type="button" data-toggle="modal" data-target="#addEvent"">Add Event</button></a>
+				      	<!-- onclick="add_event() -->
 				      </li>
 				      <li class="nav-item">
 				      	<a class="nav-link" href="#"><button id="my-preferences" class="btn btn-info" type="button" onclick="my_preferences()">Preferences</button></a>
@@ -48,12 +49,76 @@
 			<div class="calender container">
 			</div>
 
-
-
 			<!-- Box for adding and updating events -->
-			<div id="addEvent" style="display: none" class="border border-primary">
+			<!-- The Modal -->
+			<div class="modal fade" id="addEvent">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+
+			      <!-- Modal Header -->
+			      <div class="modal-header">
+			        <h5 class="modal-title">Add a event</h5>
+
+			      </div>
+
+			      <!-- Modal body -->
+			        <form class="bg-light text-dark modal-body" id="addEventForm" action="/form" method="POST">
+						<div class="formContent container">
+							<!-- popup-overlay -->
+							<span class="New Event"></span>
+							<div class="form-group row">
+							   <label for="eventName" class="col-sm-4 col-form-label">Event Title:&nbsp;</label>
+							   <div class="col-sm-8">
+							    <input type="text" class="form-control" id="eventName" name="Title" value="" required>
+							   </div>
+							</div>
+							<div class="form-group row">
+							   <label for="eventDuration" class="col-sm-4 col-form-label">Estimated Time (h):&nbsp;</label>
+							   <div class="col-sm-8">
+							    <input class="form-control" id="eventDuration" type="number" step="any" min="0" max="10" name="est" required>
+							   </div>
+							</div>
+							<div class="form-group row">
+							      <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="col-sm-4 col-form-label">
+							       <input type="checkbox" id="rep-checkbox" onclick="repChecked()" />
+							      </label>
+							       <div class="col-sm-8 text-left">I want to work on it for multiple times.</div>
+							</div>
+							<div id="collapseOne" aria-expanded="false" class="collapse form-group row">
+							    <label for="eventRepetition" class="col-sm-4 col-form-label">Number of Times:&nbsp;</label>
+							    <div class="col-sm-8">
+							    <input class="form-control" id="eventRepetition" type="number" min="0" max="5" name="rep" value="1" required>
+							    </div>
+							</div>
+							<div class="form-group row">
+							   <label for="dueDate" class="col-sm-4 col-form-label">Complete Before:&nbsp;</label>
+							   <div class="col-sm-8">
+							    <input type="date" class="form-control" id="dueDate" name="dead" value="" required>
+							   </div>
+							</div>
+							  <div class="form-group row">
+							    <div class="col-sm-6">
+							      <button type="submit" id="yesForm" style= "background-color:#2064b6" class="btn btn-primary add-event">Add</button>
+							    </div>
+							    <div class="col-sm-6">
+								  <button type="button" id="noForm" idstyle= "background-color:#2064b6" class="btn btn-primary cancel-event " data-dismiss="modal" ">Cancel</button>
+								  <!-- onclick="cancel_event() -->
+							    </div>
+							  </div>
+						</div>
+					</form>
+			      <!-- Modal footer -->
+			     <!--  <div class="modal-footer">
+			        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			      </div> -->
+
+			    </div>
+			  </div>
+			</div>
+			<!-- Original -->
+			<!-- <div id="addEvent" style="display: none" class="border border-primary">
 				<form class="bg-light text-dark" id="addEventForm" action="/form" method="POST">
-					<div class="formContent container">
+					<div class="formContent container popup-overlay">
 						<span class="New Event"></span>
 						<div class="form-group row">
 							 <a href="#" data-toggle="tooltip" title="What do you want to name the event?">Event Title</a>
@@ -68,60 +133,64 @@
 						   </div>
 						</div>
 						<div class="form-group row">
-							 <a href="#" data-toggle="tooltip" title="Do you want to schedule this multiple times?">Number of Times</a>
-						   <div class="col-sm-10">
-						    <input class="form-control" id="eventRepetition" type="number" min="0" max="5" name="rep" required>
-						   </div>
+						      <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="col-sm-2 col-form-label">
+						       <input type="checkbox" id="rep-checkbox" onclick="repChecked()" />
+						      </label>
+						       <div class="col-xs-10 text-left">I want to work on it for multiple times.</div>
+						</div>
+						<div id="collapseOne" aria-expanded="false" class="collapse form-group row">
+						    <label for="eventRepetition" class="col-xs-3 col-form-label">Number of Times:&nbsp;</label>
+						    <div class="col-xs-10">
+						    <input class="form-control" id="eventRepetition" type="number" min="0" max="5" name="rep" value="1" required>
+						    </div>
 						</div>
 						<div class="form-group row">
-							 <a href="#" data-toggle="tooltip" title="This is when you need to have the assignment turned in by. Not the last day to work.">Complete Before</a>
-						   <div class="col-sm-10">
+						   <label for="dueDate" class="col-xs-3 col-form-label">Complete Before:&nbsp;</label>
+						   <div class="col-xs-10">
 						    <input type="date" class="form-control" id="dueDate" name="dead" value="" required>
 						   </div>
 						</div>
-						<div class="form-group row">
-							<div class="col-sm-10">
-								<button type="submit" id="yesForm" style= "background-color:#2064b6" class="btn btn-primary add-event">Add</button>
-								<button type="button" id="noForm" idstyle= "background-color:#2064b6" class="btn btn-primary cancel-event" onclick="cancel_event()">Cancel</button>
-							</div>
-						</div>
+						  <div class="form-group row">
+						    <div class="col-xs-10">
+						      <button type="submit" id="yesForm" style= "background-color:#2064b6" class="btn btn-primary add-event">Add</button>
+									<button type="button" id="noForm" idstyle= "background-color:#2064b6" class="btn btn-primary cancel-event" onclick="cancel_event()">Cancel</button>
+						    </div>
+						  </div>
+					</div>
 
-				</div>
-
-			</form>
-		</div>
-
+				</form>
+			</div>
+ -->
 			<!-- Feedback popoup -->
 			{% block title %}{% endblock %}
 
 			<!-- Box for inputting work hours -->
 			<div id="preferences" style="display: none" class="border border-primary">
 				<form class="bg-light text-dark" id="addpreferencesForm" action="/preferencesForm" method="POST">
-				<!-- <span class="eveBoxClose" onclick="closeEveBox(preferences);">x</span> -->
-				<div class="form-container container">
+				<div class="form-container container popup-overlay">
 					<span class="Preferences"></span>
-					<h3>Change the fields below to share when you are willing to work!</h3><br><br>
+					<h3>Change the fields below to <br> share when you want to work:</h3><br>
 						<label for="earliestWorkTime">Earliest time to start work:</label>
 						<input type="time" value="08:00" name="earliest"><br>
-						<label for="latestWorkTime">Latest time to work up till:</label>
-						<input type="time" value="23:00" name="latest"/><br><br><br>
+						<label for="latestWorkTime">Latest time you'd like to work:</label>
+						<input type="time" value="23:00" name="latest"/><br><br>
 						<button type="submit" style= "background-color:#2064b6" class="btn btn-primary add-event" id="update">Update</button>
-						<button type="cancel" style= "background-color:#2064b6" class="btn btn-primary cancel-event">Cancel</button>
+						<button type="cancel" style= "background-color:#2064b6" class="btn btn-primary cancel-event">Cancel </button>
 					</form>
 				</div>
 			</div>
 
 
-			<div id="aboutPage" class="aboutPopup-overlay border border-primary" style="display: none">
+			<div id="aboutPage" class="popup-overlay border border-primary" style="display: none">
 			    <span class="aboutPopup-content"></span>
 			    <div>
 			      <h4>About Nessie</h4>
-			      <p style="font-size:20px"><b>Nessie is your calendar helper!</b><br> There's no need to find free time in your
-			       schedule anymore because we'll find it for you!<br>All you have to do is click "Add Event" and input the assignment's title,
-			      length,<br>frequency, and the deadline.<br> When you choose to add an event, we'll provide you with a time that<br>perfectly fits your Google Calendar schedule. <br>
+			      <p style="font-size:16px"><b>Nessie is your calendar helper!</b><br> There's no need to find free time in your
+			       schedule anymore because we'll find it for you! All you have to do is click "Add Event" and input the assignment's title,
+			      length,<br>frequency, and the deadline.When you choose to add an event, we'll provide you with a time that perfectly fits your Google Calendar schedule. <br>
 			        Be sure to update your preferences so we will only schedule assignments when you want to work.
 					 </br><b> Enjoy!</b></p>
-			       <button type="cancel" style= "background-color:#2064b6" class="btn btn-primary cancel-event" onclick="cancel_event()">Close</button>
+			       <button type="cancel" style= "height:25%" class="btn btn-primary close-event" onclick="cancel_event()">Close</button>
 			    </div>
 			</div>
 

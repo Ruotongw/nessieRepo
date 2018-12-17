@@ -5,7 +5,7 @@ console.log("checkbox disabled")
 
 // document.getElementById("reschedule").disabled = true;
 
-document.getElementById("reschedule").onclick = function (e) {
+document.getElementById("rescheduleMulti").onclick = function (e) {
 	// 
     if (!CheckBoxCount()) {
         e.preventDefault();
@@ -29,5 +29,4 @@ function CheckBoxCount() {
     // alert("selected count: " + numChecked);
 
     return true;
-
 }

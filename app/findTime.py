@@ -41,18 +41,24 @@ class FindTime:
         availableTimes = []
 
         try:
-            for i in range(len(events) - 1):
+            if len(events) > 1:
+                for i in range(len(events) - 1):
 
-                event1 = events[i]
-                event2 = events[i + 1]
-                e1, e2 = format.formatEvent(event1, event2)
-                self.compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+                    event1 = events[i]
+                    event2 = events[i + 1]
+                    e1, e2 = format.formatEvent(event1, event2)
+                    self.compareEvents(e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
-            lastEvent = events[len(events) - 1]
-            secondToLast = events[len(events) - 2]
-            self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+                lastEvent = events[len(events) - 1]
+                secondToLast = events[len(events) - 2]
 
-            self.checkEmptyDays(workStart, workEnd, timeEst)
+                self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+
+            elif len(events) == 1:
+                self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+
+            elif len(events) == 0:
+                self.checkEmptyDays(workStart, workEnd, timeEst)
 
             availableTimes.sort()
             return availableTimes
@@ -81,53 +87,88 @@ class FindTime:
 
         if now.month == deadline.month and now.year == deadline.year:
             num = deadline.day - now.day
-            print(num)
             self.setUpEmpty(now, num)
 
         elif (deadline.month - now.month == 1) or (now.month == 12 and deadline.month == 1):
-            self.monthRangeBeginEnd(now)
+            self.monthRangeBeginEnd()
 
         elif (deadline.month - now.month > 1) and (now.year == deadline.year):
-            self.monthRangeBeginEnd(now)
+            self.monthRangeBeginEnd()
             for i in range(deadline.month - now.month - 1):
                 month = now.month + i + 1
-                weekday, monthDays = calendar.monthrange(month, now.year)
+                weekday, monthDays = calendar.monthrange(now.year, month)
 
                 start = datetime.datetime(now.year, month, 1)
-                self.setUpEmpty(start, num)
+                self.setUpEmpty(start, monthDays)
 
-                monthDT = datetime.datetime(now.year, month, monthDays)
-                nextMonthDT = datetime.datetime(now.year, month + 1, monthDays)
-                self.lastDayOfMonth(monthDT, nextMonthDT, monthDays)
+                monthEnd = datetime.datetime(now.year, month, monthDays)
+                nextMonthStart = datetime.datetime(now.year, month + 1, 1)
+                self.lastDayOfMonth(monthEnd, nextMonthStart, monthDays)
+
+        elif (now.month - deadline.month < 11) and (now.year != deadline.year):
+            self.monthRangeBeginEnd()
+            if now.month != 12:
+                for i in range(12 - now.month):
+                    month = now.month + i + 1
+                    weekday, monthDays = calendar.monthrange(now.year, month)
+
+                    start = datetime.datetime(now.year, month, 1)
+                    self.setUpEmpty(start, monthDays)
+
+                    monthEnd = datetime.dateTime(now.year, month, monthDays)
+                    if month == 12:
+                        nextMonthStart = datetime.dateTime(now.year + 1, 1, 1)
+                    else:
+                        nextMonthStart = datetime.datetime(now.year, month + 1, )
+                    self.lastDayOfMonth(monthEnd, nextMonthStart, monthDays)
+
+            if deadline.month != 1:
+                for i in range(deadline.month - 1):
+                    month = 1 + i
+                    weekday, monthDays = calendar.monthrange(deadline.year, month)
+
+                    start = datetime.datetime(deadline.year, month, 1)
+                    self.setUpEmpty(start, monthDays)
 
 
-    def monthRangeBeginEnd(self, now):
+    def monthRangeBeginEnd(self):
         weekday, monthDays = calendar.monthrange(now.year, now.month)
         num = monthDays - now.day
         self.setUpEmpty(now, num)
-        self.lastDayOfMonth(now, monthDays)
+        self.lastDayOfMonth(now.month, now.year)
         dt = datetime.datetime(deadline.year, deadline.month, 1)
         self.setUpEmpty(dt, deadline.day - 1)
 
 
-    def lastDayOfMonth(self, now, monthDays):
-        lastMin = format.formatDT2(now.year, now.month, monthDays, 0, 0, 0)
-        lastMinDT = datetime.datetime(now.year, now.month, monthDays)
-        lastMax = format.formatDT2(deadline.year, deadline.month, 1, 0, 0, 0)
-        lastDayOfMonth = self.service.events().list(calendarId='primary', timeMin = lastMin,
-                                        timeMax = lastMax, singleEvents=True,
+    def lastDayOfMonth(self, month, year):
+        weekday, monthDays = calendar.monthrange(year, month)
+        min = format.formatDT2(year, month, monthDays, 0, 0, 0)
+        minDT = datetime.datetime(year, month, monthDays)
+        if month == 12:
+            nextMonth = 1
+            year += 1
+        else:
+            nextMonth = month + 1
+        max = format.formatDT2(year, nextMonth, 1, 0, 0, 0)
+        lastDay = self.service.events().list(calendarId='primary', timeMin = min,
+                                        timeMax = max, singleEvents=True,
                                         orderBy = 'startTime').execute().get('items', [])
-        self.compareEmpty(lastMinDT, lastDayOfMonth)
-
+        self.compareEmpty(minDT, lastDay)
 
 
     def setUpEmpty(self, dt, num):
         for i in range(num):
             minDay = dt.day + i
-            maxDay = dt.day + i + 1
+            weekday, monthDays = calendar.monthrange(dt.year, dt.month)
+            if minDay == monthDays:
+                maxDay = 1
+                maxMonth = dt.month + 1
+            else:
+                maxDay = minDay + 1
+                maxMonth = dt.month
             timeMinDT = datetime.datetime(dt.year, dt.month, minDay)
             timeMin = format.formatDT2(dt.year, dt.month, minDay, 0, 0, 0)
-            timeMax = format.formatDT2(dt.year, dt.month, maxDay, 0, 0, 0)
+            timeMax = format.formatDT2(dt.year, maxMonth, maxDay, 0, 0, 0)
 
             events = self.service.events().list(calendarId='primary', timeMin = timeMin,
                                             timeMax = timeMax, singleEvents=True,
@@ -136,10 +177,9 @@ class FindTime:
 
 
     def compareEmpty(self, dt, events):
-        if len(events) == 0 and enoughTimeEmpty:
-            morning = datetime.datetime(dt.year, dt.month, dt.day, int(startHours), int(startMinutes))
+        if len(events) == 0:
+            morning = datetime.datetime(dt.year, dt.month, dt.day, int(startHours), int(startMinutes)) - datetime.timedelta(minutes = 15)
             time = timeSlot.afterTimeSlot(morning)
-            print(time)
             availableTimes.append(time)
 
 

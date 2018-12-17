@@ -16,29 +16,11 @@ Date.prototype.toDateInputValue = (function() {
     return local.toJSON().slice(0,10);
 });
 
-//
-//If the add event button is clicked, create new event box
-//
-// function myFunction(){
-//   console.log("starting");
-//   chBackcolor();
-//   add_event();
-// }
-// function chBackcolor() {
-//    // document.body.style.background = "red !important";
-//    // document.body.setAttribute("class", "democlass");
-//    console.log("changing color");
-//    $("#my-preferences").attr('disabled','disabled');
-//    $("#Signout").attr('disabled','disabled');
-//    // $("#add-event").hide();
-//    // $("#my-preferences").disabled = true;
-//    // $("#Signout").disabled = true;
-//    // $("div:not(#addEvent):not(#addEvent *)").hide();
-//    console.log("hide all children of addEvent");
-// }
+
 function add_event() {
 	// Initializing new event box's input field as blank
 	// var today = Date().toISOString().substr(0, 10);
+	$('#popup-start').hide();
     $("#my-preferences").attr('disabled','disabled');
     $("#Signout").attr('disabled','disabled');
     $("#about").attr('disabled','disabled');
@@ -53,10 +35,26 @@ function add_event() {
 	$("#addEvent").show().css({
 		"position": "fixed",
 		"width":"50%",
-		"top":"40%",
+		"top":"35%",
 		"left":"25%"
 	});
 }
+
+function repChecked(){
+	if($("#rep-checkbox").is(':checked')){
+		console.log("checked");
+	    $("#addEvent").css({
+	    'height': '65%'
+		});
+	}  // checked
+	else {
+		console.log("setting value")
+	    $("#addEvent").css({
+	    'height': '55%'
+		});  // unchecked
+	    $("#eventRepetition").val("1");}
+}
+
 
 // $(window).load(function () {
 //     $(".trigger_popup_fricc").click(function(){
@@ -77,13 +75,7 @@ function about(){
   var divelement = document.getElementById("aboutPage")
   if(divelement.style.display == "none")
     divelement.style.display == "block"
-  
-
   $("#aboutPage").show();
-
-
-
-
 }
 
 function cancel_event(){
@@ -95,6 +87,7 @@ function cancel_event(){
   $("#Signout").attr('disabled',false);
   $("#about").attr('disabled',false);
   $("#add-event").attr('disabled',false);
+  $('#popup-start').hide();
 }
 
 function my_preferences(){
@@ -110,17 +103,34 @@ function my_preferences(){
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
 
-	$("#preferences").show().css({
-		"position": "fixed",
-		"width":"40%",
-		"top":"40%",
-		"left":"25%"
-	});
-
 	function cancel_event(){
 		$("#preferences").hide();
 	}
 }
+
+function addEventForm(){
+  $("#my-preferences").attr('disabled','disabled');
+  $("#Signout").attr('disabled','disabled');
+  $("#about").attr('disabled','disabled');
+  $("#add-event").attr('disabled','disabled');
+  var divelement = document.getElementById("popup")
+  if(divelement.style.display == "none")
+    divelement.style.display == "block"
+  $("#popup").show();
+}
+
+function disable(){
+  $("#my-preferences").attr('disabled','disabled');
+  $("#Signout").attr('disabled','disabled');
+  $("#about").attr('disabled','disabled');
+  $("#add-event").attr('disabled','disabled');
+}
+
+function chBackcolor() {
+   // document.body.style.opacity = 0.6;
+   document.body.setAttribute("body", "democlass");
+   console.log("changing color");
+ }
 
 	// console.log(windowHeight);
 
@@ -129,19 +139,19 @@ function my_preferences(){
 //
 //appends an "active" class to .popup and .popup-content when the "Open" button is clicked
 
-$(".add-event").on("click", function(){
-  $(".popup-overlay, .popup-content").addClass("active");
-});
-
-//removes the "active" class to .popup and .popup-content when the "Close" button is clicked
-$(".confirm, .popup-overlay").on("click", function(){
-  $(".popup-overlay, .popup-content").removeClass("active");
-});
-
-$(".reschedule, .popup-overlay").on("click", function(){
-  $(".popup-overlay, .popup-content").removeClass("active");
-});
-
+// $(".add-event").on("click", function(){
+//   $(".popup-overlay, .popup-content").addClass("active");
+// });
+//
+// //removes the "active" class to .popup and .popup-content when the "Close" button is clicked
+// $(".confirm, .popup-overlay").on("click", function(){
+//   $(".popup-overlay, .popup-content").removeClass("active");
+//
+// });
+//
+// $(".reschedule, .popup-overlay").on("click", function(){
+//   $(".popup-overlay, .popup-content").removeClass("active");
+// });
 //
 // Close new event box and edit event box and remove color from selected event
 //

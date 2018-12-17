@@ -43,20 +43,20 @@ function add_event() {
 	// });
 }
 
-function repChecked(){
-	if($("#rep-checkbox").is(':checked')){
-		console.log("checked");
-	    $("#addEvent").css({
-	    'height': '65%'
-		});
-	}  // checked
-	else {
-		console.log("setting value")
-	    $("#addEvent").css({
-	    'height': '55%'
-		});  // unchecked
-	    $("#eventRepetition").val("1");}
-}
+// function repChecked(){
+// 	if($("#rep-checkbox").is(':checked')){
+// 		console.log("checked");
+// 	    $("#addEvent").css({
+// 	    'height': '65%'
+// 		});
+// 	}  // checked
+// 	else {
+// 		console.log("setting value")
+// 	    $("#addEvent").css({
+// 	    'height': '55%'
+// 		});  // unchecked
+// 	    $("#eventRepetition").val("1");}
+// }
 
 
 // $(window).load(function () {

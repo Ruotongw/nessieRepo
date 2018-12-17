@@ -17,28 +17,30 @@ Date.prototype.toDateInputValue = (function() {
 });
 
 
-// function add_event() {
-// 	// Initializing new event box's input field as blank
-// 	// var today = Date().toISOString().substr(0, 10);
-// 	$('#popup-start').hide();
-//     $("#my-preferences").attr('disabled','disabled');
-//     $("#Signout").attr('disabled','disabled');
-//     $("#about").attr('disabled','disabled');
-//     $("#add-event").attr('disabled','disabled');
-// 	$("#dueDate").attr("min", new Date().toDateInputValue());
-// 	console.log("open event form")
-//
-// 	// Displaying new event box at apt location
-// 	var windowWidth = $(window).width();
-// 	var windowHeight = $(window).height();
-//
-// 	$("#addEvent").show().css({
-// 		"position": "fixed",
-// 		"width":"50%",
-// 		"top":"35%",
-// 		"left":"25%"
-// 	});
-// }
+function add_event() {
+	// Initializing new event box's input field as blank
+	// var today = Date().toISOString().substr(0, 10);
+	$('#startPop').hide();
+    $("#my-preferences").attr('disabled','disabled');
+    $("#Signout").attr('disabled','disabled');
+    $("#about").attr('disabled','disabled');
+    $("#add-event").attr('disabled','disabled');
+	$("#dueDate").attr("min", new Date().toDateInputValue());
+	console.log("open event form")
+
+	// Displaying new event box at apt location
+	var windowWidth = $(window).width();
+	var windowHeight = $(window).height();
+
+	$("#addEvent").modal('show');
+
+	// $("#addEvent").show().css({
+	// 	"position": "fixed",
+	// 	"width":"50%",
+	// 	"top":"35%",
+	// 	"left":"25%"
+	// });
+}
 
 function repChecked(){
 	if($("#rep-checkbox").is(':checked')){

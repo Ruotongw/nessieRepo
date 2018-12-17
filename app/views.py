@@ -139,7 +139,6 @@ def checkPreferencesForm():
 
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
-    print("in popup")
     if loginCheck() == 1:
         return redirect('/')
 

@@ -20,7 +20,7 @@ Date.prototype.toDateInputValue = (function() {
 function add_event() {
 	// Initializing new event box's input field as blank
 	// var today = Date().toISOString().substr(0, 10);
-	$('#popup-start').hide();
+	$('#startPop').hide();
     $("#my-preferences").attr('disabled','disabled');
     $("#Signout").attr('disabled','disabled');
     $("#about").attr('disabled','disabled');
@@ -32,12 +32,14 @@ function add_event() {
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
 
-	$("#addEvent").show().css({
-		"position": "fixed",
-		"width":"50%",
-		"top":"35%",
-		"left":"25%"
-	});
+	$("#addEvent").modal('show');
+
+	// $("#addEvent").show().css({
+	// 	"position": "fixed",
+	// 	"width":"50%",
+	// 	"top":"35%",
+	// 	"left":"25%"
+	// });
 }
 
 function repChecked(){

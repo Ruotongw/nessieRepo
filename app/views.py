@@ -295,7 +295,7 @@ def createEvent():
             formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
     except:
         global msg
-        msg = "This is not physically possible. Come back when you have more time, need less time, or have control over the universe. Then we'll talk."
+        msg = "There is not enough time to schedule the event. Please either choose a smaller time commitment, change your working hours, or find a later deadline."
         print ("so, something went wrong")
         return redirect('/error')
     if rep == 1:

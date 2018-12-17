@@ -33,13 +33,6 @@ function add_event() {
 	var windowHeight = $(window).height();
 
 	$("#addEvent").modal('show');
-
-	// $("#addEvent").show().css({
-	// 	"position": "fixed",
-	// 	"width":"50%",
-	// 	"top":"35%",
-	// 	"left":"25%"
-	// });
 }
 
 function repChecked(){
@@ -57,103 +50,18 @@ function repChecked(){
 	    $("#eventRepetition").val("1");}
 }
 
-
-// $(window).load(function () {
-//     $(".trigger_popup_fricc").click(function(){
-//        $('.hover_bkgr_fricc').show();
-//     });
-//     $('.hover_bkgr_fricc').click(function(){
-//         $('.hover_bkgr_fricc').hide();
-//     });
-//     $('.close-event').click(function(){
-//         $('.hover_bkgr_fricc').hide();
-//     });
-// });
-function about(){
-  $("#my-preferences").attr('disabled','disabled');
-  $("#Signout").attr('disabled','disabled');
-  $("#about").attr('disabled','disabled');
-  $("#add-event").attr('disabled','disabled');
-  var divelement = document.getElementById("aboutPage")
-  if(divelement.style.display == "none")
-    divelement.style.display == "block"
-  $("#aboutPage").show();
-}
-
-// function cancel_event(){
-// 	$("#addEventForm")[0].reset();
-// 	$("#addEvent").hide();
-//   $("#aboutPage").hide();
-//   $("#aboutPopup-content").hide();
-// 	$("#my-preferences").attr('disabled',false);
-//   $("#Signout").attr('disabled',false);
-//   $("#about").attr('disabled',false);
-//   $("#add-event").attr('disabled',false);
-//   $('#popup-start').hide();
-// }
-
-// function my_preferences(){
-//   // document.getElementById("preferences").style.display = "block";
-//   $("#add-event").attr('disabled','disabled');
-//   $("#Signout").attr('disabled','disabled');
-//   $("#about").attr('disabled','disabled');
-//   $("#my-preferences").attr('disabled','disabled');
-// 	$("#earliestWorkTime").val("");
-// 	$("#latestWorkTime").val("");
-//
-// 	// Displaying new event box at apt location
-// 	var windowWidth = $(window).width();
-// 	var windowHeight = $(window).height();
-//
-// 	function cancel_event(){
-// 		$("#preferences").hide();
-// 	}
-// }
-
-// function addEventForm(){
+// function about(){
 //   $("#my-preferences").attr('disabled','disabled');
 //   $("#Signout").attr('disabled','disabled');
 //   $("#about").attr('disabled','disabled');
 //   $("#add-event").attr('disabled','disabled');
-//   var divelement = document.getElementById("popup")
+//   var divelement = document.getElementById("aboutPage")
 //   if(divelement.style.display == "none")
 //     divelement.style.display == "block"
-//   $("#popup").show();
+//   $("#aboutPage").show();
 // }
 
-function disable(){
-  $("#my-preferences").attr('disabled','disabled');
-  $("#Signout").attr('disabled','disabled');
-  $("#about").attr('disabled','disabled');
-  $("#add-event").attr('disabled','disabled');
-}
 
-function chBackcolor() {
-   // document.body.style.opacity = 0.6;
-   document.body.setAttribute("body", "democlass");
-   console.log("changing color");
- }
-
-	// console.log(windowHeight);
-
-//
-// popup display
-//
-//appends an "active" class to .popup and .popup-content when the "Open" button is clicked
-
-// $(".add-event").on("click", function(){
-//   $(".popup-overlay, .popup-content").addClass("active");
-// });
-//
-// //removes the "active" class to .popup and .popup-content when the "Close" button is clicked
-// $(".confirm, .popup-overlay").on("click", function(){
-//   $(".popup-overlay, .popup-content").removeClass("active");
-//
-// });
-//
-// $(".reschedule, .popup-overlay").on("click", function(){
-//   $(".popup-overlay, .popup-content").removeClass("active");
-// });
 //
 // Close new event box and edit event box and remove color from selected event
 //
@@ -163,169 +71,6 @@ function closeEveBox(e) {
 	$(".event-rectangles").removeClass("event-rectangle-select");
 	$("#addEvent").hide();
 }
-
-//
-// [NOT CURRENTLY USEING]Check if the event is all day event by checking the Font Awesome Icon state
-//
-function allDay() {
-	if ($(".fa-check-square-o").length) {
-		$("#eventStartDate, #eventStartTime, #eventEndDate, #eventEndTime").attr("disabled", false);
-		$("#eventAllDay").removeClass("fa-check-square-o").addClass("fa-square-o");
-	} else {
-		$("#eventStartDate, #eventStartTime, #eventEndDate, #eventEndTime").attr("disabled", true);
-		$("#eventAllDay").removeClass("fa-square-o").addClass("fa-check-square-o");
-	}
-}
-
-//
-// [NOT CURRENTLY USEING]Updating the clicked event
-//
-function updateEvent(e) {
-	console.log('got into updateEvent');
-
-	e.preventDefault();
-
-	$("#error").text("");
-	var eventId = $("#eventId").val();
-	var eventName = $("#eventName").val();
-	var eventLocation = $("#eventLocation").val();
-	var eventStartDate = String($("#eventStartDate").val());
-	var eventStartTime = String($("#eventStartTime").val());
-	var eventEndDate = String($("#eventEndDate").val());
-	var eventEndTime = String($("#eventEndTime").val());
-	var eventDescription = $("#eventDescription").val();
-	if ($(".fa-check-square-o").length) {
-		var eventAllDay = 1;
-		eventStartTime = "";
-		eventEndTime = "";
-	}
-	else
-		var eventAllDay = 0;
-
-	if (eventStartDate > eventEndDate) {
-		$("#error").text("End date cannot be earlier than start date");
-	} else if (eventStartDate.substr(0, 7) != eventEndDate.substr(0, 7)) {
-		$("#error").text("Event cannot stretch across months");
-	} else if (eventStartTime != "" && eventEndTime == "") {
-		$("#error").text("Fill both event start and end time");
-	} else if (eventStartTime == "" && eventEndTime != "") {
-		$("#error").text("Fill both event start and end time");
-	} else {
-		$.getJSON("updateEvent/", {eventId: eventId, eventName: eventName, eventLocation: eventLocation, eventStartDate: eventStartDate, eventStartTime: eventStartTime, eventEndDate: eventEndDate, eventEndTime: eventEndTime, eventAllDay: eventAllDay, eventDescription: eventDescription}, function(data) {
-			// console.log(data);
-			$("#status").text(data["result"]);
-			$("#justForShowEvent").remove();
-			$("#addEvent").hide();
-			// refreshAllEvents();
-		});
-	}
-}
-
-//
-// [NOT CURRENTLY USEING]Display clicked event's details when any event is clicked
-//
-function event_rectangle_clicked(event) {
-	event.stopPropagation();
-	console.log('stopPropogation passed');
-
-	closeEveBox(event);
-	console.log('got into event_rectangle_clicked');
-	// console.log(event);
-	$(".viewEveBoxName").text(event.target.innerHTML);
-	var event_id = event.target.id;
-	$("[id=" + event_id + "]").addClass("event-rectangle-select");
-	$("#viewEveBoxEveId").text(event_id);
-	// console.log(event);
-	$.getJSON("viewEvent/", {eventId: event_id}, function(data) {
-		// console.log(data);
-		$(".viewTitle").text(data["event_name"]);
-		$(".viewLocation").text(data["location"]);
-
-		if (data["description"] != "") {
-			$(".viewDescription").text(data["description"]);
-		}
-
-		var start_date = new Date(data["start_date"].replace(/-/g,'/'));
-		var day_num = start_date.getDay();
-		var day = day_name[day_num];
-		var date = parseInt(data["start_date"].substr(8,2));
-		var month = month_names[parseInt(data["start_date"].substr(5,2)) - 1];
-
-		if (data["all_day"] == true || data["start_time"] == "") {
-			$(".viewDay").text(day + ", " + month + " " + date);
-		} else {
-			$(".viewDay").text(data["start_time"] + ", " + day + ", " + month + " " + date);
-		}
-
-		var parent_td = $("#" + event.target.id).parent();
-		// console.log(parent_td.width());
-		var parent_td_left = parent_td.position().left;
-		var parent_td_width = parent_td.width();
-		var windowWidth = $(window).width();
-		var eventBoxWidth = $("#viewEvent").width();
-		if (parent_td_left + parent_td_width + eventBoxWidth + 30 > windowWidth) {
-			$("#viewEvent").show().css({position:"absolute", top:(event.pageY - 120), left: (parent_td_left - eventBoxWidth)});
-		} else {
-			$("#viewEvent").show().css({position:"absolute", top:(event.pageY - 120), left: (parent_td_left + parent_td_width + 8)});
-		}
-	});
-}
-
-//
-// [NOT CURRENTLY USEING]Delete an event
-//
-function deleteEve(event) {
-	event.preventDefault();
-	event.stopPropagation();
-
-	var event_id = $("#viewEveBoxEveId").text();
-
-	$.getJSON("deleteEvent/", {eventId: event_id}, function(data) {
-		$("#status").text(data["result"]);
-		closeEveBox(event);
-		// refreshAllEvents();
-	});
-}
-
-//
-// [NOT CURRENTLY USEING]Display Edit event box with clicked event's details when an event is clicked
-//
-function editEve(event) {
-	event.preventDefault();
-	event.stopPropagation();
-
-	var event_id = $("#viewEveBoxEveId").text();
-
-	$.getJSON("viewEvent/", {eventId: event_id}, function(data) {
-		$("#eventId").val(event_id);
-		$("#eventName").val(data["event_name"]);
-		$("#eventLocation").val(data["location"]);
-		$("#eventStartDate").val(data["start_date"]);
-		$("#eventStartTime").val(data["start_time"]);
-		$("#eventEndDate").val(data["end_date"]);
-		$("#eventEndTime").val(data["end_time"]);
-		$("#eventDescription").val(data["description"]);
-		if (data["all_day"] == true) {
-			$("#eventStartDate, #eventStartTime, #eventEndDate, #eventEndTime").attr("disabled", true);
-			$("#eventAllDay").removeClass("fa-square-o").addClass("fa-check-square-o");
-		} else {
-			$("#eventStartDate, #eventStartTime, #eventEndDate, #eventEndTime").attr("disabled", false);
-			$("#eventAllDay").removeClass("fa-check-square-o").addClass("fa-square-o");
-		}
-		var date = parseInt(data["start_date"].substr(8,2));
-		var month = month_names[parseInt(data["start_date"].substr(5,2)) - 1];
-		$(".eveBoxDate").text(date + " " + month + " " + year);
-
-		closeEveBox(event);
-		$("#" + event_id).addClass("event-rectangle-select");
-		if ($(window).width() > 750) {
-			$("#addEvent").show().css({position: "absolute", top: (event.pageY - 375), left: (event.pageX - 220)});
-		} else {
-			$("#addEvent").show().css({position: "absolute", top: (event.pageY - 235), left: (event.pageX - 110)});
-		}
-	});
-}
-
 //
 // Get events from the server and add each event to the calendar
 //

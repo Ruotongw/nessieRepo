@@ -15,7 +15,6 @@ import math
 import pytz
 from pytz import timezone
 import time
-from tzlocal import get_localzone
 import calendar
 from .format import *
 from .timeSlot import *
@@ -25,6 +24,8 @@ from .findTime import *
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 def loginCheck():
+    """Check whether the user is logged in via their Google account."""
+
     try:
         if service == None:
             return redirect('/')
@@ -35,6 +36,7 @@ def loginCheck():
 
 @app.route('/', methods=['GET','POST'])
 def main():
+    """Set up the credentials and service for Google Calendar authorization."""
 
     global workStart
     global workEnd
@@ -71,16 +73,20 @@ def main():
             return form()
     return render_template('base.html')
 
+
 @app.route('/start')
 def start():
+    """Display the initial page asking the user if they want to start by adding an assignment."""
+
     x = loginCheck()
     if x == 1:
         return redirect('/')
     return render_template('start.html')
+
+
 @app.route('/form', methods=['GET', 'POST']) #allow both GET and POST requests
 def form():
-    # try:
-    #     print (service)
+
     x = loginCheck()
     if x == 1:
         return redirect('/')
@@ -104,8 +110,7 @@ def form():
             print ("else case")
 
     return render_template('index.html')
-    # except:
-    #     return redirect('/')
+
 
 
 @app.route('/preferencesForm', methods=['GET', 'POST'])
@@ -142,9 +147,6 @@ def checkPreferencesForm():
 @app.route('/popup', methods=['GET', 'POST'])
 def popup():
     print("in popup")
-
-    # global formattedChosenOnes
-
     x = loginCheck()
     if x == 1:
         return redirect('/')
@@ -187,7 +189,6 @@ def getCalendarEvents(min, max):
     '''Returns a list with every event on the user's primary Google Calendar
     from now unti the due date in cronological order. Each event is a dictionary.'''
 
-    #this could be an issue since [min] is formatted and [max] is not
     dueDateFormatted = str(max) + 'T00:00:00-06:00'
     events_result = service.events().list(calendarId='primary', timeMin=min,
                                     timeMax = dueDateFormatted, singleEvents=True,
@@ -215,14 +216,10 @@ def getEventTime(availableTimes):
         return redirect('/error')
 
 
-def reassignSlot(start, end):
-    global eventSlot
-    eventSlot = [start,end]
-    return eventSlot
-
-
 @app.route('/reschedule', methods=['GET', 'POST'])
 def rescheduleEvent():
+    '''Reschedules the event time by removing the previously chosen time slot from
+    the list of all of them and randomly chooses a new one.'''
 
     x = loginCheck()
     if x == 1:
@@ -247,7 +244,7 @@ def rescheduleEvent():
     for i in range(len(rescheduleVal)):
         rescheduleNum = rescheduleVal[i]
         timeSlots = dividedTimeSlots[rescheduleNum]
-        e = getEventToReschedule(rescheduleNum)
+        e = chosenTimeSlots[rescheduleNum]
         timeSlots.remove(e)
 
         length = len(timeSlots)
@@ -264,17 +261,10 @@ def rescheduleEvent():
 
     if rep == 1:
         return redirect('/popup')
-    # elif rep > 1:
-    #     return redirect('/multi_add')
     else:
         msg = "No available times"
         print("No available times")
         return redirect('/multi')
-
-
-def getEventToReschedule(num):
-    e = chosenTimeSlots[num]
-    return e
 
 
 def createEvent():
@@ -315,6 +305,10 @@ def createEvent():
 
 
 def setUpWorkStartEnd(nowYear, nowMonth, nowDay):
+    '''Initializes the workStart and workEnd times, whether the user has set them or
+    they are at the default hours of 8am and 11pm. Also standardizes them for daylight
+    savings time.'''
+
     if checkPreferencesForm.has_been_called:
         workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
         workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
@@ -331,6 +325,8 @@ def setUpWorkStartEnd(nowYear, nowMonth, nowDay):
 
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
+    ''''''
+
     x = loginCheck()
     if x == 1:
         return redirect('/')
@@ -367,6 +363,9 @@ def multiRes():
 
 
 def divisionOfTimeSlots(availableTimes):
+    '''Equally split all of the available times slots into rep number of lists and
+    add them to dividedTimeSlots.'''
+
     global dividedTimeSlots
     dividedTimeSlots = []
 
@@ -384,6 +383,8 @@ def divisionOfTimeSlots(availableTimes):
 
 
 def selectionOfTimeSlots(availableTimes):
+    '''Randomly '''
+
     global chosenTimeSlots
     chosenTimeSlots = []
     dividedTimeSlots = divisionOfTimeSlots(availableTimes)

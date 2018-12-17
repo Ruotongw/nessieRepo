@@ -74,40 +74,7 @@ class Format:
         dt = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
         fmt = '%Y-%m-%dT%H:%M:%S'
         dtFmt = dt.strftime(fmt)
-
-        
         dtFmt += '-05:00'
-
-        # year = str(year)
-        #
-        # month = int(month)
-        # month = str(month)
-        # if int(month) < 10:
-        #     month = '0' + month
-        #
-        # day = int(day)
-        # day = str(day)
-        # if int(day) < 10:
-        #     day = '0' + day
-        #
-        # hour = int(hour)
-        # hour = str(hour)
-        # if int(hour) < 10:
-        #     hour = '0' + hour
-        #
-        # minute = int(minute)
-        # minute = str(minute)
-        # if int(minute) < 10:
-        #     minute = '0' + minute
-        #
-        # second = int(second)
-        # second = str(second)
-        # if int(second) < 10:
-        #     second = '0' + second
-        #
-        # dt = (year + '-' + month + '-' + day +
-        #                 'T' + hour + ':' + minute + ':' +
-        #                 second + '-05:00')
 
         return dtFmt
 
@@ -115,7 +82,6 @@ class Format:
         '''Checks whether event1 and e2 are in daylight savings time and adds an
         hour accordingly.'''
 
-        global current
         current = Time()
         if not current.isDST(e1):
             e1 = e1 + datetime.timedelta(hours = 1)

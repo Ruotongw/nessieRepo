@@ -91,7 +91,7 @@
 							      <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="col-sm-4 col-form-label">
 							       <input type="checkbox" id="rep-checkbox" onclick="repChecked()" />
 							      </label>
-							       <div class="col-sm-8 text-left">I want to work on it for multiple times.</div>
+							       <div class="col-sm-8 text-left">I want to work multiple times.</div>
 							</div>
 							<div id="collapseOne" aria-expanded="false" class="collapse form-group row">
 							    <label for="eventRepetition" class="col-sm-4 col-form-label">Number of Times:&nbsp;
@@ -196,10 +196,10 @@
 							<form class="bg-light text-dark modal-body" id="addpreferencesForm" action="/preferencesForm" method="POST">
 						<div class="formContent container">
 							<span class="Preferences"></span>
-							<h3>Change the fields below to <br> share when you want to work:</h3><br>
-								<label for="earliestWorkTime">Earliest time to start work:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+							<h3>When can I schedule time for you to work?</h3><br>
+								<label for="earliestWorkTime">Earliest time you would like to work:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 								<input type="time" value="08:00" name="earliest"><br>
-								<label for="latestWorkTime">Latest time you'd like to work:&nbsp;</label>
+								<label for="latestWorkTime">Latest time you would like to work:&nbsp;</label>
 								<input type="time" value="23:00" name="latest"/><br><br>
 								<button type="submit" style= "background-color:#2064b6" class="btn btn-primary add-event">Update</button>
 								<button type="cancel" style= "background-color:#2064b6" class="btn btn-primary cancel-event" data-dismiss="modal" >Cancel </button>

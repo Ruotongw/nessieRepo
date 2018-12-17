@@ -56,39 +56,40 @@
 					<div class="formContent container">
 						<span class="New Event"></span>
 						<div class="form-group row">
-						   <label for="eventName" class="col-sm-2 col-form-label">Event Title</label>
+							 <a href="#" data-toggle="tooltip" title="What do you want to name the event?">Event Title</a>
 						   <div class="col-sm-10">
 						    <input type="text" class="form-control" id="eventName" name="Title" value="" required>
 						   </div>
 						</div>
 						<div class="form-group row">
-						   <label for="eventDuration" class="col-sm-2 col-form-label">Estimated Time (h)</label>
+							 <a href="#" data-toggle="tooltip" title="How many hours do you think this will take?">Estimated Time (h)</a>
 						   <div class="col-sm-10">
 						    <input class="form-control" id="eventDuration" type="number" step="any" min="0" max="10" name="est" required>
 						   </div>
 						</div>
 						<div class="form-group row">
-						   <label for="eventRepetition" class="col-sm-2 col-form-label">Number of Times</label>
+							 <a href="#" data-toggle="tooltip" title="Do you want to schedule this multiple times?">Number of Times</a>
 						   <div class="col-sm-10">
 						    <input class="form-control" id="eventRepetition" type="number" min="0" max="5" name="rep" required>
 						   </div>
 						</div>
 						<div class="form-group row">
-						   <label for="dueDate" class="col-sm-2 col-form-label">Complete Before</label>
+							 <a href="#" data-toggle="tooltip" title="This is when you need to have the assignment turned in by. Not the last day to work.">Complete Before</a>
 						   <div class="col-sm-10">
 						    <input type="date" class="form-control" id="dueDate" name="dead" value="" required>
 						   </div>
 						</div>
-						  <div class="form-group row">
-						    <div class="col-sm-10">
-						      <button type="submit" id="yesForm" style= "background-color:#2064b6" class="btn btn-primary add-event">Add</button>
-									<button type="button" id="noForm" idstyle= "background-color:#2064b6" class="btn btn-primary cancel-event" onclick="cancel_event()">Cancel</button>
-						    </div>
-						  </div>
-					</div>
+						<div class="form-group row">
+							<div class="col-sm-10">
+								<button type="submit" id="yesForm" style= "background-color:#2064b6" class="btn btn-primary add-event">Add</button>
+								<button type="button" id="noForm" idstyle= "background-color:#2064b6" class="btn btn-primary cancel-event" onclick="cancel_event()">Cancel</button>
+							</div>
+						</div>
 
-				</form>
-			</div>
+				</div>
+
+			</form>
+		</div>
 
 			<!-- Feedback popoup -->
 			{% block title %}{% endblock %}

@@ -278,39 +278,27 @@ def getEventToReschedule(num):
 
 
 def createEvent():
-    global rep
     '''Creates a Google Calendar event based on the randomly chosen time slot
     and prepares it to be added to the user's calendar.'''
-    print('in create event')
+
+    global rep
+    global workStart
+    global workEnd
+    global findTime
+    global chosenTimeSlots
+    global formattedChosenOnes
+    formattedChosenOnes = []
 
     now = current.currentTime()
     nowDay, nowHour, nowMinute = current.getNowDHM(now)
     nowYear, nowMonth = current.getNowYM(now)
 
-    global workStart
-    global workEnd
-    global findTime
     findTime = FindTime(service, deadline, now)
 
-    if checkPreferencesForm.has_been_called:
-        workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
-        workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
-
-    else:
-        workStart = 480
-        workEnd = 1380
-
-    if not current.isDST(datetime.datetime(nowYear, nowMonth, nowDay)):
-        workStart += 60
-        workEnd += 60
-
+    workStart, workEnd = setUpWorkStartEnd(nowYear, nowMonth, nowDay)
     events = getCalendarEvents(now, deadline)
-
     availableTimes = findTime.findAvailableTimes(nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst)
 
-    global chosenTimeSlots
-    global formattedChosenOnes
-    formattedChosenOnes = []
     try:
         selectionOfTimeSlots(availableTimes)
         for i in range(len(chosenTimeSlots)):
@@ -326,19 +314,30 @@ def createEvent():
         return redirect('/multi')
 
 
+def setUpWorkStartEnd(nowYear, nowMonth, nowDay):
+    if checkPreferencesForm.has_been_called:
+        workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
+        workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
+    else:
+        workStart = 480
+        workEnd = 1380
+
+    if not current.isDST(datetime.datetime(nowYear, nowMonth, nowDay)):
+        workStart += 60
+        workEnd += 60
+
+    return workStart, workEnd
+
+
 @app.route('/multi', methods=['GET', 'POST'])
 def multiPopup():
-
     x = loginCheck()
     if x == 1:
         return redirect('/')
+
     warning = []
     displayFormat()
-    # localChosenTimes = ""
-    # for i in range(len(displayList)):
-    #     localChosenTimes = localChosenTimes + " AND " + displayList[i]
-    #     print (localChosenTimes)
-    # warning = []
+
     for i in range(rep):
         if len(dividedTimeSlots[i]) == 1:
             print (len(dividedTimeSlots[i]))
@@ -348,7 +347,6 @@ def multiPopup():
 
 @app.route('/multi_add', methods=['GET', 'POST'])
 def multiAdd():
-
     x = loginCheck()
     if x == 1:
         return redirect('/')
@@ -361,7 +359,6 @@ def multiAdd():
 
 @app.route('/multi_res', methods=['GET', 'POST'])
 def multiRes():
-
     x = loginCheck()
     if x == 1:
         return redirect('/')

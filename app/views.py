@@ -53,6 +53,9 @@ def main():
     if request.method == "POST":
         if request.headers.get('X-Requested-With'):
 
+            #Source for the authentication code
+            #https://developers.google.com/identity/sign-in/web/server-side-flow
+
             auth_code = request.data
             # Set path to the Web application client_secret_*.json file you downloaded from the
             # Google API Console: https://console.developers.google.com/apis/credentials
@@ -439,11 +442,6 @@ def displayFormat():
 def getScheduledEvent():
     return event
 
-
-# we need to account for:
-# no time slots
-# ran out of time slots
-# others
 @app.route('/error', methods=['GET', 'POST'])
 def errorManager():
     x = loginCheck()

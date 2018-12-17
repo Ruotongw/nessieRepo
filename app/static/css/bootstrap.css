@@ -46,7 +46,11 @@ body {
 }
 
 #preferences{
-  display: none;
+  text-align: center;
+}
+
+#aboutPage{
+  text-align: center;
 }
 
 
@@ -142,9 +146,9 @@ body {
 }
 
 .aboutPage{
-  display: none;
+  /* display: none;
   border-color: #2064b6 !important;
-  border: solid;
+  border: solid; */
 }
 
 /* .aboutPopup-overlay{
@@ -172,8 +176,8 @@ body {
 
 .aboutPopup-content {
   /*Hides pop-up content when there is no "active" class */
- visibility:active;
- font-size: 14px;
+ /* visibility:active;
+ font-size: 14px; */
 }
 
 /* .aboutPopup-content.active {
@@ -382,6 +386,10 @@ h4{
 
 #modal-dialog {
   overflow: visible;
+}
+
+#modal-header{
+  text-align: center;
 }
 
 /*.checkbox { margin: 0; }*/

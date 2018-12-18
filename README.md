@@ -7,7 +7,16 @@ Then navigate to the project folder and-
   Setup Venv:   http://flask.pocoo.org/docs/1.0/installation/#virtual-environments
   Activate Venv:
     Windows:    . venv/bin/activate
-    Unix/Mac:   export FLASK_APP=run.py
+    Unix/Mac:   . venv/bin/activate
+
+  Install Pytz (only need to do this once):
+    Windows:    python setup.py install
+    Unix/Mac:   python setup.py install
+    If this doesn't work, try the other options at: https://pypi.org/project/pytz/
+
+  Install Pandas (only need to do this once):
+    Windows:    pip install pandas
+    Unix/Mac:   pip install pandas
 
   set the flask app:
     Windows:    set FLASK_APP=run.py

@@ -16,9 +16,15 @@ from .format import *
 from .timeSlot import *
 from .time import *
 
-# Finds open time slots for events.
+# Find open time slots for events.
 class FindTime:
     def __init__(self, service, dueDate, current):
+        """
+        Keyword arguments:
+        service -- string representing the service code for the logged in user
+        dueDate -- string representing the user's inputted assignment dueDate
+        current -- string representing the current date and time
+        """
         self.service = service
         self.dueDate = dueDate
         self.current = current
@@ -26,10 +32,18 @@ class FindTime:
 
 
     def findAvailableTimes(self, nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst):
-        """Calculates every available time slot in relation to the events on the user's
-        calender from now until the assignment due date. Returns a list of these time slots.
-        """
+        """Calculate every available time slot in relation to the events on the user's
+        calender from now until the assignment due date. Return a list of these time slots.
 
+        Keyword arguments:
+        nowDay -- int of the current day
+        nowHour -- int of the current hour
+        nowMinute -- int of the current minute
+        workStart -- int representing the time when the program starts scheduling events
+        workEnd -- int representing the time when the program stops scheduling events
+        events -- list of Google Calendar events in dictionary form
+        timeEst -- int representing user's inputted event length value
+        """
         global format
         format = Format()
         global timeSlot
@@ -66,48 +80,34 @@ class FindTime:
             return redirect('/error')
 
 
-    def compareLastEvent(self, lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
-        """Accounts for finding the time slots around the the last event before the
-        deadline. Also accounts for if there is only one event before the deadline.
+    def openTimeWindow(self, workStart, workEnd):
+        """Return the time during the day when the user can work on assignments
+        in terms of hours and in terms of the minutes out of the entire minutes
+        in a day.
+
+        Keyword arguments:
+        workStart -- int representing the time when the program starts scheduling events
+        workEnd -- int representing the time when the program stops scheduling events
         """
-
-        estTimeMin = timeEst * 60
-        estMins = estTimeMin % 60
-        estHours = (estTimeMin - estMins) / 60
-        openTime = self.openTimeWindow(workStart, workEnd)
-
-        lastEnd, lastStart = format.formatEvent(lastEvent, lastEvent)
-        secondEnd, secondStart = format.formatEvent(secondToLast, secondToLast)
-
-        timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
-
-        beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart)
-        enoughBeforeTime = (beforeTime >= estTimeMin + 30)
-
-        timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
-        enoughTime = (timeDiff >= (estTimeMin + 30))
-
-        timeDiffEvent = (lastStart.hour * 60 + lastStart.minute) - (secondEnd.hour * 60 + secondEnd.minute)
-        enoughTimeEvent = (timeDiffEvent >= (estTimeMin + 30))
-
-        diffDays = lastStart.day != nowDay
-        diffEventDays = lastStart.day != secondEnd.day
-
-        if(enoughBeforeTime and (enoughTime or diffDays) and (diffEventDays or enoughTimeEvent)):
-            time = timeSlot.beforeTimeSlot(lastStart)
-            availableTimes.append(time)
-
-        if(((lastEnd.hour*60) in openTime) and (timeWindow in openTime)):
-            time = timeSlot.afterTimeSlot(lastEnd)
-            availableTimes.append(time)
+        openTime = range(workStart, workEnd)
+        return openTime
 
 
     def compareEvents(self, e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
-        """Compares each pair of events on the user's calendar from now until the
-        entered deadline. If there is enough time between the events, the time slot
-        between them is added to the list of available times.
-        """
+        """Compare each pair of events on the user's calendar from now until the
+        entered deadline. If there is enough time between the events, add the time slot
+        between them to the list of available times.
 
+        Keyword arguments:
+        e1 -- the first event in the pair being compared
+        e2 -- the second event in the part being compared
+        workStart -- int representing the time when the program starts scheduling events
+        workEnd -- int representing the time when the program stops scheduling events
+        nowDay -- int of the current day
+        nowHour -- int of the current hour
+        nowMinute -- int of the current minute
+        timeEst -- int representing user's inputted event length value
+        """
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60
         estHours = (estTimeMin - estMins) / 60
@@ -146,55 +146,60 @@ class FindTime:
             availableTimes.append(time)
 
 
+    def compareLastEvent(self, lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
+        """Account for finding the time slots around the the last event before the
+        deadline. Also account for if there is only one event before the deadline.
 
-    def getAllDays(self):
-        """Return a list of all the days between now and the user's deadline."""
-
-        start = str(self.current[0:10])
-        end = str(self.dueDate[0:10])
-        daysRange = pd.date_range(start = start, end = end).tolist()
-        daysRange = daysRange[1:len(daysRange)-1]
-        days = []
-        for i in daysRange:
-            day = str(i)
-            day = day[:10] + 'T' + day[11:] + '-05:00'
-            days.append(day)
-        return days
-
-
-    def getComparableDateValues(self, days):
-        """Return a list of days in the required format for comparison."""
-
-        dates = []
-        for i in days:
-            date = i[:10]
-            dates.append(date)
-        return dates
-
-
-    def getEmptyDays(self, events):
-        """CODE ATTRIBUTION: https://stackoverflow.com/questions/18194968/python-remove-duplicates-from-2-lists
-
-        Return the list of all days without Google Calendar events from now until the deadline.
+        Keyword arguments:
+        lastEvent -- final event before the due date in dictionary form
+        secondToLast -- second to last event before the due date in dictionary form
+        workStart -- int representing the time when the program starts scheduling events
+        workEnd -- int representing the time when the program stops scheduling events
+        nowDay -- int of the current day
+        nowHour -- int of the current hour
+        nowMinute -- int of the current minute
+        timeEst -- int representing user's inputted event length value
         """
+        estTimeMin = timeEst * 60
+        estMins = estTimeMin % 60
+        estHours = (estTimeMin - estMins) / 60
+        openTime = self.openTimeWindow(workStart, workEnd)
 
-        days1 = self.getAllDays()
-        cleanedEvents = []
+        lastEnd, lastStart = format.formatEvent(lastEvent, lastEvent)
+        secondEnd, secondStart = format.formatEvent(secondToLast, secondToLast)
 
-        for event in events:
-            dt = event['start'].get('dateTime')
-            cleanedEvents.append(dt)
+        timeWindow = (lastEnd.hour * 60) + lastEnd.minute + (estTimeMin + 30)
 
-        days = self.getComparableDateValues(days1)
-        events = self.getComparableDateValues(cleanedEvents)
+        beforeTime = (lastStart.hour * 60 + lastStart.minute) - (workStart)
+        enoughBeforeTime = (beforeTime >= estTimeMin + 30)
 
-        days = [time for time in days if not time in events]
-        return days
+        timeDiff = (lastStart.hour * 60 + lastStart.minute) - (nowHour * 60 + nowMinute)
+        enoughTime = (timeDiff >= (estTimeMin + 30))
+
+        timeDiffEvent = (lastStart.hour * 60 + lastStart.minute) - (secondEnd.hour * 60 + secondEnd.minute)
+        enoughTimeEvent = (timeDiffEvent >= (estTimeMin + 30))
+
+        diffDays = lastStart.day != nowDay
+        diffEventDays = lastStart.day != secondEnd.day
+
+        if(enoughBeforeTime and (enoughTime or diffDays) and (diffEventDays or enoughTimeEvent)):
+            time = timeSlot.beforeTimeSlot(lastStart)
+            availableTimes.append(time)
+
+        if(((lastEnd.hour*60) in openTime) and (timeWindow in openTime)):
+            time = timeSlot.afterTimeSlot(lastEnd)
+            availableTimes.append(time)
 
 
     def addEmptyDays(self, events, workStart, workEnd, timeEst):
-        """Add morning time slots to availableTimes for each day without events."""
+        """Add morning time slots to availableTimes for each day without events.
 
+        Keyword arguments:
+        events -- a list of all events on the user's calendar from now until the due date in dictionary form
+        workStart -- int representing the time when the program starts scheduling events
+        workEnd -- int representing the time when the program stops scheduling events
+        timeEst -- int representing user's inputted event length value
+        """
         startMinutes = workStart % 60
         startHours = (workStart - startMinutes) / 60
         endMinutes = workEnd % 60
@@ -211,10 +216,49 @@ class FindTime:
                 availableTimes.append(time)
 
 
-    def openTimeWindow(self, openStartTime, openEndTime):
-        """Return the time during the day when the user can work on assignments
-        in terms of hours and in terms of the minutes out of the entire minutes
-        in a day."""
+    def getEmptyDays(self, events):
+        """Return the list of all days without Google Calendar events from now until the deadline.
+        CODE ATTRIBUTION: https://stackoverflow.com/questions/18194968/python-remove-duplicates-from-2-lists
 
-        openTime = range(openStartTime, openEndTime)
-        return openTime
+        Keyword arguments:
+        events -- a list of all events on the user's calendar from now until the due date in dictionary form
+        """
+        days1 = self.getAllDays()
+        cleanedEvents = []
+
+        for event in events:
+            dt = event['start'].get('dateTime')
+            cleanedEvents.append(dt)
+
+        days = self.getComparableDateValues(days1)
+        events = self.getComparableDateValues(cleanedEvents)
+
+        days = [time for time in days if not time in events]
+        return days
+
+
+    def getAllDays(self):
+        """Return a list of all the days between now and the user's deadline."""
+        start = str(self.current[0:10])
+        end = str(self.dueDate[0:10])
+        daysRange = pd.date_range(start = start, end = end).tolist()
+        daysRange = daysRange[1:len(daysRange)-1]
+        days = []
+        for i in daysRange:
+            day = str(i)
+            day = day[:10] + 'T' + day[11:] + '-05:00'
+            days.append(day)
+        return days
+
+
+    def getComparableDateValues(self, days):
+        """Return a list of days in the required format for comparison.
+
+        Keyword arguments:
+        days -- a list of strings representing days
+        """
+        dates = []
+        for i in days:
+            date = i[:10]
+            dates.append(date)
+        return dates

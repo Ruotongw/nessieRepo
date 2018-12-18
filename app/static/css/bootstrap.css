@@ -226,8 +226,14 @@ h6{
   color: white;
 }
 
+.modal-body{
+  background-color: #f8f9fa!important;
+}
+
+.modal-footer{
+  background-color: #f8f9fa!important;
+}
 .fa-question-circle{
   color: #2064b6;
-}
 
 /*.checkbox { margin: 0; }*/

@@ -38,31 +38,21 @@ function add_event() {
 	$("#addEvent").modal('show');
 }
 
-// function repChecked(){
-// 	if($("#rep-checkbox").is(':checked')){
-// 		console.log("checked");
-// 	    $("#addEvent").css({
-// 	    'height': '65%'
-// 		});
-// 	}  // checked
-// 	else {
-// 		console.log("setting value")
-// 	    $("#addEvent").css({
-// 	    'height': '55%'
-// 		});  // unchecked
-// 	    $("#eventRepetition").val("1");}
-// }
-
-
-//
-// Close new event box and edit event box and remove color from selected event
-//
-function closeEveBox(e) {
-	e.preventDefault();
-
-	$(".event-rectangles").removeClass("event-rectangle-select");
-	$("#addEvent").hide();
+function repChecked(){
+	if($("#rep-checkbox").is(':checked')){
+		console.log("checked");
+	}  // checked
+	else {
+		console.log("setting value")
+	    // unchecked
+	    $("#eventRepetition").val("1");}
 }
+
+function close_event(){
+	console.log("close")
+	$('#addEventForm')[0].reset();
+}
+
 //
 // Get events from the server and add each event to the calendar
 //

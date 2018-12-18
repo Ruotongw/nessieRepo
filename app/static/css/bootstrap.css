@@ -149,6 +149,7 @@ button:not(.navbar-toggler){
   text-align: center;
   margin-top: 22px;
   font-size: 14px;
+  left: 34%;
 }
 
 #addMulti{
@@ -159,6 +160,7 @@ button:not(.navbar-toggler){
   text-align: center;
   margin-top: 22px;
   font-size: 14px;
+  left: 65%;
 }
 
 #cancelMulti{
@@ -169,6 +171,7 @@ button:not(.navbar-toggler){
   text-align: center;
   margin-top: 22px;
   font-size: 14px;
+  left:5%;
 }
 #add{
   display:inline-block;
@@ -187,7 +190,7 @@ button:not(.navbar-toggler){
 
 #add-event{
   text-align: center;
-  width: 140px;
+  width: 150px;
   /* vertical-align:middle !important;
   justify-content: center !important;
   display: flex; */
@@ -231,6 +234,7 @@ h5{
   height: 40px;
   padding: 5px;
   font-size: 14px;
+  left: 34%;
 }
 
 #addPopup{
@@ -239,6 +243,7 @@ h5{
   height: 40px;
   padding: 5px;
   font-size: 14px;
+  left: 65%;
 }
 
 #noPopup{
@@ -255,36 +260,7 @@ h5{
   height: 40px;
   padding: 5px;
   font-size: 14px;
-}
-
-.multi-add {
-  padding-top: 10px;
-  position: absolute;
-  display: inline-block;
-  width: 140px;
-  height: 60px;
-  left: 65%;
-  font-size: 14px;
-}
-
-.multi-cancel {
-  padding-top: 10px;
-  position: absolute;
-  display: inline-block;
-  width: 140px;
-  height: 60px;
   left:5%;
-  font-size: 14px;
-}
-
-.center {
-  padding-top: 10px;
-  position: absolute;
-  display: inline-block;
-  font-size: 14px;
-  /* width: 250px;
-  height: 60px; */
-  left: 34%;
 }
 
 #modal-dialog {

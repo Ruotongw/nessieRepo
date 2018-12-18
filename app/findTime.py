@@ -24,9 +24,11 @@ class FindTime:
         self.current = current
         pass
 
+
     def findAvailableTimes(self, nowDay, nowHour, nowMinute, workStart, workEnd, events, timeEst):
-        '''Calculates every available time slot in relation to the events on the user's
-        calender from now until the assignment due date. Returns a list of these time slots.'''
+        """Calculates every available time slot in relation to the events on the user's
+        calender from now until the assignment due date. Returns a list of these time slots.
+        """
 
         global format
         format = Format()
@@ -34,7 +36,7 @@ class FindTime:
         timeSlot = TimeSlot(timeEst)
         global availableTimes
         availableTimes = []
-
+        print(self.current)
         try:
             if len(events) > 1:
                 for i in range(len(events) - 1):
@@ -49,7 +51,11 @@ class FindTime:
                 self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
             elif len(events) == 1:
-                self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
+                lastEvent = events[0]
+                nowTime = [self.current[:11] + str(int(self.current[11:13]) - 1) + self.current[13:], self.current]
+                nowTime = format.eventFormatDictionary(nowTime, 'now')
+
+                self.compareLastEvent(lastEvent, nowTime, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
             self.addEmptyDays(events, workStart, workEnd, timeEst)
             availableTimes.sort()
@@ -61,8 +67,9 @@ class FindTime:
 
 
     def compareLastEvent(self, lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
-        '''Accounts for finding the time slots around the the last event before the
-        deadline. Also accounts for if there is only one event before the deadline.'''
+        """Accounts for finding the time slots around the the last event before the
+        deadline. Also accounts for if there is only one event before the deadline.
+        """
 
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60
@@ -96,9 +103,10 @@ class FindTime:
 
 
     def compareEvents(self, e1, e2, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst):
-        '''Compares each pair of events on the user's calendar from now until the
+        """Compares each pair of events on the user's calendar from now until the
         entered deadline. If there is enough time between the events, the time slot
-        between them is added to the list of available times.'''
+        between them is added to the list of available times.
+        """
 
         estTimeMin = timeEst * 60
         estMins = estTimeMin % 60
@@ -140,6 +148,8 @@ class FindTime:
 
 
     def getAllDays(self):
+        """Return a list of all the days between now and the user's deadline."""
+
         start = str(self.current[0:10])
         end = str(self.dueDate[0:10])
         daysRange = pd.date_range(start = start, end = end).tolist()
@@ -153,6 +163,8 @@ class FindTime:
 
 
     def getComparableDateValues(self, days):
+        """Return a list of days in the required format for comparison."""
+
         dates = []
         for i in days:
             date = i[:10]
@@ -161,7 +173,10 @@ class FindTime:
 
 
     def getEmptyDays(self, events):
-        """CODE ATTRIBUTION: https://stackoverflow.com/questions/18194968/python-remove-duplicates-from-2-lists"""
+        """CODE ATTRIBUTION: https://stackoverflow.com/questions/18194968/python-remove-duplicates-from-2-lists
+
+        Return the list of all days without Google Calendar events from now until the deadline.
+        """
 
         days1 = self.getAllDays()
         cleanedEvents = []
@@ -178,6 +193,8 @@ class FindTime:
 
 
     def addEmptyDays(self, events, workStart, workEnd, timeEst):
+        """Add morning time slots to availableTimes for each day without events."""
+
         startMinutes = workStart % 60
         startHours = (workStart - startMinutes) / 60
         endMinutes = workEnd % 60
@@ -195,9 +212,9 @@ class FindTime:
 
 
     def openTimeWindow(self, openStartTime, openEndTime):
-        '''Returns the time during the day when the user can work on assignments
+        """Return the time during the day when the user can work on assignments
         in terms of hours and in terms of the minutes out of the entire minutes
-        in a day.'''
+        in a day."""
 
         openTime = range(openStartTime, openEndTime)
         return openTime

@@ -317,7 +317,7 @@ def multiPopup():
 
     for i in range(rep):
         if len(dividedTimeSlots[i]) == 1:
-            warning.insert(i, "(There are no further times available)")
+            warning.insert(i, "(This is your last option)")
     return render_template('multi.html', displayList=displayList, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
 
 

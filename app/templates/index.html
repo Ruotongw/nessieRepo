@@ -36,7 +36,7 @@
 				    </ul>
 				    <ul class="navbar-nav list-inline my-2 my-sm-0">
 				      <li class="nav-item">
-				      	<a class="nav-link" href="#"> <button id="add-event" class="btn btn-info" type="button" data-toggle="modal" data-target="#addEvent">Add Event</button></a>
+				      	<a class="nav-link" href="#"> <button id="add-event" class="btn btn-info" type="button" data-toggle="modal" data-target="#addEvent">Add Assignment</button></a>
 				      	<!-- onclick="add_event() -->
 				      </li>
 				      <li class="nav-item">
@@ -58,7 +58,7 @@
 
 			      <!-- Modal Header -->
 			      <div class="modal-header modal-header-centered">
-			        <h5 class="modal-title text-center">Add an event</h5>
+			        <h5 class="modal-title text-center">Add an Assignment</h5>
 
 			      </div>
 
@@ -68,15 +68,15 @@
 							<!-- popup-overlay -->
 							<span class="New Event"></span>
 							<div class="form-group row">
-							   <label for="eventName" class="col-sm-4 col-form-label">Event Title:&nbsp;
-									 <a href="#" data-toggle="tooltip" title="What do you want to name the event?"></label>
+							   <label for="eventName" class="col-sm-4 col-form-label">Assignment Title:&nbsp;
+									 <a href="#" data-toggle="tooltip" title="What is the name of the assignment?"></label>
 							   <div class="col-sm-8">
 							    <input type="text" class="form-control" id="eventName" name="Title" value="" required>
 							   </div>
 							</div>
 							<div class="form-group row">
 							   <label for="eventDuration" class="col-sm-4 col-form-label">Estimated Time (h):&nbsp;
-									 <a href="#" data-toggle="tooltip" title="How long will the sessions take?">
+									 <a href="#" data-toggle="tooltip" title="How many hours at a time do you want to work on this?">
 										 <span class="fas fa-question-circle"></span>
 									 </a>
 								 </label>
@@ -87,7 +87,7 @@
 							<div class="form-group row">
 							      <label class="col-sm-8 col-form-label">
 							      	Repeat Multiple Times:&nbsp;
-							      	<a href="#" data-toggle="tooltip" title="Do you want to work on this event for multiple time?&nbsp;">
+							      	<a href="#" data-toggle="tooltip" title="Do you want to work on this assignment multiple time?&nbsp;">
  										 <span class="fas fa-question-circle"></span>
 									 </a>
 							       	<input data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" type="checkbox" id="rep-checkbox" />
@@ -95,7 +95,7 @@
 							</div>
 							<div id="collapseOne" aria-expanded="false" class="collapse form-group row">
 							    <label for="eventRepetition" class="col-sm-4 col-form-label">Number of Times:&nbsp;
- 									 <a href="#" data-toggle="tooltip" title="How many times do you want this to take place?">
+ 									 <a href="#" data-toggle="tooltip" title="How many times do you want me to schedule work time for this assignment?">
  										 <span class="fas fa-question-circle"></span>
 									 </a>
  									</label>
@@ -105,7 +105,7 @@
 							</div>
 							<div class="form-group row">
 							   <label for="dueDate" class="col-sm-4 col-form-label">Complete Before:&nbsp;
-									 <a href="#" data-toggle="tooltip" title="When does the assignment have to be finished before?">
+									 <a href="#" data-toggle="tooltip" title="When does the assignment have to be finished by?">
 										 <span class="fas fa-question-circle"></span>
 									 </a>
 								 </label>
@@ -171,11 +171,14 @@
 
 						<!-- Modal body -->
 						<div class="bg-light text-dark modal-body">
-						 <p><b>Nessie is your calendar helper!</b><br> There's no need to find free time in your
-							schedule anymore because we'll find it for you! All you have to do is click "Add Event" and input the assignment's title,
-						 length,<br>frequency, and the deadline.When you choose to add an event, we'll provide you with a time that perfectly fits your Google Calendar schedule. <br>
-							 Be sure to update your preferences so we will only schedule assignments when you want to work.
-						</br><b> Enjoy!</b></p>
+						 <p style="line-height:1.7"><b>I'm Nessie, your personal calendar assistant!</b><br><br>
+							Don't worry about finding time to do your schoolwork <br> anymore because I can take care of that for you. <br>
+						 	All you have to do is click "Add Assignment" and enter your assignment's title,
+			      	length, frequency, and the deadline.<br><br> When you add an assignment or project, I'll <br> provide you with a time that
+							perfectly fits with your <br> Google Calendar schedule for you to work on it. <br>
+							I'll also make sure you have at least a 15 minute buffer before and after your work time, in case you have a busy schedule. <br><br>
+			        Be sure to update your preferences so I
+							only schedule time when you actually want to work.</p>
 							<button type="cancel" class="btn btn-primary close-event" data-dismiss="modal">Close</button>
 					 </div>
 					</div>

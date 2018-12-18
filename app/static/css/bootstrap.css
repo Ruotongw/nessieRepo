@@ -187,9 +187,10 @@ button:not(.navbar-toggler){
 
 #add-event{
   text-align: center;
-  vertical-align:middle !important;
+  width: 140px;
+  /* vertical-align:middle !important;
   justify-content: center !important;
-  display: flex;
+  display: flex; */
 }
 
 #cancel-event{
@@ -292,7 +293,7 @@ h5{
 
 .modal-header{
   background-color: #d7c394 !important;
-  fon
+  text-align: center;
 }
 
 

@@ -12,16 +12,16 @@ var month = parseInt($(".month").attr('id'));
 //The below method restricts users from entering an assignment due in the past.
 //This function is by Wajid khan from https://stackoverflow.com/questions/43274559/how-do-i-restrict-past-dates-in-html5-input-type-date
 Date.prototype.toDateInputValue = (function() {
-    var now = new Date();
+  var local = new Date(this);
+  local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+  local.setDate(local.getDate()+1)
+  console.log(local.getDate())
+  return local.toJSON().slice(0,10);
+});
 
-    var day = ("0" + now.getDate()).slice(-2);
-    var month = ("0" + (now.getMonth() + 1)).slice(-2);
-
-    var today = now.getFullYear() + "-" + (month) + "-" + (day);
-
-    $('#dueDate').val(today);
-    $('#dueDate').attr('min', today); });
-
+$(document).ready(function(){
+  $("#dueDate").attr("min", new Date().toDateInputValue());
+});
 
 function add_event() {
 	// Initializing new event box's input field as blank

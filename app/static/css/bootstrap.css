@@ -92,8 +92,8 @@ body {
 	/*color: #2064b6 !important;*/
 	height: 50px;
 	text-align: right;
-  background-color:#FC9E02;
-  border-color:#FC9E02;
+  background-color:#FC9E02 !important;; 
+  border-color:#FC9E02 !important;;
 }
 
 #arrowRight{

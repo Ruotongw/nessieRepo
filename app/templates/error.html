@@ -1,10 +1,11 @@
 {% extends "index.html" %}
 {% block title %}
 
-			<!--Creates the popup body-->
+			
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 			<script src="{{ url_for('static', filename='./js/error.js') }}"></script>
-
+			
+			<!--Creates the popup body-->
 			<div id="errorPop" class="modal fade" role="dialog">
 			  <div class="modal-dialog modal-dialog-centered" role="document">
 			    <div class="modal-content">
@@ -14,26 +15,10 @@
 			      <div class="modal-body">
 							<p><span id="eventName-popup">{{ msg }}</span></p>
 						<!--popup's close button-->
-
 						 	<a href="/form"><button class="btn btn-primary" data-dismiss="modal">Sorry</button></a>
 			      </div>
 			    </div>
 			  </div>
 			</div>
-
-			<!-- <div class="popup-overlay">
-			  <!--Creates the popup content-->
-			   <!-- <div class="popup-content">
-			      <h2>Attention!</h2>
-			      <p><span id="eventName-popup">{{ msg }}</span></p> -->
-			     <!--popup's close button-->
-
-				    <!-- <a href="/form"><button>Sorry</button></a>
-
-			  </div>
-			</div> -->
-			<!--Content shown when popup is not displayed-->
-			<!-- <h2>jQuery Pop-Up Example</h2> -->
-			<!-- <button class="open">Open</button> -->
 
 {% endblock %}

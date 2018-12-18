@@ -1,10 +1,15 @@
 // construct a calendar display on the page.
+// Adapt from https://github.com/AnirudhGoel/Productive-Calender
 
+// Initialize variables
 var current = new Date();
 var currentMonth = current.getMonth();
 var currentDate = current.getDate();
 var currentYear = current.getFullYear();
 
+//
+// Build a calendar layout
+//
 function calender(month, year) {
     // Creat spaces for days before the day of start and day after the month is ended
     var padding = "";
@@ -45,7 +50,7 @@ function calender(month, year) {
             // console.log(i + monthNames[month] + year)
         } else {
             generateCal += "<div class='day col-sm p-2 border border-left-0 border-top-0 text-truncate '><h5 class='row align-items-center'><span class='date col-1'>" + i + "</span><span class='col-1'></span></h5><div class='text-truncate day-container' id='" + i + monthNames[month] + year+ "'></div></div>";
-            console.log(i + monthNames[month] + year)
+            // console.log(i + monthNames[month] + year)
         }
 
         generateDay++;
@@ -128,15 +133,3 @@ if (window.addEventListener) {
 }
 
 // console.log("load calendar");
-
-//
-// Whenever window is resized, page is reloaded so as to change full day names to short names to ensure responsiveness.
-// Eg - Wednesday -> Wed
-//
-$(window).resize(function() {
-    if ($(window).width() < 768) {
-        $(".table-header").html("<th>Sun</th> <th>Mon</th> <th>Tues</th> <th>Wed</th> <th>Thur</th> <th>Fri</th> <th>Sat</th>");
-    } else {
-        $(".table-header").html("<th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>");
-    }
-});

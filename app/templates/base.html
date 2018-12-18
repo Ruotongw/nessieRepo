@@ -10,7 +10,9 @@ https://developers.google.com/identity/sign-in/web/server-side-flow -->
     <!-- Font Awesome served from CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/login.css') }}">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -18,6 +20,7 @@ https://developers.google.com/identity/sign-in/web/server-side-flow -->
     </script>
     <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
     </script>
+
     <script>
     function start() {
       gapi.load('auth2', function() {
@@ -30,6 +33,7 @@ https://developers.google.com/identity/sign-in/web/server-side-flow -->
     }
     </script>
   </head>
+
   <body>
     <div class="container">
       <div class="jumbotron">
@@ -70,7 +74,7 @@ https://developers.google.com/identity/sign-in/web/server-side-flow -->
       </div>
     </div>
 
-   <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
+      
 
       <script>
         $('#signinButton').click(function() {
@@ -111,6 +115,7 @@ https://developers.google.com/identity/sign-in/web/server-side-flow -->
         }
       }
     </script>
+    
     <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
     <script src="{{ url_for('static', filename='./js/login.js') }}" ></script>
   </body>

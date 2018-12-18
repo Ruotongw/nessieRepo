@@ -3,21 +3,20 @@ Modal design came from: https://getbootstrap.com/docs/4.1/components/modal/ -->
 
 {% extends "index.html" %}
 {% block title %}
-
-			<!--Creates the popup body-->
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 			<script src="{{ url_for('static', filename='./js/error.js') }}"></script>
 
+			<!--Creates the popup body-->
 			<div id="errorPop" class="modal fade" role="dialog">
 			  <div class="modal-dialog modal-dialog-centered" role="document">
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <h6>Attention!</h6>
 			      </div>
-			      	<div class="modal-body">
-								<p><span id="eventName-popup">{{ msg }}</span></p>
-								<!--popup's close button-->
-						 		<a href="/form"><button class="btn btn-primary" data-dismiss="modal">Sorry</button></a>
+			      <div class="modal-body">
+							<p><span id="eventName-popup">{{ msg }}</span></p>
+							<!--popup's close button-->
+						 	<a href="/form"><button class="btn btn-primary" data-dismiss="modal">Sorry</button></a>
 			      </div>
 			    </div>
 			  </div>

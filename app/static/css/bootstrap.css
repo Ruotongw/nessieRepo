@@ -9,7 +9,12 @@
     }
     .date {
         padding-left: 4px;
+        height: 9vw;
     }
+    .day-container {
+    overflow-y: scroll;
+    height: 10vw;
+}
 }
 
 @media (min-width: 576px) {

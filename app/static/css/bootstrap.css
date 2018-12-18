@@ -135,22 +135,8 @@ button:not(.navbar-toggler){
   border-radius: 8px;
 }
 
-#add{
-  display:inline-block;
-  vertical-align:middle;
-  height: 60px;
-  width: 150px;
-  text-align: center;
-  margin:.10rem;
-  font-size: 1rem;
-  color: white;
-  background-color: #2064b6 !important;
-  border-radius: 8px;
-  margin-left: 10px;
-}
 
-
-#add-event{
+ #add-event{
   text-align: center;
   width: 150px;
 }
@@ -158,6 +144,7 @@ button:not(.navbar-toggler){
 #cancel-event{
   text-align: center;
 }
+
 
 #update{
   margin-right: 10px;

@@ -1,3 +1,8 @@
+<!-- Creates popup for when assignment is added to calendar. User can then return to calendar or sign out.
+Modal design came from: https://getbootstrap.com/docs/4.1/components/modal/
+Learned how to write for-loops in html file fron Django guide:
+https://docs.djangoproject.com/en/2.1/ref/templates/builtins/-->
+
 {% extends "index.html" %}
 {% block title %}
 
@@ -10,16 +15,16 @@
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <h6>Success!</h6>
-			      </div>
-			      <div class="modal-body">
-							<p><span id="eventName-popup">You have successfully added </span> <span><b>{{ title["summary"] }}</b></span><span> for: </span> <br />
-	              	{% for i in range(rep) %}
-	                <span> <b>{{ displayList[i] }}</b> </span> <br />
-	        		{% endfor %}
-	              </p>
-								<a href="/end"><button class="btn btn-primary">Signout</button></a>
-						    <a href="/form"><button>View Calendar</button></a>
-			      </div>
+			      		</div>
+			      			<div class="modal-body">
+										<p><span id="eventName-popup">You have successfully added </span> <span><b>{{ title["summary"] }}</b></span><span> for: </span> <br />
+	              		{% for i in range(rep) %}
+	                	<span> <b>{{ displayList[i] }}</b> </span> <br />
+	        					{% endfor %}
+	              		</p>
+										<a href="/end"><button class="btn btn-primary">Signout</button></a>
+						    		<a href="/form"><button>View Calendar</button></a>
+			      			</div>
 			    </div>
 			  </div>
 			</div>

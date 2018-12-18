@@ -1,3 +1,5 @@
+<!-- Creates popup for multiple scheduled events. User either reschedules some events, cancels, or adds all events.
+Modal design came from: https://getbootstrap.com/docs/4.1/components/modal/ -->
 {% extends "index.html" %}
 {% block title %}
 
@@ -21,27 +23,20 @@
 								<p style="line-height:2">
 									I have found the following times for you to work on <b>{{ formattedChosenOnes[0]["summary"] }}</b>. <br />
 									Please <b>check</b> any that you wish to <b>reschedule</b>.
-										</p>
-						      <!-- <p>rep = <span id="eventName-popup">{{ rep }}</span> </p> -->
+								</p>
 									<div>
 						        <form action="/reschedule" method="GET">
 						            	{% for i in range(rep) %}
 						            		<input type="checkbox" name="{{i}}" value="true"/> {{ displayList[i] }} <b>{{ warning[i] }}</b><br />
 												{% endfor %}
 												<br/><br/><a href="/reschedule" ><button type="submit" id="reschedulePopup" class="btn btn-primary">Reschedule event(s)</button></a>
-												<!-- <input type="submit" value="Submit">  -->
 												<a href="/multi_add"> <button type="button" class="btn btn-primary" id="addPopup">All times work!</button></a>
 												<a href="/form" > <button type="button" class="btn btn-primary" id="cancelPopup">Cancel</button></a>
 							      </form>
 									</div>
 								</div>
-								</div>
-								</div>
-								</div>
-
-
-			<!--Content shown when popup is not displayed-->
-			<!-- <h2>jQuery Pop-Up Example</h2> -->
-			<!-- <button class="open">Open</button> -->
+							</div>
+						</div>
+					</div>
 
 {% endblock %}

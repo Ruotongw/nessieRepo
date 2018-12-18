@@ -1,3 +1,6 @@
+<!-- Creates first popup for a scheduled event displaying selected time for assignment, which can be rescheduled, added, or canceled.
+Modal design came from: https://getbootstrap.com/docs/4.1/components/modal/ -->
+
 {% extends "index.html" %}
 {% block title %}
 
@@ -22,43 +25,12 @@
   							<b><span id="eventTime-popup">{{ event }}</span></b>. <br />
   							Does this work for you?</p>
   							<b><span id="eventName-popup">{{ options }}</span></b>
-  			      <!-- time.strftime("%b %d %Y %H:%M:%S", time.gmtime(t)) -->
-  			     <!--popup's close button-->
-
-  					 <br/><br/><a href="/reschedule"><button id="reschedulePopup">No, reschedule</button></a>
-  					<a href="/add"><button id="addPopup" class="btn btn-info">Yes, add</button></a>
-  					<a href="/form"><button id="cancelPopup" class="btn btn-info btn btn-primary" data-dismiss="modal">Cancel</button></a>
+  					 		<br/><br/><a href="/reschedule"><button id="reschedulePopup">No, reschedule</button></a>
+  							<a href="/add"><button id="addPopup" class="btn btn-info">Yes, add</button></a>
+  							<a href="/form"><button id="cancelPopup" class="btn btn-info btn btn-primary" data-dismiss="modal">Cancel</button></a>
 					 </div>
-
-						<!-- Modal footer -->
-						<!-- <div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-						</div> -->
-
 					</div>
 				</div>
 			</div>
-
-				<!-- <div id="popup" class="popup-overlay"> -->
-			  <!--Creates the popup content-->
-			   	<!-- <div class="popup-content">
-			      <h2 class="popup-title">Hi there!</h2>
-			      <p style="line-height:2">
-							I have found time for you to work on <b><span id="eventName-popup">{{ title["summary"] }}</span></b> on <br />
-							<b><span id="eventTime-popup">{{ event }}</span></b>. <br />
-							Does this work for you?</p>
-							<b><span id="eventName-popup">{{ options }}</span></b> -->
-			      <!-- time.strftime("%b %d %Y %H:%M:%S", time.gmtime(t)) -->
-			     <!--popup's close button-->
-
-					 <!-- <br/><br/><a href="/reschedule"><button id="reschedulePopup">No, reschedule</button></a>
-					<a href="/add"><button id="addPopup" class="btn btn-info">Yes, add</button></a>
-					<a href="/form"><button id="cancelPopup" class="btn btn-info">Cancel</button></a>
-
-				</div>
-			</div> -->
-			<!--Content shown when popup is not displayed-->
-			<!-- <h2>jQuery Pop-Up Example</h2> -->
-			<!-- <button class="open">Open</button> -->
 
 {% endblock %}

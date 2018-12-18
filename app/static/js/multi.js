@@ -1,20 +1,17 @@
+//Popup for multi-event scheduling appears and checks if any checkboxes
+//are checked through CheckBoxCount() function. Then, returns True or False.
+//From variety post of stack overflow, but specifcally Lalji Dhameliya:
+//https://stackoverflow.com/questions/901712/how-to-check-whether-a-checkbox-is-checked-in-jquery 
+
 $(document).ready(function(){
-  console.log("entered popup")
   $("#multi").modal('show');
 
   var checkboxes = $("input[type='checkbox']"),
       submitButt = $("input[type='submit']");
 
-  console.log("checkbox disabled")
-
-  // document.getElementById("reschedule").disabled = true;
-
   document.getElementById("rescheduleMulti").onclick = function (e) {
-  	//
       if (!CheckBoxCount()) {
           e.preventDefault();
-      	// document.getElementById("reschedule").disabled = false;
-          // document.forms[0].submit();
       };
   };
 
@@ -30,9 +27,6 @@ $(document).ready(function(){
       if (numChecked < 1) {
           alert("Choose at least one event to reschedule !"); return false;
       }
-      // alert("selected count: " + numChecked);
-
       return true;
   }
-
 });

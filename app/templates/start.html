@@ -1,3 +1,5 @@
+<!-- Creates first popup user sees asking if they want to schedule an event right away.
+Modal design came from: https://getbootstrap.com/docs/4.1/components/modal/ -->
 {% extends "index.html" %}
 {% block title %}
 
@@ -12,19 +14,14 @@
 			      </div>
 			      <div class="modal-body">
 			         <p style="line-height:2"> I'm Nessie, your personal assignment scheduler.</p><br/>
-			     	 <p>Do you want to start by adding an assignment coming up?</p><br/>
+			     	 	<p>Do you want to start by adding an assignment coming up?</p><br/>
 			      </div>
 			      <div class="modal-footer">
-			      	<!-- <a class="btn btn-info" id="noPopup" href="/form" role="button">No, add later.</a> -->
 							<button type="button" id="noPopup" class="btn btn-info btn btn-primary" data-dismiss="modal">No, add later.</button>
-			      	<!-- <button type="button" class="btn btn-info" href="/form">No, add later.</button> -->
 			        <button type="button" id="addPopup" class="btn btn-info" onclick="add_event()">Yes, add now!</button>
 			      </div>
 			    </div>
 			  </div>
 			</div>
-			<!--Content shown when popup is not displayed-->
-			<!-- <h2>jQuery Pop-Up Example</h2> -->
-			<!-- <button class="open">Open</button> -->
 
 {% endblock %}

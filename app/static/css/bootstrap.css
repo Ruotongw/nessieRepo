@@ -92,7 +92,7 @@ body {
 	/*color: #2064b6 !important;*/
 	height: 50px;
 	text-align: right;
-  background-color:#FC9E02 !important;; 
+  background-color:#FC9E02 !important;;
   border-color:#FC9E02 !important;;
 }
 
@@ -117,6 +117,8 @@ body {
     height: 5vw;
 }
 
+/* From stack overflow article:
+https://stackoverflow.com/questions/17954966/how-to-get-rid-of-x-and-up-down-arrow-elements-of-a-input-date */
 input[type=date]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     display: none;

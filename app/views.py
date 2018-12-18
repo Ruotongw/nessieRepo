@@ -170,7 +170,13 @@ def createEvent():
 
 
 def setUpWorkStartEnd(nowYear, nowMonth, nowDay):
-    """Initialize the workStart and workEnd times to either the user's input or the default values."""
+    """Initialize the workStart and workEnd times to either the user's input or the default values.
+
+    Keyword argument:
+    nowYear -- int of the current year
+    nowMonth -- int of the current month
+    nowDay -- int of the current day
+    """
     if checkPreferencesForm.has_been_called:
         workStart = int(earliestWorkTime[:2])*60 + int(earliestWorkTime[3:])
         workEnd = int(latestWorkTime[:2])*60 + int(latestWorkTime[3:])
@@ -186,7 +192,12 @@ def setUpWorkStartEnd(nowYear, nowMonth, nowDay):
 
 
 def getCalendarEvents(min, max):
-    """Return a list of dictionaries of events on the user's Google Calendar from now until the due date."""
+    """Return a list of dictionaries of events on the user's Google Calendar from now until the due date.
+
+    Keyword arguments:
+    min -- string of the lower bound for the range of obtained calendar events (inclusive)
+    max -- string of the upper bound for the range of obtained calendar events (exclusive)
+    """
     dueDateFormatted = str(max) + 'T00:00:00-06:00'
     events_result = service.events().list(calendarId='primary', timeMin=min,
                                     timeMax = dueDateFormatted, singleEvents=True,
@@ -216,7 +227,11 @@ def getEvents():
 
 
 def selectionOfTimeSlots(availableTimes):
-    """Use getEventTime to assemble a list of randomly chosen time slots."""
+    """Use getEventTime to assemble a list of randomly chosen time slots.
+
+    Keyword arguments:
+    availableTimes -- a list of all possible time slots on user's calendar
+    """
     global chosenTimeSlots
     chosenTimeSlots = []
     dividedTimeSlots = divisionOfTimeSlots(availableTimes)
@@ -229,7 +244,11 @@ def selectionOfTimeSlots(availableTimes):
 
 
 def divisionOfTimeSlots(availableTimes):
-    """Equally split all of the available times slots into rep number of lists and add them to dividedTimeSlots."""
+    """Equally split all of the available times slots into rep number of lists and add them to dividedTimeSlots.
+
+    Keyword arguments:
+    availableTimes -- a list of all possible time slots on user's calendar
+    """
     global dividedTimeSlots
     dividedTimeSlots = []
 
@@ -247,7 +266,11 @@ def divisionOfTimeSlots(availableTimes):
 
 
 def getEventTime(availableTimes):
-    """Return a randomly selected time slot from all of the available times slots."""
+    """Return a randomly selected time slot from all of the available times slots.
+
+    Keyword arguments:
+    availableTimes -- a list of all possible time slots on user's calendar
+    """
     length = len(availableTimes)
     if (length != 0):
         x = random.randrange(0, length)

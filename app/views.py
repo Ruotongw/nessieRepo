@@ -149,7 +149,7 @@ def popup():
         if len(dividedTimeSlots[0]) != 1:
             return render_template('popup.html', event=displayList[0], title = title)
         else:
-            options = "(There are no further time slots available)"
+            options = "(This is your last possible work time option)"
             return render_template('popup.html', event=displayList[0], title = title, options=options)
     except:
         return redirect("/error")
@@ -278,7 +278,7 @@ def createEvent():
             formattedChosenOnes.append(format.eventFormatDictionary(chosenTimeSlots[i], title))
     except:
         global msg
-        msg = "There is not enough time to schedule the event. Please either choose a smaller time commitment, change your working hours, or find a later deadline."
+        msg = "There is not enough time to schedule the event. Please either choose a smaller time commitment, change your working hours, or find a later deadline. /n NOTE: We will not schedule multiple, new assignments in a row."
         return redirect('/error')
     if rep == 1:
         return redirect('/popup')

@@ -8,6 +8,9 @@ var year = parseInt($(".year").attr('id'));
 var month = parseInt($(".month").attr('id'));
 
 
+
+//The below method restricts users from entering an assignment due in the past.
+//This function is by Wajid khan from https://stackoverflow.com/questions/43274559/how-do-i-restrict-past-dates-in-html5-input-type-date
 Date.prototype.toDateInputValue = (function() {
     var now = new Date();
 

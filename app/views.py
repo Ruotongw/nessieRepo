@@ -149,7 +149,7 @@ def popup():
         if len(dividedTimeSlots[0]) != 1:
             return render_template('popup.html', event=displayList[0], title = title)
         else:
-            options = "(There are no further time slots available)"
+            options = "(This is your last possible work time option)"
             return render_template('popup.html', event=displayList[0], title = title, options=options)
     except:
         return redirect("/error")

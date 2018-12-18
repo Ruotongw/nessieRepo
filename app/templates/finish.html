@@ -3,23 +3,43 @@
 
 			<!--Creates the popup body-->
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+			<script src="{{ url_for('static', filename='./js/finish.js') }}"></script>
 
-			<div class="popup-overlay">
+			<div id="finishPop" class="modal fade" role="dialog">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5>Success!</h5>
+			      </div>
+			      <div class="modal-body">
+							<p><span id="eventName-popup">You have successfully added </span> <span><b>{{ title["summary"] }}</b></span><span> for: </span> <br />
+	              	{% for i in range(rep) %}
+	                <span> {{ displayList[i] }} </span> <br />
+	        		{% endfor %}
+	              </p>
+								<a href="/end"><button>Signout and leave</button></a>
+						    <a href="/form"><button>View the Calendar</button></a>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- <div class="popup-overlay">
 			  <!--Creates the popup content-->
-			   <div class="popup-content">
+			   <!-- <div class="popup-content">
 			      <h2>Success!</h2>
 			      <p><span id="eventName-popup">You have successfully added </span> <span><b>{{ title["summary"] }}</b></span><span> for: </span> <br />
               	{% for i in range(rep) %}
                 <span> {{ displayList[i] }} </span> <br />
         		{% endfor %}
-              </p>
+              </p> -->
 			     <!--popup's close button-->
 
-            <a href="/end"><button>Signout and leave</button></a>
+            <!-- <a href="/end"><button>Signout and leave</button></a>
 				    <a href="/form"><button>View the Calendar</button></a>
 
 			  </div>
-			</div>
+			</div> --> 
 			<!--Content shown when popup is not displayed-->
 			<!-- <h2>jQuery Pop-Up Example</h2> -->
 			<!-- <button class="open">Open</button> -->

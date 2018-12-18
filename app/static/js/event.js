@@ -1,4 +1,4 @@
-// display events on the calendar and add interactivity to bottoms
+// display events on the calendar and add interactivity to buttons
 
 // Initializing variables
 var month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -7,14 +7,17 @@ var day_name = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
 var year = parseInt($(".year").attr('id'));
 var month = parseInt($(".month").attr('id'));
 
-// console.log("load event");
+
 Date.prototype.toDateInputValue = (function() {
-    var local = new Date(this);
-    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    local.setDate(local.getDate()+1)
-    console.log(local.getDate())
-    return local.toJSON().slice(0,10);
-});
+    var now = new Date();
+
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+    $('#dueDate').val(today);
+    $('#dueDate').attr('min', today); });
 
 
 function add_event() {
@@ -22,10 +25,6 @@ function add_event() {
 	// var today = Date().toISOString().substr(0, 10);
 	// $('#startPop').hide();
 	$('#startPop').modal('hide');
-    // $("#my-preferences").attr('disabled','disabled');
-    // $("#Signout").attr('disabled','disabled');
-    // $("#about").attr('disabled','disabled');
-    // $("#add-event").attr('disabled','disabled');
 	$("#dueDate").attr("min", new Date().toDateInputValue());
 	console.log("open event form")
 
@@ -50,17 +49,6 @@ function repChecked(){
 		});  // unchecked
 	    $("#eventRepetition").val("1");}
 }
-
-// function about(){
-//   $("#my-preferences").attr('disabled','disabled');
-//   $("#Signout").attr('disabled','disabled');
-//   $("#about").attr('disabled','disabled');
-//   $("#add-event").attr('disabled','disabled');
-//   var divelement = document.getElementById("aboutPage")
-//   if(divelement.style.display == "none")
-//     divelement.style.display == "block"
-//   $("#aboutPage").show();
-// }
 
 
 //
@@ -132,6 +120,3 @@ function refreshAllEvents(month, year) {
 		}
 	});
 }
-
-
-// }

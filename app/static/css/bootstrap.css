@@ -89,8 +89,11 @@ body {
 
 
 #signinButton{
+	/*color: #2064b6 !important;*/
 	height: 50px;
 	text-align: right;
+  background-color:#FC9E02;
+  border-color:#FC9E02;
 }
 
 #arrowRight{
@@ -230,5 +233,7 @@ h6{
 .modal-footer{
   background-color: #f8f9fa!important;
 }
+.fa-question-circle{
+  color: #2064b6;
 
 /*.checkbox { margin: 0; }*/

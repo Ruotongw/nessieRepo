@@ -45,6 +45,7 @@ body {
     /*border-color: #9f9a9a !important;*/
 }
 
+/*Make sure all form content is centerd*/
 #preferences{
   text-align: center;
 }
@@ -63,6 +64,7 @@ body {
 }
 
 
+/*format of buttons on start html*/
 #yesForm{
   text-align: center;
   margin-left: 100px;
@@ -113,10 +115,6 @@ body {
     height: 5vw;
 }
 
-#about{
-  display: inline-block;
-}
-
 input[type=date]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     display: none;
@@ -145,6 +143,9 @@ button:not(.navbar-toggler){
   text-align: center;
 }
 
+#about{
+  display: inline-block;
+}
 
 #update{
   margin-right: 10px;

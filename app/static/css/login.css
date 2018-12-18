@@ -1,27 +1,3 @@
-/*.mobile{
-  background-image: url(http://mockuphone.com/static/images/phones/iphone6/iphone6_silver_portrait.png);
-  background-repeat: no-repeat;
-  background-size: content;
-  display: inline-block;
-  width: 330px;
-  height: 640px;
-  background-position: center;
-  content: '';
-  position: relative;
-}*/
-.chat-w {
-    /*background-color: #fff;*/
-    /*display: inline-block;*/
-    /*height: 461px;*/
-    /*width: 262px;*/
-    /*position: absolute;*/
-    /*padding-top: 100px;*/
-    /*patop: 80px;*/
-    /*border-radius: 4px;*/
-    /*left: 25px;*/
-  /*overflow: hidden;*/
-}
-
 body{
   font-weight: 400;
   margin:0;

@@ -11,6 +11,7 @@ import google.oauth2.credentials
 from app import app
 import datetime
 import calendar
+import pandas as pd #pip install pandas
 from .format import *
 from .timeSlot import *
 from .time import *
@@ -45,15 +46,12 @@ class FindTime:
 
                 lastEvent = events[len(events) - 1]
                 secondToLast = events[len(events) - 2]
-
                 self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
             elif len(events) == 1:
                 self.compareLastEvent(lastEvent, secondToLast, workStart, workEnd, nowDay, nowHour, nowMinute, timeEst)
 
-            elif len(events) == 0:
-                self.checkEmptyDays(workStart, workEnd, timeEst)
-
+            self.addEmptyDays(events, workStart, workEnd, timeEst)
             availableTimes.sort()
             return availableTimes
         except:
@@ -140,130 +138,60 @@ class FindTime:
             availableTimes.append(time)
 
 
-    def checkEmptyDays(self, workStart, workEnd, timeEst):
-        '''Checks each day from now until the user's deadline to determine whether there
-        are already any events on each day. If not, a possible time slot in the morning is
-        added to availableTimes.'''
 
-        global deadline
-        global startMinutes
-        global startHours
-        global now
-        global enoughTimeEmpty
+    def getAllDays(self):
+        start = str(self.current[0:10])
+        end = str(self.dueDate[0:10])
+        daysRange = pd.date_range(start = start, end = end).tolist()
+        daysRange = daysRange[1:len(daysRange)-1]
+        days = []
+        for i in daysRange:
+            day = str(i)
+            day = day[:10] + 'T' + day[11:] + '-05:00'
+            days.append(day)
+        return days
 
-        deadline = datetime.datetime(int(self.dueDate[0:4]), int(self.dueDate[5:7]), int(self.dueDate[8:10]))
-        now = datetime.datetime(int(self.current[0:4]), int(self.current[5:7]), int(self.current[8:10]))
+
+    def getComparableDateValues(self, days):
+        dates = []
+        for i in days:
+            date = i[:10]
+            dates.append(date)
+        return dates
+
+
+    def getEmptyDays(self, events):
+        """CODE ATTRIBUTION: https://stackoverflow.com/questions/18194968/python-remove-duplicates-from-2-lists"""
+
+        days1 = self.getAllDays()
+        cleanedEvents = []
+
+        for event in events:
+            dt = event['start'].get('dateTime')
+            cleanedEvents.append(dt)
+
+        days = self.getComparableDateValues(days1)
+        events = self.getComparableDateValues(cleanedEvents)
+
+        days = [time for time in days if not time in events]
+        return days
+
+
+    def addEmptyDays(self, events, workStart, workEnd, timeEst):
         startMinutes = workStart % 60
         startHours = (workStart - startMinutes) / 60
         endMinutes = workEnd % 60
         endHours = (workEnd - endMinutes) / 60
+
         enoughTimeEmpty = (workEnd - workStart) >= (timeEst * 60) + 30
 
-        if now.month == deadline.month and now.year == deadline.year:
-            num = deadline.day - now.day
-            self.setUpEmpty(now, num)
-
-        elif (deadline.month - now.month == 1) or (now.month == 12 and deadline.month == 1):
-            self.monthRangeBeginEnd()
-
-        elif (deadline.month - now.month > 1) and (now.year == deadline.year):
-            self.monthRangeBeginEnd()
-            for i in range(deadline.month - now.month - 1):
-                month = now.month + i + 1
-                weekday, monthDays = calendar.monthrange(now.year, month)
-
-                start = datetime.datetime(now.year, month, 1)
-                self.setUpEmpty(start, monthDays)
-
-                monthEnd = datetime.datetime(now.year, month, monthDays)
-                nextMonthStart = datetime.datetime(now.year, month + 1, 1)
-                self.lastDayOfMonth(monthEnd, nextMonthStart, monthDays)
-
-        elif (now.month - deadline.month < 11) and (now.year != deadline.year):
-            self.monthRangeBeginEnd()
-            if now.month != 12:
-                for i in range(12 - now.month):
-                    month = now.month + i + 1
-                    weekday, monthDays = calendar.monthrange(now.year, month)
-
-                    start = datetime.datetime(now.year, month, 1)
-                    self.setUpEmpty(start, monthDays)
-
-                    monthEnd = datetime.dateTime(now.year, month, monthDays)
-                    if month == 12:
-                        nextMonthStart = datetime.dateTime(now.year + 1, 1, 1)
-                    else:
-                        nextMonthStart = datetime.datetime(now.year, month + 1, )
-                    self.lastDayOfMonth(monthEnd, nextMonthStart, monthDays)
-
-            if deadline.month != 1:
-                for i in range(deadline.month - 1):
-                    month = 1 + i
-                    weekday, monthDays = calendar.monthrange(deadline.year, month)
-
-                    start = datetime.datetime(deadline.year, month, 1)
-                    self.setUpEmpty(start, monthDays)
-
-
-    def monthRangeBeginEnd(self):
-        '''Checks for empty days in the current month and the deadline month.'''
-
-        weekday, monthDays = calendar.monthrange(now.year, now.month)
-        num = monthDays - now.day
-        self.setUpEmpty(now, num)
-        self.lastDayOfMonth(now.month, now.year)
-        dt = datetime.datetime(deadline.year, deadline.month, 1)
-        self.setUpEmpty(dt, deadline.day - 1)
-
-
-    def lastDayOfMonth(self, month, year):
-        '''Handles irregularity with the last day of the month.'''
-
-        weekday, monthDays = calendar.monthrange(year, month)
-        min = format.formatDT2(year, month, monthDays, 0, 0, 0)
-        minDT = datetime.datetime(year, month, monthDays)
-        if month == 12:
-            nextMonth = 1
-            year += 1
-        else:
-            nextMonth = month + 1
-        max = format.formatDT2(year, nextMonth, 1, 0, 0, 0)
-        lastDay = self.service.events().list(calendarId='primary', timeMin = min,
-                                        timeMax = max, singleEvents=True,
-                                        orderBy = 'startTime').execute().get('items', [])
-        self.compareEmpty(minDT, lastDay)
-
-
-    def setUpEmpty(self, dt, num):
-        '''Retrieves the events for minDay and sends them to the compareEmpty method.'''
-
-        for i in range(num):
-            minDay = dt.day + i
-            weekday, monthDays = calendar.monthrange(dt.year, dt.month)
-            if minDay == monthDays:
-                maxDay = 1
-                maxMonth = dt.month + 1
-            else:
-                maxDay = minDay + 1
-                maxMonth = dt.month
-            timeMinDT = datetime.datetime(dt.year, dt.month, minDay)
-            timeMin = format.formatDT2(dt.year, dt.month, minDay, 0, 0, 0)
-            timeMax = format.formatDT2(dt.year, maxMonth, maxDay, 0, 0, 0)
-
-            events = self.service.events().list(calendarId='primary', timeMin = timeMin,
-                                            timeMax = timeMax, singleEvents=True,
-                                            orderBy = 'startTime').execute().get('items', [])
-            self.compareEmpty(timeMinDT, events)
-
-
-    def compareEmpty(self, dt, events):
-        '''If events is empty, there are no events on the calendar for the given day and
-        a time slot is added to available times for in the morning.'''
-
-        if len(events) == 0 and enoughTimeEmpty:
-            morning = datetime.datetime(dt.year, dt.month, dt.day, int(startHours), int(startMinutes)) - datetime.timedelta(minutes = 15)
-            time = timeSlot.afterTimeSlot(morning)
-            availableTimes.append(time)
+        emptyDays = self.getEmptyDays(events)
+        for day in emptyDays:
+            if enoughTimeEmpty:
+                morning = datetime.datetime(int(day[0:4]), int(day[5:7]), int(day[8:]), int(startHours), int(startMinutes))
+                morning -= datetime.timedelta(minutes = 15)
+                time = timeSlot.afterTimeSlot(morning)
+                availableTimes.append(time)
 
 
     def openTimeWindow(self, openStartTime, openEndTime):

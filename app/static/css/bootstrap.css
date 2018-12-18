@@ -138,7 +138,7 @@ button:not(.navbar-toggler){
 
  #add-event{
   text-align: center;
-  width: 150px;
+  width: 150px !important;
 }
 
 #cancel-event{

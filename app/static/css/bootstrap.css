@@ -81,11 +81,8 @@ body {
 }
 
 #cancelEvent{
-  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-  /* background-color: #2064b6 !important; */
   text-align: center;
   margin: 0 auto;
-
 }
 
 
@@ -95,17 +92,15 @@ body {
 	text-align: right;
 }
 
-/* #i{
-  display: inline-block;
-} */
 #arrowRight{
   text-align: center;
-  margin: 30px; */ */
+  margin: 30px;
+  color: black;
 }
 #arrowLeft{
   text-align: center;
-  /* padding-left: 50px; */
-  margin: 30px; */
+  margin: 30px;
+  color: black;
 }
 
 .currentday {
@@ -140,39 +135,6 @@ button:not(.navbar-toggler){
   border-radius: 8px;
 }
 
-
-#rescheduleMulti{
-  display:inline-block;
-  vertical-align:middle;
-  height: 60px;
-  width: 145px;
-  text-align: center;
-  margin-top: 22px;
-  font-size: 14px;
-  left: 34%;
-}
-
-#addMulti{
-  display:inline-block;
-  vertical-align:middle;
-  height: 60px;
-  width: 120px;
-  text-align: center;
-  margin-top: 22px;
-  font-size: 14px;
-  left: 65%;
-}
-
-#cancelMulti{
-  display:inline-block;
-  vertical-align:middle;
-  height: 60px;
-  width: 120px;
-  text-align: center;
-  margin-top: 22px;
-  font-size: 14px;
-  left:5%;
-}
 #add{
   display:inline-block;
   vertical-align:middle;
@@ -191,16 +153,10 @@ button:not(.navbar-toggler){
 #add-event{
   text-align: center;
   width: 150px;
-  /* vertical-align:middle !important;
-  justify-content: center !important;
-  display: flex; */
 }
 
 #cancel-event{
   text-align: center;
-  vertical-align:middle !important;
-  justify-content: center !important;
-  display: flex;
 }
 
 #update{
@@ -225,13 +181,17 @@ h4{
 }
 
 h5{
+  color: black;
+}
+
+h6{
   color: white;
 }
 
 #reschedulePopup{
   text-align: center;
   width: 150px;
-  height: 40px;
+  height: 50px;
   padding: 5px;
   font-size: 14px;
   left: 34%;
@@ -240,7 +200,7 @@ h5{
 #addPopup{
   text-align: center;
   width: 150px;
-  height: 40px;
+  height: 50px;
   padding: 5px;
   font-size: 14px;
   left: 65%;
@@ -249,7 +209,7 @@ h5{
 #noPopup{
   text-align: center;
   width: 150px;
-  height: 40px;
+  height: 50px;
   padding: 5px;
   font-size: 14px;
 }
@@ -257,7 +217,7 @@ h5{
 #cancelPopup{
   text-align: center;
   width: 125px;
-  height: 40px;
+  height: 50px;
   padding: 5px;
   font-size: 14px;
   left:5%;
@@ -272,5 +232,8 @@ h5{
   text-align: center;
 }
 
+.table-header{
+  color: white;
+}
 
 /*.checkbox { margin: 0; }*/

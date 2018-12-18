@@ -89,7 +89,6 @@ body {
 
 
 #signinButton{
-	color: #2064b6 !important;
 	height: 50px;
 	text-align: right;
 }
@@ -222,6 +221,14 @@ h6{
 
 .table-header{
   color: white;
+}
+
+.modal-body{
+  background-color: #f8f9fa!important;
+}
+
+.modal-footer{
+  background-color: #f8f9fa!important;
 }
 
 /*.checkbox { margin: 0; }*/

@@ -9,7 +9,7 @@ $(document).ready(function(){
   var checkboxes = $("input[type='checkbox']"),
       submitButt = $("input[type='submit']");
 
-  document.getElementById("rescheduleMulti").onclick = function (e) {
+  document.getElementById("reschedulePopup").onclick = function (e) {
       if (!CheckBoxCount()) {
           e.preventDefault();
       };

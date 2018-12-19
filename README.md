@@ -1,6 +1,6 @@
 # nessieRepo
 This web-app is built using Flask. Please install-
-  The latest version of Python:             https://www.python.org/
+  Python 3:                                 https://www.python.org/
   Flask:                                    https://pypi.org/project/Flask/1.0.2/
 
 Then navigate to the project folder and-
@@ -14,9 +14,11 @@ Then navigate to the project folder and-
     Unix/Mac:   python setup.py install
     If this doesn't work, try the other options at: https://pypi.org/project/pytz/
 
-  Install Pandas (only need to do this once):
-    Windows:    pip install pandas
-    Unix/Mac:   pip install pandas
+  Install Pip based dependencies: (pip install ____)
+    Flask
+    --upgrade google-api-python-client oauth2client
+    tzlocal
+    Pandas
 
   set the flask app:
     Windows:    set FLASK_APP=run.py

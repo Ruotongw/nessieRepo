@@ -9,15 +9,14 @@ Then navigate to the project folder and-
   Activate Venv:
     Windows:    venv\Scripts\activate
     Unix/Mac:   . venv/bin/activate
+  Run: python -m pip install --upgrade pip
 
-  Install Pytz:
-    Windows:    python setup.py install
-    Unix/Mac:   python setup.py install
-    If this doesn't work, try the other options at: https://pypi.org/project/pytz/
+  Setup Flask:  http://flask.pocoo.org/docs/1.0/installation/#virtual-environments
+    pip install Flask
 
   Install Pip based dependencies: (pip install ____)
-    Flask
     --upgrade google-api-python-client oauth2client
+    Pytz
     tzlocal
     Pandas
 

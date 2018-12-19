@@ -94,11 +94,9 @@ body {
 
 
 #signinButton{
-	/*color: #2064b6 !important;*/
 	height: 50px;
 	text-align: right;
-  background-color:#FC9E02 !important;;
-  border-color:#FC9E02 !important;;
+  border-color:#FC9E02 !important;
 }
 
 #arrowRight{

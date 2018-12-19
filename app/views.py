@@ -308,11 +308,14 @@ def multiPopup():
         return redirect('/')
 
     warning = []
+    
     displayFormat()
 
     for i in range(rep):
         if len(dividedTimeSlots[i]) == 1:
-            warning.insert(i, "(This is your last option)")
+            warning.append("(This is your last option)")
+        else:
+            warning.append('')
     return render_template('multi.html', displayList=displayList, formattedChosenOnes = formattedChosenOnes, rep=rep, warning=warning)
 
 

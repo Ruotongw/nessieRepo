@@ -16,7 +16,7 @@ from .format import *
 from .timeSlot import *
 from .time import *
 
-# Find open time slots for events.
+#Find open time slots for events.
 class FindTime:
     def __init__(self, service, dueDate, current):
         """
@@ -218,7 +218,6 @@ class FindTime:
 
     def getEmptyDays(self, events):
         """Return the list of all days without Google Calendar events from now until the deadline.
-        CODE ATTRIBUTION: https://stackoverflow.com/questions/18194968/python-remove-duplicates-from-2-lists
 
         Keyword arguments:
         events -- a list of all events on the user's calendar from now until the due date in dictionary form
@@ -233,6 +232,8 @@ class FindTime:
         days = self.getComparableDateValues(days1)
         events = self.getComparableDateValues(cleanedEvents)
 
+        #Source for removing duplicates:
+        #https://stackoverflow.com/questions/18194968/python-remove-duplicates-from-2-lists
         days = [time for time in days if not time in events]
         return days
 

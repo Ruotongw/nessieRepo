@@ -308,7 +308,7 @@ def multiPopup():
         return redirect('/')
 
     warning = []
-    
+
     displayFormat()
 
     for i in range(rep):

@@ -7,16 +7,18 @@ import time
 from tzlocal import get_localzone
 from .time import *
 
-# Handles the formatting of dateTime objects.
+#Handle the formatting of dateTime objects.
 class Format:
     def __init__(self):
         pass
 
     def formatEvent(self, event1, event2):
-        '''Returns event1 and event2 in the correct datetime format to use in
-        findAvailableTimes(). This requires turning the start and end time strings
-        into dateTime objects, converting them to UTC time, and normalizing them to
-        account for daylight savings time.'''
+        """Return event1 and event2 in the correct datetime format to use in findAvailableTimes().
+
+        Keyword arguments:
+        event1 -- a calendar event in dictionary form
+        event2 -- a calendar event in dictionary form
+        """
 
         fmt = '%Y-%m-%dT%H:%M:%S%z'
 
@@ -49,8 +51,12 @@ class Format:
         return e1, e2
 
     def eventFormatDictionary(self, eventTime, title):
-        "Formats event as a dictionary to show start and end times"
+        """Format event as a dictionary to show start and end times.
 
+        Keyword arguments:
+        eventTime -- a list with two values: the start and end dates and times for the event
+        title -- the name of the event
+        """
         eventStart = eventTime[0]
         eventEnd = eventTime[1]
         formattedEvent = {
@@ -68,9 +74,16 @@ class Format:
 
 
     def formatDT2(self, year, month, day, hour, minute, second):
-        '''Returns a datetime string with the given integers formatted correctly
-        for the Google API.'''
+        """Return a datetime string with the given integers formatted correctly for the Google API.
 
+        Keyword arguments:
+        year -- int representing a year value
+        month -- int representing a month value (1-12)
+        day -- int representing a day value (1-31)
+        hour -- int representing an hour value (1-24)
+        minute -- int representing a minute value (1-60)
+        second -- int representing a second value (1-60)
+        """
         dt = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
         fmt = '%Y-%m-%dT%H:%M:%S'
         dtFmt = dt.strftime(fmt)
@@ -79,8 +92,12 @@ class Format:
         return dtFmt
 
     def inDaylightSavings(self, e1, e2):
-        '''Checks whether event1 and e2 are in daylight savings time and adds an
-        hour accordingly.'''
+        """Check whether event1 and e2 are in daylight savings time and add an hour accordingly.
+
+        Keyword arguments:
+        e1 -- a datetime object 
+        e2 -- a datetime object
+        """
 
         current = Time()
         if not current.isDST(e1):

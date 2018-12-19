@@ -6,14 +6,17 @@ from pytz import timezone
 import time
 from tzlocal import get_localzone
 
-# Handles finding and manipulating the current time.
+#Handle retrieving and manipulating the current time.
 class Time:
     def __init__(self):
         pass
 
     def getNowDHM(self, now):
-        '''Returns the day, hour, and minute value for the current time.'''
+        """Return the day, hour, and minute values for the current time.
 
+        Keyword arguments:
+        now -- a string representing the current date and time
+        """
         now = now[:22] + now[23:]
         now = datetime.datetime.strptime(now, '%Y-%m-%dT%H:%M:%S%z')
 
@@ -24,6 +27,11 @@ class Time:
 
 
     def getNowYM(self, now):
+        """Return the year and month values for the current time.
+
+        Keyword arguments:
+        now -- a string representing the current date and time
+        """
         now = now[:22] + now[23:]
         now = datetime.datetime.strptime(now, '%Y-%m-%dT%H:%M:%S%z')
 
@@ -33,9 +41,7 @@ class Time:
 
 
     def currentTime(self):
-        '''Returns the current Chicago time, accounting for daylight savings and
-        in the correct string format to use with Google's API.'''
-
+        """Return the current Chicago time in the correct string format to use with Google's API."""
         chi = timezone('America/Chicago')
         fmt = '%Y-%m-%dT%H:%M:%S%z'
 
@@ -57,11 +63,13 @@ class Time:
 
 
     def isDST(self, dt):
-        '''Checks whether the inputted datetime is in daylight savings. Returns true
-        if it is, false if it is not.
-        CODE ATTRIBUTION:
-        https://stackoverflow.com/questions/5590429/calculating-daylight-saving-time-from-only-date'''
+        """Check whether the inputted datetime is in daylight savings. Return true if it is.
 
+        Keyword arguments:
+        dt -- a datetime object
+        """
+        #Source for checking daylight savings time:
+        #https://stackoverflow.com/questions/5590429/calculating-daylight-saving-time-from-only-date
         lastSunday = dt.day - dt.weekday()
         if (dt.month < 3 or dt.month > 11):
             return False

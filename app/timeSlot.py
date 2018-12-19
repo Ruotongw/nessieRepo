@@ -7,17 +7,24 @@ import time
 from tzlocal import get_localzone
 from .format import *
 
-# Handles time slot behavior.
+#Handle time slot behavior.
 class TimeSlot:
     def __init__(self, estimate):
+        """
+        Keyword arguments:
+        estimate -- the user's inputted length of time they want to work for
+        """
         self.estimate = estimate
         global format
         format = Format()
 
 
     def beforeTimeSlot(self, event2):
-        '''Returns the time slot before event2.'''
+        """Return the time slot before event2.
 
+        Keyword arguments:
+        event2 -- a datetime object representing the event being scheduled before
+        """
         localizedTime = self.estimate
 
         event2Min = (event2.hour * 60) + event2.minute
@@ -39,8 +46,11 @@ class TimeSlot:
 
 
     def afterTimeSlot(self, event1):
-        '''Returns the time slot after event1.'''
+        """Return the time slot after event1.
 
+        Keyword arguments:
+        event1 -- a datetime object representing the event being scheduled after
+        """
         localizedTime = self.estimate
 
         event1Min = (event1.hour * 60) + event1.minute
